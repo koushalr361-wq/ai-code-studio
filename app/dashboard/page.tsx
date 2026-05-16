@@ -1,3 +1,7 @@
+"use client";
+
+import React from "react";
+
 export default function Dashboard() {
   const leads = [
     { id: 1, email: "rahul.sharma@example.com", date: "16 May 2026" },
@@ -7,7 +11,9 @@ export default function Dashboard() {
 
   const handleWhatsApp = (email: string) => {
     const text = encodeURIComponent(`Hey! Thanks for joining the AI Code Studio waitlist (${email}).`);
-    window.open(`https://wa.me/?text=${text}`, "_blank");
+    if (typeof window !== "undefined") {
+      window.open(`https://wa.me/?text=${text}`, "_blank");
+    }
   };
 
   return (
