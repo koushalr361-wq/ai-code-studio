@@ -70,25 +70,26 @@ export default function Home() {
       <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "500px", height: "1px", background: "linear-gradient(90deg, transparent, rgba(120, 119, 198, 0.4), transparent)", boxShadow: "0 0 100px 20px rgba(120, 119, 198, 0.15)", pointerEvents: "none" }} />
 
       {/* --- HERO INTERFACE SECTION --- */}
-      <div style={{ textAlign: "center", maxWidth: "720px", animation: "fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards" }}>
+      <div style={{ textAlign: "center", maxWidth: "820px", animation: "fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards" }}>
         <div className="premium-badge" style={{ display: "inline-block", padding: "6px 16px", borderRadius: "100px", background: "linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)", border: "1px solid rgba(255,255,255,0.06)", color: "#e4e4e7", fontSize: "11px", letterSpacing: "2px", marginBottom: "32px", textTransform: "uppercase", fontWeight: 600, boxShadow: "0 4px 12px rgba(0,0,0,0.5)" }}>
-          ✦ INTRODUCING VELOSTACK FOR AGENCIES
+          ✦ INTRODUCING <b>VELOSTACK</b> FOR AGENCIES
         </div>
 
         <h1 style={{ 
-          fontSize: "84px", 
-          fontWeight: 800, 
+          fontSize: "68px", 
+          fontWeight: 900, 
           marginBottom: "28px", 
-          letterSpacing: "-4px", 
-          lineHeight: "1.02", 
-          background: "linear-gradient(180deg, #ffffff 40%, #94a3b8 100%)", 
+          letterSpacing: "-3.5px", 
+          lineHeight: "1.1", 
+          background: "linear-gradient(180deg, #ffffff 40%, #64748b 100%)", 
           WebkitBackgroundClip: "text", 
-          WebkitTextFillColor: "transparent" 
+          WebkitTextFillColor: "transparent",
+          textTransform: "uppercase"
         }}>
-          Ship projects instantly.
+          THE ENGINE OF MODERN PRODUCTION.
         </h1>
         
-        <p style={{ color: "#94a3b8", fontSize: "20px", marginBottom: "54px", lineHeight: "1.6", fontWeight: 400, letterSpacing: "-0.4px", opacity: 0.85 }}>
+        <p style={{ color: "#94a3b8", fontSize: "20px", marginBottom: "54px", lineHeight: "1.6", fontWeight: 400, letterSpacing: "-0.4px", opacity: 0.85, maxWidth: "680px", margin: "0 auto 54px auto" }}>
           The zero-friction automated workspace engineered to scale freelance and agency developers. Launch hyper-fast client sites, secure critical user records, and complete scopes 10x faster.
         </p>
 
@@ -152,7 +153,7 @@ export default function Home() {
             <div style={{ padding: "8px 12px", backgroundColor: "rgba(56, 189, 248, 0.03)", border: "1px solid rgba(56, 189, 248, 0.2)", borderRadius: "8px", fontSize: "10px", fontFamily: "monospace", color: "#38bdf8" }}>Clean.code</div>
           </div>
           <h4 style={{ fontSize: "19px", fontWeight: 600, marginBottom: "12px", color: "#f4f4f5", letterSpacing: "-0.4px" }}>10x Production Speed →</h4>
-          <p style={{ color: "#71717a", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>Our context-aware AI engine predicts workflows seamlessly, turning quick ideas into clean components instantly.</p>
+          <p style={{ color: "#71717a", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>Our context-aware AI assistant predicts workflows seamlessly, turning quick ideas into clean components instantly.</p>
         </div>
       </div>
 
