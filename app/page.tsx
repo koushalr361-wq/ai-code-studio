@@ -70,23 +70,27 @@ export default function Home() {
       <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "500px", height: "1px", background: "linear-gradient(90deg, transparent, rgba(120, 119, 198, 0.4), transparent)", boxShadow: "0 0 100px 20px rgba(120, 119, 198, 0.15)", pointerEvents: "none" }} />
 
       {/* --- HERO INTERFACE SECTION --- */}
-      <div style={{ textAlign: "center", maxWidth: "820px", animation: "fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards" }}>
+      <div style={{ textAlign: "center", maxWidth: "850px", animation: "fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards" }}>
         <div className="premium-badge" style={{ display: "inline-block", padding: "6px 16px", borderRadius: "100px", background: "linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)", border: "1px solid rgba(255,255,255,0.06)", color: "#e4e4e7", fontSize: "11px", letterSpacing: "2px", marginBottom: "32px", textTransform: "uppercase", fontWeight: 600, boxShadow: "0 4px 12px rgba(0,0,0,0.5)" }}>
-          ✦ INTRODUCING <b>VELOSTACK</b> FOR AGENCIES
+          ✦ INTRODUCING THE PLATFORM FOR AGENCIES
         </div>
 
+        {/* Brand Identity Main Header Array */}
         <h1 style={{ 
-          fontSize: "68px", 
+          fontSize: "90px", 
           fontWeight: 900, 
-          marginBottom: "28px", 
-          letterSpacing: "-3.5px", 
-          lineHeight: "1.1", 
-          background: "linear-gradient(180deg, #ffffff 40%, #64748b 100%)", 
+          marginBottom: "24px", 
+          letterSpacing: "-4.5px", 
+          lineHeight: "0.95", 
+          background: "linear-gradient(180deg, #ffffff 40%, #94a3b8 100%)", 
           WebkitBackgroundClip: "text", 
           WebkitTextFillColor: "transparent",
           textTransform: "uppercase"
         }}>
-          THE ENGINE OF MODERN PRODUCTION.
+          VELOSTACK.<br />
+          <span style={{ fontSize: "46px", fontWeight: 700, opacity: 0.55, letterSpacing: "-1.5px", background: "linear-gradient(180deg, #ffffff 30%, #64748b 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            THE ENGINE OF MODERN PRODUCTION.
+          </span>
         </h1>
         
         <p style={{ color: "#94a3b8", fontSize: "20px", marginBottom: "54px", lineHeight: "1.6", fontWeight: 400, letterSpacing: "-0.4px", opacity: 0.85, maxWidth: "680px", margin: "0 auto 54px auto" }}>
@@ -220,3 +224,4 @@ export default function Home() {
     </div>
   );
 }
+
