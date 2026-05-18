@@ -10,15 +10,14 @@ export default function Dashboard() {
   const SHEET_ID = "166hobvDz67EcKLCl86wOXGstTcvfG0VDfX4uwT1TIdk"; 
 
   useEffect(() => {
-    if (SHEET_ID === "YOUR_SHEET_ID_HERE") {
-      setLoading(false);
-      return;
-    }
-
     // Fetches your live Google Sheet data cleanly as a CSV file parse
-    fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`)
+    fetch(`https://docs.google.com/spreadsheets/d/${String(SHEET_ID)}/gviz/tq?tqx=out:csv`)
       .then((res) => res.text())
       .then((data) => {
+        if (!data || data.includes("<!DOCTYPE html>")) {
+          setLoading(false);
+          return;
+        }
         const rows = data.split("\n").slice(1); // Skip the sheet's header row
         const formattedLeads = rows.map((row) => {
           const columns = row.split(",");
@@ -76,9 +75,7 @@ export default function Dashboard() {
               ) : leads.length === 0 ? (
                 <tr>
                   <td colSpan={3} style={{ padding: "30px", textAlign: "center", color: "#a0a0a0" }}>
-                    {SHEET_ID === "YOUR_SHEET_ID_HERE" 
-                      ? "⚠️ Please add your sheet ID inside the code to connect your database." 
-                      : "No leads found yet. Try signing up on your landing page!"}
+                    No leads found yet. Try signing up on your landing page!
                   </td>
                 </tr>
               ) : (
