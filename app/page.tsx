@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import Link from "next/link";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -61,13 +63,81 @@ export default function Home() {
       flexDirection: "column",
       alignItems: "center", 
       fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif', 
-      padding: "120px 24px 160px 24px",
+      padding: "160px 24px 160px 24px",
       overflowX: "hidden",
       position: "relative"
     }}>
       
       {/* Top Ambient Light Flare Beam */}
       <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "500px", height: "1px", background: "linear-gradient(90deg, transparent, rgba(120, 119, 198, 0.4), transparent)", boxShadow: "0 0 100px 20px rgba(120, 119, 198, 0.15)", pointerEvents: "none" }} />
+
+      {/* --- FLOATING PREMIUM SECURITY HEADER --- */}
+      <header style={{
+        position: "absolute",
+        top: "24px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: "100%",
+        maxWidth: "1120px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "14px 28px",
+        borderRadius: "16px",
+        backgroundColor: "rgba(10, 10, 10, 0.4)",
+        backdropFilter: "blur(12px)",
+        border: "1px solid rgba(255, 255, 255, 0.05)",
+        zIndex: 50
+      }}>
+        <div style={{ fontWeight: 800, fontSize: "16px", letterSpacing: "-0.5px", background: "linear-gradient(180deg, #ffffff 40%, #94a3b8 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+          VELOSTACK
+        </div>
+        
+        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          {/* Clerk Block: When Logged Out */}
+          <SignedOut>
+            <SignInButton mode="modal">
+              <button style={{
+                backgroundColor: "#ffffff",
+                color: "#000000",
+                border: "none",
+                borderRadius: "10px",
+                padding: "8px 20px",
+                fontSize: "13px",
+                fontWeight: 600,
+                cursor: "pointer",
+                transition: "all 0.2s ease"
+              }} className="auth-btn">
+                Sign In
+              </button>
+            </SignInButton>
+          </SignedOut>
+
+          {/* Clerk Block: When Logged In */}
+          <SignedIn>
+            <Link href="/dashboard" style={{ textDecoration: "none" }}>
+              <button style={{
+                backgroundColor: "rgba(255, 255, 255, 0.03)",
+                color: "#ffffff",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                borderRadius: "10px",
+                padding: "8px 20px",
+                fontSize: "13px",
+                fontWeight: 600,
+                cursor: "pointer",
+                transition: "all 0.2s ease"
+              }} className="auth-btn-secondary">
+                Go to Workspace →
+              </button>
+            </Link>
+            <UserButton appearance={{
+              elements: {
+                avatarBox: "w-8 h-8 border border-neutral-800"
+              }
+            }} />
+          </SignedIn>
+        </div>
+      </header>
 
       {/* --- HERO INTERFACE SECTION --- */}
       <div style={{ textAlign: "center", maxWidth: "850px", animation: "fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards" }}>
@@ -219,9 +289,17 @@ export default function Home() {
           transform: scale(1.01);
           box-shadow: 0 4px 30px rgba(255,255,255,0.3);
         }
+        .auth-btn:hover {
+          background-color: #e4e4e7 !important;
+          transform: scale(1.02);
+        }
+        .auth-btn-secondary:hover {
+          background-color: rgba(255, 255, 255, 0.06) !important;
+          border-color: rgba(255, 255, 255, 0.15) !important;
+          transform: scale(1.02);
+        }
         input::placeholder { color: #4b5563; }
       `}</style>
     </div>
   );
 }
-
