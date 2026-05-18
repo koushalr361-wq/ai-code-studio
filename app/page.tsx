@@ -115,7 +115,7 @@ export default function Home() {
 
           {/* Clerk Block: When Logged In */}
           <SignedIn>
-            <Link href="/dashboard" style={{ textDecoration: "none" }}>
+            <Link href="/generate" style={{ textDecoration: "none" }}>
               <button style={{
                 backgroundColor: "rgba(255, 255, 255, 0.03)",
                 color: "#ffffff",
