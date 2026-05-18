@@ -128,8 +128,8 @@ export default function Home() {
         
         {/* Card 1: Compilation */}
         <div className="feature-card" style={{ backgroundColor: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: "20px", padding: "40px", transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)", cursor: "pointer" }}>
-          {/* Abstract Line Poster Design */}
-          <div className="card-poster" style={{ height: "100px", width: "100%", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.04)", backgroundColor: "rgba(0,0,0,0.3)", marginBottom: "32px", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", relative: "linear" }}>
+          {/* Fixed Style Attributes */}
+          <div className="card-poster" style={{ height: "100px", width: "100%", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.04)", backgroundColor: "rgba(0,0,0,0.3)", marginBottom: "32px", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", position: "relative" }}>
             <div style={{ width: "60px", height: "2px", background: "linear-gradient(90deg, transparent, #38bdf8, transparent)", animation: "scanLine 2s linear infinite" }} />
           </div>
           <h4 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "10px", color: "#f4f4f5", letterSpacing: "-0.3px" }}>Instant Compilation</h4>
@@ -138,7 +138,6 @@ export default function Home() {
 
         {/* Card 2: Runtimes */}
         <div className="feature-card" style={{ backgroundColor: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: "20px", padding: "40px", transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)", cursor: "pointer" }}>
-          {/* Concentric Geometric Radar Design */}
           <div className="card-poster" style={{ height: "100px", width: "100%", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.04)", backgroundColor: "rgba(0,0,0,0.3)", marginBottom: "32px", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <div style={{ width: "20px", height: "20px", borderRadius: "50%", border: "1px dashed rgba(255,255,255,0.2)" }} />
@@ -150,7 +149,6 @@ export default function Home() {
 
         {/* Card 3: Neural Synthesis */}
         <div className="feature-card" style={{ backgroundColor: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: "20px", padding: "40px", transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)", cursor: "pointer" }}>
-          {/* Structural Mesh Dot Grid Design */}
           <div className="card-poster" style={{ height: "100px", width: "100%", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.04)", backgroundColor: "rgba(0,0,0,0.3)", marginBottom: "32px", display: "flex", gap: "6px", alignItems: "center", justifyContent: "center" }}>
             <div style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.2)" }} />
             <div style={{ width: "6px", height: "24px", borderRadius: "100px", background: "linear-gradient(180deg, rgba(255,255,255,0.4), transparent)" }} />
@@ -182,7 +180,6 @@ export default function Home() {
           100% { transform: translateX(80px); opacity: 0; }
         }
         
-        /* High-End Card Response */
         .feature-card:hover {
           background-color: rgba(255,255,255,0.02) !important;
           border-color: rgba(255,255,255,0.1) !important;
