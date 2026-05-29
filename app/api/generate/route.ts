@@ -8,18 +8,28 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return NextResponse.json({ error: "Gemini API key missing on server" }, { status: 500 });
+    // 1. SET UP AN API KEY POOL FOR ROTATION
+    const keyPool = [
+      process.env.GEMINI_API_KEY,
+      process.env.GEMINI_API_KEY_SECONDARY, // Your secondary backup key
+    ].filter(Boolean); // Clears out any keys that aren't configured yet
+
+    if (keyPool.length === 0) {
+      return NextResponse.json({ error: "No Gemini API keys found on the server" }, { status: 500 });
     }
 
-    // Correct production URL mapping for the active gemini-2.5-flash model
+    // 2. INTELLIGENT ROTATION: Pick a random key out of the pool for this specific user request
+    const randomIndex = Math.floor(Math.random() * keyPool.length);
+    const activeApiKey = keyPool[randomIndex];
+
+    // 3. TARGET THE ULTRA-FAST, HIGH-VOLUME INFRASTRUCTURE MODEL (gemini-3.1-flash-lite)
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-3.1-flash-lite:generateContent`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "x-goog-api-key": activeApiKey!,
         },
         body: JSON.stringify({
           contents: [
@@ -33,7 +43,7 @@ export async function POST(req: Request) {
           ],
           generationConfig: {
             maxOutputTokens: 8000,
-            temperature: 0.3,
+            temperature: 0.2, // Slightly lowered for faster, more deterministic generation speeds
           },
         }),
       }
@@ -43,12 +53,11 @@ export async function POST(req: Request) {
 
     if (!response.ok) {
       return NextResponse.json(
-        { error: data.error?.message || "Failed to fetch from Gemini" },
+        { error: data.error?.message || "The cluster limits are full. Try again." },
         { status: response.status }
       );
     }
 
-    // Extract the text response containing our generated layout code
     const generatedCode = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!generatedCode) {
@@ -57,7 +66,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ code: generatedCode });
   } catch (error) {
-    console.error("Generation Error:", error);
+    console.error("Multi-User Distribution Routing Error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
