@@ -13,27 +13,27 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Gemini API key missing on server" }, { status: 500 });
     }
 
-    // Call Google's Gemini API with explicit Google-authorized headers
+    // Call Google's active flagship Gemini model
     const response = await fetch(
-     `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-goog-api-key": apiKey, // CRITICAL: Tells Google's mesh network to accept the key token
+          "x-goog-api-key": apiKey, // Securely authorizes your active API key
         },
         body: JSON.stringify({
           contents: [
             {
               parts: [
                 {
-                  text: `You are an expert full-stack AI developer. Generate a complete, beautifully styled HTML web component layout based on this specification: "${prompt}". Use Tailwind CSS via CDN for rich modern styling. Return ONLY the raw code elements. Do not include markdown code block backticks (\`\`\`) or any conversation description.`,
+                  text: `You are an expert full-stack AI developer. Generate a complete, beautifully styled HTML web component layout based on this specification: "${prompt}". Use Tailwind CSS via CDN for rich modern styling. Return ONLY the raw code elements. Do not include markdown code block backticks (\`\`\`) or any conversational text.`,
                 },
               ],
             },
           ],
           generationConfig: {
-            maxOutputTokens: 4000,
+            maxOutputTokens: 8000,
             temperature: 0.3,
           },
         }),
