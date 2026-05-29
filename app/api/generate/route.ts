@@ -13,9 +13,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Gemini API key missing on server" }, { status: 500 });
     }
 
-    // Call Google's globally free legacy stable endpoint
+    // Swapping to stable v1 and targeting gemini-2.5-flash
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent`,
       {
         method: "POST",
         headers: {
