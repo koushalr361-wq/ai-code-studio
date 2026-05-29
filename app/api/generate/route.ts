@@ -13,14 +13,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Gemini API key missing on server" }, { status: 500 });
     }
 
-    // Swapping to stable v1 and targeting gemini-2.5-flash
+    // Correct production URL mapping for the active gemini-2.5-flash model
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-goog-api-key": apiKey,
         },
         body: JSON.stringify({
           contents: [
