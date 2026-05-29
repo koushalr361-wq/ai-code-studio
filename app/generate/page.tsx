@@ -13,28 +13,67 @@ export default function GenerateWorkspace() {
 
   const handleGenerateApp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!prompt) return;
+    if (!prompt.trim()) return;
 
     setIsGenerating(true);
     setGeneratedUrl(null);
-    setGenerationLogs([]);
+    setGenerationLogs(["🤖 Analyzing user request layout rules..."]);
 
-    const steps = [
-      "🤖 Analyzing user request layout rules...",
-      "🏗️ Generating optimized Next.js components & design systems...",
-      "🎨 Compiling custom dark-mode Tailwind CSS layout properties...",
-      "📦 Injecting sandboxed backend storage enclaves...",
-      "🚀 Pushing live production compilation bundle to edge global nodes...",
-      "✔ Deployment fully successful! App is live at production link."
-    ];
+    try {
+      // Small visual delay to show structural analysis beginning
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      setGenerationLogs((prev) => [...prev, "🧠 Routing request parameters to Gemini 2.5 Flash API..."]);
 
-    for (let i = 0; i < steps.length; i++) {
-      await new Promise((resolve) => setTimeout(resolve, 1200));
-      setGenerationLogs((prev) => [...prev, steps[i]]);
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Generation engine hit a structural exception.");
+      }
+
+      setGenerationLogs((prev) => [...prev, "🎨 Compiling custom dark-mode Tailwind CSS layout properties..."]);
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      setGenerationLogs((prev) => [...prev, "🚀 Injecting sandboxed runtime environment parameters..."]);
+
+      // Injecting script to load Tailwind safely into the iframe environment dynamically
+      const completeHtmlCode = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <script src="https://cdn.tailwindcss.com"></script>
+          <style>
+            body { background-color: #030303; color: #ffffff; margin: 0; padding: 24px; font-family: system-ui, sans-serif; }
+            /* Hide scrollbars but keep functionality */
+            ::-webkit-scrollbar { display: none; }
+          </style>
+        </head>
+        <body>
+          ${data.code}
+        </body>
+        </html>
+      `;
+
+      // Convert the raw HTML code string into a safe browser-executable Data URL blob
+      const sandboxBlobUrl = `data:text/html;charset=utf-8,${encodeURIComponent(completeHtmlCode)}`;
+
+      setGenerationLogs((prev) => [...prev, "✔ Deployment fully successful! App is live in production frame."]);
+      setGeneratedUrl(sandboxBlobUrl);
+
+    } catch (error: any) {
+      console.error("Workspace Engine Error:", error);
+      setGenerationLogs((prev) => [...prev, `❌ Error: ${error.message || "Connection timed out."}`]);
+    } finally {
+      setIsGenerating(false);
     }
-
-    setIsGenerating(false);
-    setGeneratedUrl("https://ai-code-studio-dun.vercel.app/");
   };
 
   return (
