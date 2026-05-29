@@ -9,14 +9,14 @@ export default function GenerateWorkspace() {
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationLogs, setGenerationLogs] = useState<string[]>([]);
-  const [generatedUrl, setGeneratedUrl] = useState<string | null>(null);
+  const [generatedHtmlText, setGeneratedHtmlText] = useState<string | null>(null);
 
   const handleGenerateApp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim()) return;
 
     setIsGenerating(true);
-    setGeneratedUrl(null);
+    setGeneratedHtmlText(null);
     setGenerationLogs(["🤖 Analyzing user request layout rules..."]);
 
     try {
@@ -42,6 +42,16 @@ export default function GenerateWorkspace() {
       await new Promise((resolve) => setTimeout(resolve, 600));
       setGenerationLogs((prev) => [...prev, "🚀 Injecting sandboxed runtime environment parameters..."]);
 
+      // Clean up any accidental markdown code block formatting tags returned by the model
+      let rawCode = data.code || "";
+      if (rawCode.includes("```")) {
+        rawCode = rawCode.replace(/```html/gi, "").replace(/```/g, "").trim();
+      }
+
+      if (!rawCode) {
+        throw new Error("The AI backend returned an empty response string.");
+      }
+
       // Injecting script to load Tailwind safely into the iframe environment dynamically
       const completeHtmlCode = `
         <!DOCTYPE html>
@@ -49,7 +59,7 @@ export default function GenerateWorkspace() {
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <script src="https://cdn.tailwindcss.com"></script>
+          <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
           <style>
             body { background-color: #030303; color: #ffffff; margin: 0; padding: 24px; font-family: system-ui, sans-serif; }
             /* Hide scrollbars but keep functionality */
@@ -57,16 +67,13 @@ export default function GenerateWorkspace() {
           </style>
         </head>
         <body>
-          ${data.code}
+          ${rawCode}
         </body>
         </html>
       `;
 
-      // Convert the raw HTML code string into a safe browser-executable Data URL blob
-      const sandboxBlobUrl = `data:text/html;charset=utf-8,${encodeURIComponent(completeHtmlCode)}`;
-
       setGenerationLogs((prev) => [...prev, "✔ Deployment fully successful! App is live in production frame."]);
-      setGeneratedUrl(sandboxBlobUrl);
+      setGeneratedHtmlText(completeHtmlCode);
 
     } catch (error: any) {
       console.error("Workspace Engine Error:", error);
@@ -201,9 +208,9 @@ export default function GenerateWorkspace() {
         <div style={{ flex: 1, backgroundColor: "#0b0b0f", padding: "32px", display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: generatedUrl ? "#22c55e" : "#eab308" }} />
+              <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: generatedHtmlText ? "#22c55e" : "#eab308" }} />
               <span style={{ fontSize: "13px", fontWeight: 500, color: "#a1a1aa" }}>
-                {generatedUrl ? "Live Application Sandbox Framework" : "Awaiting Output Compilation Sequence"}
+                {generatedHtmlText ? "Live Application Sandbox Framework" : "Awaiting Output Compilation Sequence"}
               </span>
             </div>
           </div>
@@ -219,9 +226,9 @@ export default function GenerateWorkspace() {
             justifyContent: "center",
             boxShadow: "0 20px 50px rgba(0,0,0,0.5)"
           }}>
-            {generatedUrl ? (
+            {generatedHtmlText ? (
               <iframe
-                src={generatedUrl}
+                srcDoc={generatedHtmlText}
                 title="Generated Application Preview"
                 style={{ width: "100%", height: "100%", border: "none" }}
               />
