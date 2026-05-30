@@ -204,23 +204,12 @@ export default function PromptArcPremiumSuite() {
             </p>
 
             <div style={{ marginBottom: "80px" }}>
-              {isSignedIn ? (
-                <button onClick={handleLaunchStudio} style={{
-                  backgroundColor: "#ffffff", color: "#000000", padding: "14px 32px", borderRadius: "8px",
-                  fontSize: "14px", fontWeight: 600, cursor: "pointer", border: "none", boxShadow: "0 4px 30px rgba(255,255,255,0.15)"
-                }}>
-                  Launch Application Studio
-                </button>
-              ) : (
-                <SignInButton mode="modal">
-                  <button style={{
-                    backgroundColor: "#ffffff", color: "#000000", padding: "14px 32px", borderRadius: "8px",
-                    fontSize: "14px", fontWeight: 600, cursor: "pointer", border: "none", boxShadow: "0 4px 30px rgba(255,255,255,0.15)"
-                  }}>
-                    Launch Application Studio
-                  </button>
-                </SignInButton>
-              )}
+              <button onClick={handleLaunchStudio} style={{
+                backgroundColor: "#ffffff", color: "#000000", padding: "14px 32px", borderRadius: "8px",
+                fontSize: "14px", fontWeight: 600, cursor: "pointer", border: "none", boxShadow: "0 4px 30px rgba(255,255,255,0.15)"
+              }}>
+                Launch Application Studio
+              </button>
             </div>
 
             {/* --- THREE MAIN GLASS LABELS MAPPED DIRECTLY FROM DESIGN ARCHITECTURES --- */}
@@ -233,7 +222,7 @@ export default function PromptArcPremiumSuite() {
                   <div style={{ position: "absolute", width: "80px", height: "1px", background: "linear-gradient(90deg, transparent, #38bdf8, transparent)" }} />
                 </div>
                 <div>
-                  <div style={{ fontSize: "11px", fontWeight: 600, color: "#38bdf8", textTransform: "uppercase", tracking: "1px", marginBottom: "6px" }}>AI Prompt Engine</div>
+                  <div style={{ fontSize: "11px", fontWeight: 600, color: "#38bdf8", textTransform: "uppercase", marginBottom: "6px" }}>AI Prompt Engine</div>
                   <h3 style={{ fontSize: "18px", fontWeight: 700, margin: "0 0 8px 0", letterSpacing: "-0.3px" }}>Instant Compilation</h3>
                   <p style={{ color: "#94a3b8", fontSize: "13px", margin: 0, lineHeight: "1.6" }}>Auto-generates clean within/Tailwind from text. Responsive design, Ready-to-deploy logic.</p>
                 </div>
@@ -247,7 +236,7 @@ export default function PromptArcPremiumSuite() {
                   <div style={{ width: "70%", height: "4px", background: "rgba(255,255,255,0.03)", borderRadius: "2px" }} />
                 </div>
                 <div>
-                  <div style={{ fontSize: "11px", fontWeight: 600, color: "#64748b", textTransform: "uppercase", tracking: "1px", marginBottom: "6px" }}>Visualization Sandbox</div>
+                  <div style={{ fontSize: "11px", fontWeight: 600, color: "#64748b", textTransform: "uppercase", marginBottom: "6px" }}>Visualization Sandbox</div>
                   <h3 style={{ fontSize: "18px", fontWeight: 700, margin: "0 0 8px 0", letterSpacing: "-0.3px" }}>Real-Time Previews</h3>
                   <p style={{ color: "#94a3b8", fontSize: "13px", margin: 0, lineHeight: "1.6" }}>See your creation instantly within a secure canvas. Interactive state, Mock data injection.</p>
                 </div>
@@ -261,7 +250,7 @@ export default function PromptArcPremiumSuite() {
                   </div>
                 </div>
                 <div>
-                  <div style={{ fontSize: "11px", fontWeight: 600, color: "#64748b", textTransform: "uppercase", tracking: "1px", marginBottom: "6px" }}>DevOps Integration</div>
+                  <div style={{ fontSize: "11px", fontWeight: 600, color: "#64748b", textTransform: "uppercase", marginBottom: "6px" }}>DevOps Integration</div>
                   <h3 style={{ fontSize: "18px", fontWeight: 700, margin: "0 0 8px 0", letterSpacing: "-0.3px" }}>One-Click Deploy</h3>
                   <p style={{ color: "#94a3b8", fontSize: "13px", margin: 0, lineHeight: "1.6" }}>Push directly to GitHub repos and launch live links. Clerk auth, Production hosting config.</p>
                 </div>
@@ -451,10 +440,10 @@ export default function PromptArcPremiumSuite() {
                   <div style={{ textAlign: "center", maxWidth: "320px" }}>
                     <div style={{ width: "32px", height: "32px", margin: "0 auto 16px auto", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "4px" }} />
                     <h4 style={{ fontSize: "14px", fontWeight: 600, margin: "0 0 6px 0", letterSpacing: "-0.2px" }}>
-                      {isGenerating ? "Assembling Code Structures" : "Viewport Architecture Empty"}
+                      {isGenerating ? "Assembling Code Structures" : "Sandbox Matrix Completely Empty"}
                     </h4>
                     <p style={{ color: "#71717a", fontSize: "12px", margin: 0, lineHeight: "1.5" }}>
-                      {isGenerating ? "Our automated pipeline is building application frames and resolving asset allocations live." : "Your target live application view screen mounts programmatically immediately following execution sequence confirmation."}
+                      {isGenerating ? "Our automated pipeline is building application frames and resolving asset allocations live." : "Your target live application view screen mounts programmatically immediately following generation sequence confirmation."}
                     </p>
                   </div>
                 )}
