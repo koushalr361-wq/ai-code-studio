@@ -10,6 +10,10 @@ export default function GenerateWorkspace() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationLogs, setGenerationLogs] = useState<string[]>([]);
   const [generatedHtmlText, setGeneratedHtmlText] = useState<string | null>(null);
+  
+  // Simulated SaaS states - set this to true if a user pays!
+  const [isSubscribed, setIsSubscribed] = useState(false); 
+  const [copyStatus, setCopyStatus] = useState("Copy Code");
 
   const handleGenerateApp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,12 +21,13 @@ export default function GenerateWorkspace() {
 
     setIsGenerating(true);
     setGeneratedHtmlText(null);
+    // Updated initial branding log text
     setGenerationLogs(["🤖 Analyzing user request layout rules..."]);
 
     try {
-      // Small visual delay to show structural analysis beginning
       await new Promise((resolve) => setTimeout(resolve, 800));
-      setGenerationLogs((prev) => [...prev, "🧠 Routing request parameters to Gemini 2.5 Flash API..."]);
+      // Updated Step 2 log text matching the PromptArc identity
+      setGenerationLogs((prev) => [...prev, "⚡ Mapping prompt arc parameters into sandbox grid layers..."]);
 
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -42,7 +47,6 @@ export default function GenerateWorkspace() {
       await new Promise((resolve) => setTimeout(resolve, 600));
       setGenerationLogs((prev) => [...prev, "🚀 Injecting sandboxed runtime environment parameters..."]);
 
-      // Clean up any accidental markdown code block formatting tags returned by the model
       let rawCode = data.code || "";
       if (rawCode.includes("```")) {
         rawCode = rawCode.replace(/```html/gi, "").replace(/```/g, "").trim();
@@ -52,7 +56,6 @@ export default function GenerateWorkspace() {
         throw new Error("The AI backend returned an empty response string.");
       }
 
-      // Injecting script to load Tailwind safely into the iframe environment dynamically
       const completeHtmlCode = `
         <!DOCTYPE html>
         <html lang="en">
@@ -62,7 +65,6 @@ export default function GenerateWorkspace() {
           <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
           <style>
             body { background-color: #030303; color: #ffffff; margin: 0; padding: 24px; font-family: system-ui, sans-serif; }
-            /* Hide scrollbars but keep functionality */
             ::-webkit-scrollbar { display: none; }
           </style>
         </head>
@@ -81,6 +83,14 @@ export default function GenerateWorkspace() {
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  // Raw clipboard logic engine
+  const handleCopyCode = () => {
+    if (!generatedHtmlText) return;
+    navigator.clipboard.writeText(generatedHtmlText);
+    setCopyStatus("Copied! ✓");
+    setTimeout(() => setCopyStatus("Copy Code"), 2000);
   };
 
   return (
@@ -104,8 +114,8 @@ export default function GenerateWorkspace() {
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
           <Link href="/" style={{ textDecoration: "none", fontWeight: 800, fontSize: "16px", color: "#ffffff", letterSpacing: "-0.5px" }}>
-  PROMPTARC
-</Link>
+            PROMPTARC
+          </Link>
           <span style={{ color: "rgba(255,255,255,0.2)", fontSize: "14px" }}>/</span>
           <span style={{ fontSize: "13px", fontWeight: 500, color: "#94a3b8" }}>Application Studio</span>
         </div>
@@ -205,7 +215,8 @@ export default function GenerateWorkspace() {
         </div>
 
         {/* RIGHT WORKSPACE: Automated Live Application Framer Window */}
-        <div style={{ flex: 1, backgroundColor: "#0b0b0f", padding: "32px", display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div style={{ flex: 1, backgroundColor: "#0b0b0f", padding: "32px", display: "flex", flexDirection: "column", gap: "16px", position: "relative" }}>
+          
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: generatedHtmlText ? "#22c55e" : "#eab308" }} />
@@ -213,8 +224,46 @@ export default function GenerateWorkspace() {
                 {generatedHtmlText ? "Live Application Sandbox Framework" : "Awaiting Output Compilation Sequence"}
               </span>
             </div>
+
+            {/* --- ACTION BAR BARRIER STYLES --- */}
+            {generatedHtmlText && (
+              <div style={{ display: "flex", gap: "10px", position: "relative", zIndex: 10 }}>
+                <button
+                  onClick={handleCopyCode}
+                  disabled={!isSubscribed}
+                  style={{
+                    backgroundColor: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    color: isSubscribed ? "#e2e8f0" : "#52525b",
+                    padding: "6px 12px",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    fontWeight: 500,
+                    cursor: isSubscribed ? "pointer" : "not-allowed"
+                  }}
+                >
+                  {copyStatus}
+                </button>
+                <button
+                  disabled={!isSubscribed}
+                  style={{
+                    backgroundColor: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    color: isSubscribed ? "#e2e8f0" : "#52525b",
+                    padding: "6px 12px",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    fontWeight: 500,
+                    cursor: isSubscribed ? "pointer" : "not-allowed"
+                  }}
+                >
+                  Export to GitHub 🐙
+                </button>
+              </div>
+            )}
           </div>
 
+          {/* APPLICATION MAIN DISPLAY PREVIEW BOX CONTAINER */}
           <div style={{
             flex: 1,
             backgroundColor: "#030303",
@@ -224,14 +273,66 @@ export default function GenerateWorkspace() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            boxShadow: "0 20px 50px rgba(0,0,0,0.5)"
+            boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
+            position: "relative"
           }}>
             {generatedHtmlText ? (
-              <iframe
-                srcDoc={generatedHtmlText}
-                title="Generated Application Preview"
-                style={{ width: "100%", height: "100%", border: "none" }}
-              />
+              <>
+                <iframe
+                  srcDoc={generatedHtmlText}
+                  title="Generated Application Preview"
+                  style={{ width: "100%", height: "100%", border: "none" }}
+                />
+
+                {/* --- INTERACTIVE SLEEK GLASSMORPHIC PAYWALL BLUR GATE --- */}
+                {!isSubscribed && (
+                  <div style={{
+                    position: "absolute",
+                    inset: 0,
+                    backgroundColor: "rgba(3, 3, 3, 0.4)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    zIndex: 20
+                  }}>
+                    <div style={{
+                      backgroundColor: "#09090b",
+                      border: "1px solid rgba(255, 255, 255, 0.08)",
+                      borderRadius: "16px",
+                      padding: "32px",
+                      maxWidth: "380px",
+                      textAlign: "center",
+                      boxShadow: "0 30px 60px rgba(0,0,0,0.8)"
+                    }}>
+                      <div style={{ fontSize: "32px", marginBottom: "16px" }}>🔒</div>
+                      <h3 style={{ fontSize: "18px", fontWeight: 700, margin: "0 0 8px 0", letterSpacing: "-0.3px" }}>
+                        Unlock Your Application Assets
+                      </h3>
+                      <p style={{ color: "#a1a1aa", fontSize: "13px", lineHeight: "1.5", margin: "0 0 24px 0" }}>
+                        Your fully responsive layout has successfully compiled! Upgrade to PromptArc premium to export directly to GitHub and snap the source code.
+                      </p>
+                      <button
+                        onClick={() => setIsSubscribed(true)} // Clicking hooks up a test pass upgrade!
+                        style={{
+                          backgroundColor: "#ffffff",
+                          color: "#000000",
+                          border: "none",
+                          borderRadius: "8px",
+                          width: "100%",
+                          padding: "12px 16px",
+                          fontSize: "14px",
+                          fontWeight: 600,
+                          cursor: "pointer"
+                          }}
+                        >
+                          Upgrade to Premium ⚡
+                        </button>
+                    </div>
+                  </div>
+                )}
+              </>
             ) : (
               <div style={{ textAlign: "center", maxWidth: "320px" }}>
                 <div style={{ fontSize: "28px", marginBottom: "12px" }}>{isGenerating ? "⚙️" : "🖥️"}</div>
