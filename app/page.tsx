@@ -1,305 +1,352 @@
 "use client";
 
 import React, { useState } from "react";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 
-export default function Home() {
-  const [email, setEmail] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
+export default function GenerateWorkspace() {
+  const { user } = useUser();
+  const [prompt, setPrompt] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationLogs, setGenerationLogs] = useState<string[]>([]);
+  const [generatedHtmlText, setGeneratedHtmlText] = useState<string | null>(null);
   
-  // Track which feature card is currently expanded in the popup modal
-  const [activeModal, setActiveModal] = useState<number | null>(null);
+  // Simulated SaaS states - set this to true if a user pays!
+  const [isSubscribed, setIsSubscribed] = useState(false); 
+  const [copyStatus, setCopyStatus] = useState("Copy Code");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleGenerateApp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!prompt.trim()) return;
 
-    setLoading(true);
-    const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdpbB9V6F9oD2zX6wK_gUz_zE3fVv8N-Z7nKw/formResponse";
-    const formData = new FormData();
-    formData.append("emailAddress", email); 
+    setIsGenerating(true);
+    setGeneratedHtmlText(null);
+    // Updated initial branding log text
+    setGenerationLogs(["🤖 Analyzing user request layout rules..."]);
 
     try {
-      await fetch(FORM_URL, { method: "POST", mode: "no-cors", body: formData });
-      setIsSubmitted(true);
-      setEmail("");
-    } catch (error) {
-      console.error("Submission error:", error);
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      // Updated Step 2 log text matching the PromptArc identity
+      setGenerationLogs((prev) => [...prev, "⚡ Mapping prompt arc parameters into sandbox grid layers..."]);
+
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Generation engine hit a structural exception.");
+      }
+
+      setGenerationLogs((prev) => [...prev, "🎨 Compiling custom dark-mode Tailwind CSS layout properties..."]);
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      setGenerationLogs((prev) => [...prev, "🚀 Injecting sandboxed runtime environment parameters..."]);
+
+      let rawCode = data.code || "";
+      if (rawCode.includes("```")) {
+        rawCode = rawCode.replace(/```html/gi, "").replace(/```/g, "").trim();
+      }
+
+      if (!rawCode) {
+        throw new Error("The AI backend returned an empty response string.");
+      }
+
+      const completeHtmlCode = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+          <style>
+            body { background-color: #030303; color: #ffffff; margin: 0; padding: 24px; font-family: system-ui, sans-serif; }
+            ::-webkit-scrollbar { display: none; }
+          </style>
+        </head>
+        <body>
+          ${rawCode}
+        </body>
+        </html>
+      `;
+
+      setGenerationLogs((prev) => [...prev, "✔ Deployment fully successful! App is live in production frame."]);
+      setGeneratedHtmlText(completeHtmlCode);
+
+    } catch (error: any) {
+      console.error("Workspace Engine Error:", error);
+      setGenerationLogs((prev) => [...prev, `❌ Error: ${error.message || "Connection timed out."}`]);
     } finally {
-      setLoading(false);
+      setIsGenerating(false);
     }
   };
 
-  const modalDetails = [
-    {
-      title: "1-Click Client Handoff",
-      tagline: "Go from Idea to Live URL in Seconds",
-      extendedDesc: "Stop wasting billable hours configuring cloud servers, managing complicated DNS records, or troubleshooting build pipelines. VeloStack deploys your web projects to a lightning-fast global edge network the exact second you hit save. Instantly share progress with clients using clean, premium presentation links.",
-      metric: "0 manual server maintenance overhead"
-    },
-    {
-      title: "Client-Grade Security",
-      tagline: "Enterprise-Level Safety Built-In",
-      extendedDesc: "Keep your clients' business data entirely protected without needing a dedicated security team. Every single application you build is automatically shielded inside an isolated cloud sandbox environment. Built-in hack protection and automated SSL renewal come standard for every project.",
-      metric: "100% automated uptime protection"
-    },
-    {
-      title: "10x Production Speed",
-      tagline: "Smart AI-Powered Workflow Optimization",
-      extendedDesc: "Conquer deadlines and onboard more high-paying clients simultaneously. As you build out your software project, our context-aware AI assistant intelligently predicts your next design pattern, automatically generating highly clean, production-ready frontend components and boilerplate code.",
-      metric: "Saves roughly 15+ hours per build"
-    }
-  ];
+  // Raw clipboard logic engine
+  const handleCopyCode = () => {
+    if (!generatedHtmlText) return;
+    navigator.clipboard.writeText(generatedHtmlText);
+    setCopyStatus("Copied! ✓");
+    setTimeout(() => setCopyStatus("Copy Code"), 2000);
+  };
 
   return (
-    <div style={{ 
-      backgroundColor: "#030303", 
-      backgroundImage: "radial-gradient(circle at 50% -10%, #161625 0%, #030303 60%)",
-      color: "#ffffff", 
-      minHeight: "100vh", 
-      display: "flex", 
-      flexDirection: "column",
-      alignItems: "center", 
-      fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif', 
-      padding: "160px 24px 160px 24px",
-      overflowX: "hidden",
-      position: "relative"
+    <div style={{
+      backgroundColor: "#030303",
+      color: "#ffffff",
+      minHeight: "100vh",
+      fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif',
+      display: "flex",
+      flexDirection: "column"
     }}>
       
-      {/* Top Ambient Light Flare Beam */}
-      <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "500px", height: "1px", background: "linear-gradient(90deg, transparent, rgba(120, 119, 198, 0.4), transparent)", boxShadow: "0 0 100px 20px rgba(120, 119, 198, 0.15)", pointerEvents: "none" }} />
-
-      {/* --- FLOATING PREMIUM SECURITY HEADER --- */}
+      {/* --- WORKSPACE HEADER PANEL --- */}
       <header style={{
-        position: "absolute",
-        top: "24px",
-        left: "50%",
-        transform: "translateX(-50%)",
-        width: "100%",
-        maxWidth: "1120px",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "14px 28px",
-        borderRadius: "16px",
-        backgroundColor: "rgba(10, 10, 10, 0.4)",
-        backdropFilter: "blur(12px)",
-        border: "1px solid rgba(255, 255, 255, 0.05)",
-        zIndex: 50
+        padding: "16px 32px",
+        borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+        backgroundColor: "#09090b"
       }}>
-        <div style={{ fontWeight: 800, fontSize: "16px", letterSpacing: "-0.5px", background: "linear-gradient(180deg, #ffffff 40%, #94a3b8 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-          VELOSTACK
+        <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
+          <Link href="/" style={{ textDecoration: "none", fontWeight: 800, fontSize: "16px", color: "#ffffff", letterSpacing: "-0.5px" }}>
+            PROMPTARC
+          </Link>
+          <span style={{ color: "rgba(255,255,255,0.2)", fontSize: "14px" }}>/</span>
+          <span style={{ fontSize: "13px", fontWeight: 500, color: "#94a3b8" }}>Application Studio</span>
         </div>
         
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          {/* Clerk Block: When Logged Out */}
-          <SignedOut>
-            <SignInButton mode="modal">
-              <button style={{
-                backgroundColor: "#ffffff",
-                color: "#000000",
-                border: "none",
-                borderRadius: "10px",
-                padding: "8px 20px",
-                fontSize: "13px",
-                fontWeight: 600,
-                cursor: "pointer",
-                transition: "all 0.2s ease"
-              }} className="auth-btn">
-                Sign In
-              </button>
-            </SignInButton>
-          </SignedOut>
-
-          {/* Clerk Block: When Logged In */}
-          <SignedIn>
-            <Link href="/generate" style={{ textDecoration: "none" }}>
-              <button style={{
-                backgroundColor: "rgba(255, 255, 255, 0.03)",
-                color: "#ffffff",
-                border: "1px solid rgba(255, 255, 255, 0.08)",
-                borderRadius: "10px",
-                padding: "8px 20px",
-                fontSize: "13px",
-                fontWeight: 600,
-                cursor: "pointer",
-                transition: "all 0.2s ease"
-              }} className="auth-btn-secondary">
-                Go to Workspace →
-              </button>
-            </Link>
-            <UserButton appearance={{
-              elements: {
-                avatarBox: "w-8 h-8 border border-neutral-800"
-              }
-            }} />
-          </SignedIn>
+          <span style={{ fontSize: "13px", color: "#64748b" }}>
+            Account: <strong style={{ color: "#e2e8f0" }}>{user?.firstName || "Developer"}</strong>
+          </span>
+          <UserButton afterSignOutUrl="/" />
         </div>
       </header>
 
-      {/* --- HERO INTERFACE SECTION --- */}
-      <div style={{ textAlign: "center", maxWidth: "850px", animation: "fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards" }}>
-        <div className="premium-badge" style={{ display: "inline-block", padding: "6px 16px", borderRadius: "100px", background: "linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)", border: "1px solid rgba(255,255,255,0.06)", color: "#e4e4e7", fontSize: "11px", letterSpacing: "2px", marginBottom: "32px", textTransform: "uppercase", fontWeight: 600, boxShadow: "0 4px 12px rgba(0,0,0,0.5)" }}>
-          ✦ INTRODUCING THE PLATFORM FOR AGENCIES
-        </div>
-
-        {/* Brand Identity Main Header Array */}
-        <h1 style={{ 
-          fontSize: "90px", 
-          fontWeight: 900, 
-          marginBottom: "24px", 
-          letterSpacing: "-4.5px", 
-          lineHeight: "0.95", 
-          background: "linear-gradient(180deg, #ffffff 40%, #94a3b8 100%)", 
-          WebkitBackgroundClip: "text", 
-          WebkitTextFillColor: "transparent",
-          textTransform: "uppercase"
+      {/* --- WORKSPACE SPLIT COMPONENT LAYOUT --- */}
+      <main style={{ flex: 1, display: "flex", height: "calc(100vh - 65px)", overflow: "hidden" }}>
+        
+        {/* LEFT WORKSPACE: Control Terminal Input Sheet */}
+        <div style={{
+          width: "420px",
+          borderRight: "1px solid rgba(255, 255, 255, 0.05)",
+          padding: "32px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "28px",
+          backgroundColor: "#060608"
         }}>
-          VELOSTACK.<br />
-          <span style={{ fontSize: "46px", fontWeight: 700, opacity: 0.55, letterSpacing: "-1.5px", background: "linear-gradient(180deg, #ffffff 30%, #64748b 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            THE ENGINE OF MODERN PRODUCTION.
-          </span>
-        </h1>
-        
-        <p style={{ color: "#94a3b8", fontSize: "20px", marginBottom: "54px", lineHeight: "1.6", fontWeight: 400, letterSpacing: "-0.4px", opacity: 0.85, maxWidth: "680px", margin: "0 auto 54px auto" }}>
-          The zero-friction automated workspace engineered to scale freelance and agency developers. Launch hyper-fast client sites, secure critical user records, and complete scopes 10x faster.
-        </p>
-
-        {/* Action Form */}
-        <div style={{ minHeight: "68px", display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "140px" }}>
-          {isSubmitted ? (
-            <div style={{ backgroundColor: "rgba(255, 255, 255, 0.01)", border: "1px solid rgba(76, 175, 80, 0.3)", boxShadow: "0 0 60px rgba(76, 175, 80, 0.05), inset 0 1px 0 rgba(255,255,255,0.05)", padding: "24px 64px", borderRadius: "16px", animation: "scaleUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards" }}>
-              <h3 style={{ fontSize: "17px", color: "#4caf50", margin: "0 0 4px 0", fontWeight: 600, letterSpacing: "-0.3px" }}>✦ Business Entry Secured</h3>
-              <p style={{ color: "#71717a", margin: 0, fontSize: "14px" }}>We will connect via your WhatsApp workspace shortly with priority workspace keys.</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} style={{ display: "flex", gap: "12px", width: "100%", maxWidth: "480px", backgroundColor: "rgba(10,10,10,0.8)", backdropFilter: "blur(20px)", padding: "7px", borderRadius: "16px", border: "1px solid rgba(255,255,255,0.06)", boxShadow: "0 30px 60px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.05)" }}>
-              <input type="email" placeholder="Enter your agency or freelance email" value={email} onChange={(e) => setEmail(e.target.value)} required style={{ flex: 1, backgroundColor: "transparent", border: "none", padding: "12px 16px", color: "#ffffff", fontSize: "15px", outline: "none" }} />
-              <button type="submit" disabled={loading} style={{ backgroundColor: "#ffffff", color: "#000000", border: "none", borderRadius: "11px", padding: "0 28px", fontSize: "14px", fontWeight: 600, cursor: "pointer", height: "44px", boxShadow: "0 4px 24px rgba(255,255,255,0.2), inset 0 1px 0 rgba(255,255,255,0.4)", transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)" }}>
-                {loading ? "Verifying..." : "Get Early Access"}
-              </button>
-            </form>
-          )}
-        </div>
-      </div>
-
-      {/* --- RE-ENGINEERED CONVERSION CARDS GRID --- */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "40px", width: "100%", maxWidth: "1120px", animation: "fadeInUp 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards" }}>
-        
-        {/* Card 1: 1-Click Client Handoff */}
-        <div onClick={() => setActiveModal(0)} className="feature-card" style={{ backgroundColor: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: "24px", padding: "44px", transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)", cursor: "pointer", boxShadow: "inset 0 1px 1px rgba(255,255,255,0.02)", position: "relative" }}>
-          <div className="card-poster" style={{ height: "140px", width: "100%", borderRadius: "14px", border: "1px solid rgba(255,255,255,0.05)", backgroundColor: "#06060a", marginBottom: "36px", padding: "14px", position: "relative", overflow: "hidden", display: "flex", flexDirection: "column", gap: "8px" }}>
-            <div style={{ display: "flex", gap: "6px", borderBottom: "1px solid rgba(255,255,255,0.03)", paddingBottom: "8px" }}>
-              <div style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#ef4444" }} />
-              <div style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#eab308" }} />
-              <div style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#22c55e" }} />
-            </div>
-            <div style={{ fontFamily: "monospace", fontSize: "11px", color: "#38bdf8", display: "flex", alignItems: "center", gap: "6px" }}><span style={{ color: "#4b5563" }}>$</span> npm run deploy --live</div>
-            <div style={{ fontFamily: "monospace", fontSize: "11px", color: "#22c55e", opacity: 0.8 }}>✔ Production site live on global edge network!</div>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "100%", background: "linear-gradient(to bottom, transparent 50%, rgba(56, 189, 248, 0.01) 50%)", backgroundSize: "100% 4px", pointerEvents: "none" }} />
+          <div>
+            <h2 style={{ fontSize: "20px", fontWeight: 700, margin: "0 0 6px 0", letterSpacing: "-0.5px" }}>Application Generator</h2>
+            <p style={{ color: "#71717a", fontSize: "13px", margin: 0, lineHeight: "1.5" }}>
+              Input your structured design requirements. Our automated engine will instantly provision code configurations and push them live.
+            </p>
           </div>
-          <h4 style={{ fontSize: "19px", fontWeight: 600, marginBottom: "12px", color: "#f4f4f5", letterSpacing: "-0.4px" }}>1-Click Client Handoff →</h4>
-          <p style={{ color: "#71717a", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>Go from a blank text page to a live production URL in seconds. No complex server maintenance required.</p>
+
+          <form onSubmit={handleGenerateApp} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <label style={{ fontSize: "11px", fontWeight: 600, color: "#a1a1aa", letterSpacing: "1px", textTransform: "uppercase" }}>Prompt Specifications</label>
+            <textarea
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              placeholder="e.g., Build a modern real estate dashboard with a dark-theme aesthetic, live status cards, filter settings, and custom analytics graphs..."
+              disabled={isGenerating}
+              style={{
+                backgroundColor: "#09090b",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                borderRadius: "12px",
+                padding: "16px",
+                color: "#ffffff",
+                fontSize: "14px",
+                fontFamily: "inherit",
+                resize: "none",
+                height: "140px",
+                outline: "none",
+                lineHeight: "1.5"
+              }}
+            />
+            <button
+              type="submit"
+              disabled={isGenerating || !prompt}
+              style={{
+                backgroundColor: isGenerating || !prompt ? "rgba(255,255,255,0.02)" : "#ffffff",
+                color: isGenerating || !prompt ? "#71717a" : "#000000",
+                border: isGenerating || !prompt ? "1px solid rgba(255,255,255,0.05)" : "none",
+                borderRadius: "10px",
+                padding: "14px",
+                fontSize: "14px",
+                fontWeight: 600,
+                cursor: isGenerating || !prompt ? "not-allowed" : "pointer",
+                transition: "all 0.2s ease"
+              }}
+            >
+              {isGenerating ? "Compiling App Matrix..." : "Generate Web App ⚡"}
+            </button>
+          </form>
+
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "12px" }}>
+            <span style={{ fontSize: "11px", fontWeight: 600, color: "#a1a1aa", letterSpacing: "1px", textTransform: "uppercase" }}>System Compilation Logs</span>
+            <div style={{
+              flex: 1,
+              backgroundColor: "#000000",
+              border: "1px solid rgba(255, 255, 255, 0.04)",
+              borderRadius: "12px",
+              padding: "16px",
+              fontFamily: "monospace",
+              fontSize: "12px",
+              color: "#38bdf8",
+              overflowY: "auto",
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px"
+            }}>
+              {generationLogs.length === 0 && (
+                <span style={{ color: "#4b5563", fontStyle: "italic" }}>System waiting for execution prompt configuration...</span>
+              )}
+              {generationLogs.map((log, index) => (
+                <div key={index}>{log}</div>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Card 2: Client-Grade Security */}
-        <div onClick={() => setActiveModal(1)} className="feature-card" style={{ backgroundColor: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: "24px", padding: "44px", transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)", cursor: "pointer", boxShadow: "inset 0 1px 1px rgba(255,255,255,0.02)", position: "relative" }}>
-          <div className="card-poster" style={{ height: "140px", width: "100%", borderRadius: "14px", border: "1px solid rgba(255,255,255,0.05)", backgroundColor: "#06060a", marginBottom: "36px", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
-            <div style={{ width: "70px", height: "70px", borderRadius: "50%", border: "1px solid rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <div style={{ width: "46px", height: "46px", borderRadius: "50%", border: "1px solid rgba(56, 189, 248, 0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div style={{ width: "12px", height: "12px", borderRadius: "50%", backgroundColor: "#38bdf8", boxShadow: "0 0 12px 4px rgba(56, 189, 248, 0.3)" }} />
+        {/* RIGHT WORKSPACE: Automated Live Application Framer Window */}
+        <div style={{ flex: 1, backgroundColor: "#0b0b0f", padding: "32px", display: "flex", flexDirection: "column", gap: "16px", position: "relative" }}>
+          
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: generatedHtmlText ? "#22c55e" : "#eab308" }} />
+              <span style={{ fontSize: "13px", fontWeight: 500, color: "#a1a1aa" }}>
+                {generatedHtmlText ? "Live Application Sandbox Framework" : "Awaiting Output Compilation Sequence"}
+              </span>
+            </div>
+
+            {/* --- ACTION BAR BARRIER STYLES --- */}
+            {generatedHtmlText && (
+              <div style={{ display: "flex", gap: "10px", position: "relative", zIndex: 10 }}>
+                <button
+                  onClick={handleCopyCode}
+                  disabled={!isSubscribed}
+                  style={{
+                    backgroundColor: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    color: isSubscribed ? "#e2e8f0" : "#52525b",
+                    padding: "6px 12px",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    fontWeight: 500,
+                    cursor: isSubscribed ? "pointer" : "not-allowed"
+                  }}
+                >
+                  {copyStatus}
+                </button>
+                <button
+                  disabled={!isSubscribed}
+                  style={{
+                    backgroundColor: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    color: isSubscribed ? "#e2e8f0" : "#52525b",
+                    padding: "6px 12px",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    fontWeight: 500,
+                    cursor: isSubscribed ? "pointer" : "not-allowed"
+                  }}
+                >
+                  Export to GitHub 🐙
+                </button>
               </div>
-            </div>
+            )}
           </div>
-          <h4 style={{ fontSize: "19px", fontWeight: 600, marginBottom: "12px", color: "#f4f4f5", letterSpacing: "-0.4px" }}>Client-Grade Security →</h4>
-          <p style={{ color: "#71717a", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>Every build structure handles operations inside completely isolated data enclaves to keep user data pristine.</p>
-        </div>
 
-        {/* Card 3: 10x Production Speed */}
-        <div onClick={() => setActiveModal(2)} className="feature-card" style={{ backgroundColor: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: "24px", padding: "44px", transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)", cursor: "pointer", boxShadow: "inset 0 1px 1px rgba(255,255,255,0.02)", position: "relative" }}>
-          <div className="card-poster" style={{ height: "140px", width: "100%", borderRadius: "14px", border: "1px solid rgba(255,255,255,0.05)", backgroundColor: "#06060a", marginBottom: "36px", display: "flex", alignItems: "center", justifyContent: "center", gap: "20px", padding: "20px" }}>
-            <div style={{ padding: "8px 12px", backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "8px", fontSize: "10px", fontFamily: "monospace", color: "#a1a1aa" }}>Design.wire</div>
-            <div style={{ width: "30px", height: "1px", backgroundColor: "rgba(255,255,255,0.1)", position: "relative" }}>
-              <div style={{ width: "4px", height: "4px", borderRadius: "50%", backgroundColor: "#38bdf8", position: "absolute", top: "-1.5px", left: "0", animation: "flowDot 2s ease-in-out infinite" }} />
-            </div>
-            <div style={{ padding: "8px 12px", backgroundColor: "rgba(56, 189, 248, 0.03)", border: "1px solid rgba(56, 189, 248, 0.2)", borderRadius: "8px", fontSize: "10px", fontFamily: "monospace", color: "#38bdf8" }}>Clean.code</div>
+          {/* APPLICATION MAIN DISPLAY PREVIEW BOX CONTAINER */}
+          <div style={{
+            flex: 1,
+            backgroundColor: "#030303",
+            borderRadius: "16px",
+            border: "1px solid rgba(255, 255, 255, 0.05)",
+            overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
+            position: "relative"
+          }}>
+            {generatedHtmlText ? (
+              <>
+                <iframe
+                  srcDoc={generatedHtmlText}
+                  title="Generated Application Preview"
+                  style={{ width: "100%", height: "100%", border: "none" }}
+                />
+
+                {/* --- INTERACTIVE SLEEK GLASSMORPHIC PAYWALL BLUR GATE --- */}
+                {!isSubscribed && (
+                  <div style={{
+                    position: "absolute",
+                    inset: 0,
+                    backgroundColor: "rgba(3, 3, 3, 0.4)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    zIndex: 20
+                  }}>
+                    <div style={{
+                      backgroundColor: "#09090b",
+                      border: "1px solid rgba(255, 255, 255, 0.08)",
+                      borderRadius: "16px",
+                      padding: "32px",
+                      maxWidth: "380px",
+                      textAlign: "center",
+                      boxShadow: "0 30px 60px rgba(0,0,0,0.8)"
+                    }}>
+                      <div style={{ fontSize: "32px", marginBottom: "16px" }}>🔒</div>
+                      <h3 style={{ fontSize: "18px", fontWeight: 700, margin: "0 0 8px 0", letterSpacing: "-0.3px" }}>
+                        Unlock Your Application Assets
+                      </h3>
+                      <p style={{ color: "#a1a1aa", fontSize: "13px", lineHeight: "1.5", margin: "0 0 24px 0" }}>
+                        Your fully responsive layout has successfully compiled! Upgrade to PromptArc premium to export directly to GitHub and snap the source code.
+                      </p>
+                      <button
+                        onClick={() => setIsSubscribed(true)} // Clicking hooks up a test pass upgrade!
+                        style={{
+                          backgroundColor: "#ffffff",
+                          color: "#000000",
+                          border: "none",
+                          borderRadius: "8px",
+                          width: "100%",
+                          padding: "12px 16px",
+                          fontSize: "14px",
+                          fontWeight: 600,
+                          cursor: "pointer"
+                          }}
+                        >
+                          Upgrade to Premium ⚡
+                        </button>
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div style={{ textAlign: "center", maxWidth: "320px" }}>
+                <div style={{ fontSize: "28px", marginBottom: "12px" }}>{isGenerating ? "⚙️" : "🖥️"}</div>
+                <h4 style={{ fontSize: "14px", fontWeight: 600, margin: "0 0 6px 0" }}>
+                  {isGenerating ? "Assembling Code Structures" : "Sandbox Matrix Completely Empty"}
+                </h4>
+                <p style={{ color: "#71717a", fontSize: "12px", margin: 0, lineHeight: "1.5" }}>
+                  {isGenerating ? "The AI generator is compiling files and provisioning assets on the cloud network layout." : "Your target live application view screen mounts programmatically immediately following generation sequence confirmation."}
+                </p>
+              </div>
+            )}
           </div>
-          <h4 style={{ fontSize: "19px", fontWeight: 600, marginBottom: "12px", color: "#f4f4f5", letterSpacing: "-0.4px" }}>10x Production Speed →</h4>
-          <p style={{ color: "#71717a", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>Our context-aware AI assistant predicts workflows seamlessly, turning quick ideas into clean components instantly.</p>
         </div>
-      </div>
-
-      {/* --- GLASS POPUP MODAL --- */}
-      {activeModal !== null && (
-        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.7)", backdropFilter: "blur(12px)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 1000, animation: "fadeIn 0.2s ease-out" }} onClick={() => setActiveModal(null)}>
-          <div style={{ backgroundColor: "#09090b", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 30px 70px rgba(0,0,0,0.9), 0 0 50px rgba(120, 119, 198, 0.1)", padding: "40px", borderRadius: "24px", maxWidth: "500px", width: "90%", position: "relative", animation: "scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards" }} onClick={(e) => e.stopPropagation()}>
-            <button onClick={() => setActiveModal(null)} style={{ position: "absolute", top: "24px", right: "24px", backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", color: "#a1a1aa", borderRadius: "50%", width: "28px", height: "28px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: "12px" }}>✕</button>
-            <span style={{ fontSize: "11px", letterSpacing: "1.5px", color: "#38bdf8", textTransform: "uppercase", fontWeight: 700, display: "block", marginBottom: "8px" }}>{modalDetails[activeModal].tagline}</span>
-            <h2 style={{ fontSize: "28px", fontWeight: 700, margin: "0 0 16px 0", letterSpacing: "-1px" }}>{modalDetails[activeModal].title}</h2>
-            <p style={{ color: "#a1a1aa", fontSize: "15px", lineHeight: "1.6", margin: "0 0 28px 0" }}>{modalDetails[activeModal].extendedDesc}</p>
-            <div style={{ backgroundColor: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.04)", padding: "14px 20px", borderRadius: "12px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontSize: "13px", color: "#71717a" }}>Workflow Advantage:</span>
-              <span style={{ fontSize: "13px", color: "#22c55e", fontFamily: "monospace", fontWeight: 600 }}>{modalDetails[activeModal].metric}</span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* --- AUTOMATED GLOW & SLIDE INTERACTIVE ANIMATIONS --- */}
-      <style jsx global>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(12px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(24px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes scaleUp {
-          from { opacity: 0; transform: scale(0.96); }
-          to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes flowDot {
-          0% { left: 0%; opacity: 0; }
-          20% { opacity: 1; }
-          80% { opacity: 1; }
-          100% { left: 100%; opacity: 0; }
-        }
-        
-        /* Premium Glowing Border Interactions */
-        .feature-card {
-          position: relative;
-          overflow: hidden;
-        }
-        .feature-card:hover {
-          background-color: rgba(255,255,255,0.02) !important;
-          border-color: rgba(56, 189, 248, 0.25) !important;
-          transform: translateY(-6px);
-          box-shadow: 0 40px 80px rgba(0,0,0,0.8), 0 0 30px rgba(56, 189, 248, 0.03);
-        }
-        .feature-card:hover .card-poster {
-          border-color: rgba(56, 189, 248, 0.2) !important;
-          background-color: #020204 !important;
-          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        form button:hover {
-          opacity: 0.92;
-          transform: scale(1.01);
-          box-shadow: 0 4px 30px rgba(255,255,255,0.3);
-        }
-        .auth-btn:hover {
-          background-color: #e4e4e7 !important;
-          transform: scale(1.02);
-        }
-        .auth-btn-secondary:hover {
-          background-color: rgba(255, 255, 255, 0.06) !important;
-          border-color: rgba(255, 255, 255, 0.15) !important;
-          transform: scale(1.02);
-        }
-        input::placeholder { color: #4b5563; }
-      `}</style>
+      </main>
     </div>
   );
 }
