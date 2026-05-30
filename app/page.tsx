@@ -95,7 +95,7 @@ export default function PromptArcPremiumSuite() {
       backgroundColor: "#030307",
       color: "#ffffff",
       minHeight: "100vh",
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+      fontFamily: '"Plus Jakarta Sans", "Geist Sans", -apple-system, BlinkMacSystemFont, sans-serif',
       WebkitFontSmoothing: "antialiased",
       MozOsxFontSmoothing: "grayscale",
       display: "flex",
@@ -103,8 +103,10 @@ export default function PromptArcPremiumSuite() {
       overflow: "hidden"
     }}>
       
-      {/* CSS System for Glass Effects, Cosmic Gradient Backdrops & Strict Type Layouts */}
+      {/* Font Imports, Core Animations, Glass Cards & Global Typography Optimization */}
       <style>{`
+        @import url('[https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap](https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap)');
+        
         @keyframes studioPopIn {
           0% { opacity: 0; transform: scale(0.97) translateY(24px); }
           100% { opacity: 1; transform: scale(1) translateY(0); }
@@ -168,20 +170,20 @@ export default function PromptArcPremiumSuite() {
             display: "flex", justifyContent: "space-between", alignItems: "center",
             padding: "32px 64px", zIndex: 10
           }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", fontWeight: 800, fontSize: "15px", letterSpacing: "-0.5px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", fontWeight: 800, fontSize: "16px", letterSpacing: "-0.8px" }}>
               PROMPTARC
             </div>
             <div>
               {isSignedIn ? (
                 <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                  <span style={{ fontSize: "13px", color: "#94a3b8" }}>Developer Account: <strong style={{ color: "#ffffff" }}>{user?.firstName}</strong></span>
+                  <span style={{ fontSize: "13px", color: "#94a3b8", fontWeight: 500 }}>Developer Account: <strong style={{ color: "#ffffff", fontWeight: 600 }}>{user?.firstName}</strong></span>
                   <UserButton afterSignOutUrl="/" />
                 </div>
               ) : (
                 <SignInButton mode="modal">
                   <button style={{
                     backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)",
-                    color: "#ffffff", padding: "8px 20px", borderRadius: "8px", fontSize: "13px", fontWeight: 600, cursor: "pointer"
+                    color: "#ffffff", padding: "8px 20px", borderRadius: "8px", fontSize: "13px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit"
                   }}>Sign In</button>
                 </SignInButton>
               )}
@@ -192,21 +194,21 @@ export default function PromptArcPremiumSuite() {
           <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "0 24px", zIndex: 2, marginTop: "20px" }}>
             
             <h1 style={{
-              fontSize: "64px", fontWeight: 800, letterSpacing: "-2.5px", margin: "0 0 16px 0", textAlign: "center",
-              background: "linear-gradient(to bottom, #ffffff 50%, #94a3b8 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-              lineHeight: 1
+              fontSize: "68px", fontWeight: 800, letterSpacing: "-3.5px", margin: "0 0 20px 0", textAlign: "center",
+              background: "linear-gradient(to bottom, #ffffff 40%, #71717a 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+              lineHeight: 0.95
             }}>
               PROMPTARC
             </h1>
 
-            <p style={{ fontSize: "15px", color: "#94a3b8", lineHeight: "1.6", margin: "0 0 40px 0", textAlign: "center", maxWidth: "600px" }}>
+            <p style={{ fontSize: "15px", color: "#94a3b8", lineHeight: "1.6", margin: "0 0 40px 0", textAlign: "center", maxWidth: "600px", fontWeight: 400, letterSpacing: "-0.1px" }}>
               Auto-generates clean HTML/Tailwind from text, mates with development, building expine, and ribeotvised action actions into a proper, premium startup-grade platform.
             </p>
 
             <div style={{ marginBottom: "80px" }}>
               <button onClick={handleLaunchStudio} style={{
-                backgroundColor: "#ffffff", color: "#000000", padding: "14px 32px", borderRadius: "8px",
-                fontSize: "14px", fontWeight: 600, cursor: "pointer", border: "none", boxShadow: "0 4px 30px rgba(255,255,255,0.15)"
+                backgroundColor: "#ffffff", color: "#000000", padding: "14px 34px", borderRadius: "8px",
+                fontSize: "14px", fontWeight: 600, cursor: "pointer", border: "none", boxShadow: "0 4px 30px rgba(255,255,255,0.15)", fontFamily: "inherit", letterSpacing: "-0.2px"
               }}>
                 Launch Application Studio
               </button>
@@ -222,9 +224,9 @@ export default function PromptArcPremiumSuite() {
                   <div style={{ position: "absolute", width: "80px", height: "1px", background: "linear-gradient(90deg, transparent, #38bdf8, transparent)" }} />
                 </div>
                 <div>
-                  <div style={{ fontSize: "11px", fontWeight: 600, color: "#38bdf8", textTransform: "uppercase", marginBottom: "6px" }}>AI Prompt Engine</div>
-                  <h3 style={{ fontSize: "18px", fontWeight: 700, margin: "0 0 8px 0", letterSpacing: "-0.3px" }}>Instant Compilation</h3>
-                  <p style={{ color: "#94a3b8", fontSize: "13px", margin: 0, lineHeight: "1.6" }}>Auto-generates clean within/Tailwind from text. Responsive design, Ready-to-deploy logic.</p>
+                  <div style={{ fontSize: "11px", fontWeight: 700, color: "#38bdf8", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px" }}>AI Prompt Engine</div>
+                  <h3 style={{ fontSize: "19px", fontWeight: 700, margin: "0 0 8px 0", letterSpacing: "-0.4px" }}>Instant Compilation</h3>
+                  <p style={{ color: "#94a3b8", fontSize: "13px", margin: 0, lineHeight: "1.6", fontWeight: 400 }}>Auto-generates clean within/Tailwind from text. Responsive design, Ready-to-deploy logic.</p>
                 </div>
               </div>
 
@@ -236,9 +238,9 @@ export default function PromptArcPremiumSuite() {
                   <div style={{ width: "70%", height: "4px", background: "rgba(255,255,255,0.03)", borderRadius: "2px" }} />
                 </div>
                 <div>
-                  <div style={{ fontSize: "11px", fontWeight: 600, color: "#64748b", textTransform: "uppercase", marginBottom: "6px" }}>Visualization Sandbox</div>
-                  <h3 style={{ fontSize: "18px", fontWeight: 700, margin: "0 0 8px 0", letterSpacing: "-0.3px" }}>Real-Time Previews</h3>
-                  <p style={{ color: "#94a3b8", fontSize: "13px", margin: 0, lineHeight: "1.6" }}>See your creation instantly within a secure canvas. Interactive state, Mock data injection.</p>
+                  <div style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px" }}>Visualization Sandbox</div>
+                  <h3 style={{ fontSize: "19px", fontWeight: 700, margin: "0 0 8px 0", letterSpacing: "-0.4px" }}>Real-Time Previews</h3>
+                  <p style={{ color: "#94a3b8", fontSize: "13px", margin: 0, lineHeight: "1.6", fontWeight: 400 }}>See your creation instantly within a secure canvas. Interactive state, Mock data injection.</p>
                 </div>
               </div>
 
@@ -250,16 +252,16 @@ export default function PromptArcPremiumSuite() {
                   </div>
                 </div>
                 <div>
-                  <div style={{ fontSize: "11px", fontWeight: 600, color: "#64748b", textTransform: "uppercase", marginBottom: "6px" }}>DevOps Integration</div>
-                  <h3 style={{ fontSize: "18px", fontWeight: 700, margin: "0 0 8px 0", letterSpacing: "-0.3px" }}>One-Click Deploy</h3>
-                  <p style={{ color: "#94a3b8", fontSize: "13px", margin: 0, lineHeight: "1.6" }}>Push directly to GitHub repos and launch live links. Clerk auth, Production hosting config.</p>
+                  <div style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px" }}>DevOps Integration</div>
+                  <h3 style={{ fontSize: "19px", fontWeight: 700, margin: "0 0 8px 0", letterSpacing: "-0.4px" }}>One-Click Deploy</h3>
+                  <p style={{ color: "#94a3b8", fontSize: "13px", margin: 0, lineHeight: "1.6", fontWeight: 400 }}>Push directly to GitHub repos and launch live links. Clerk auth, Production hosting config.</p>
                 </div>
               </div>
 
             </div>
           </div>
 
-          <footer style={{ textAlign: "center", padding: "24px 0", fontSize: "11px", color: "#27272a", letterSpacing: "0.5px" }}>
+          <footer style={{ textAlign: "center", padding: "24px 0", fontSize: "11px", color: "#3f3f46", letterSpacing: "0.5px", fontWeight: 500 }}>
             © 2026 PROMPTARC CORE PLATFORM OPERATIONS SECURED.
           </footer>
         </div>
@@ -275,16 +277,16 @@ export default function PromptArcPremiumSuite() {
             padding: "16px 32px", borderBottom: "1px solid rgba(255, 255, 255, 0.05)", backgroundColor: "#09090b", zIndex: 10
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
-              <div onClick={() => setViewMode("landing")} style={{ fontWeight: 800, fontSize: "15px", color: "#ffffff", letterSpacing: "-0.5px", cursor: "pointer" }}>
+              <div onClick={() => setViewMode("landing")} style={{ fontWeight: 800, fontSize: "16px", color: "#ffffff", letterSpacing: "-0.8px", cursor: "pointer" }}>
                 PROMPTARC
               </div>
               <span style={{ color: "rgba(255,255,255,0.15)", fontSize: "14px" }}>/</span>
-              <span style={{ fontSize: "13px", fontWeight: 500, color: "#94a3b8" }}>Application Studio</span>
+              <span style={{ fontSize: "13px", fontWeight: 500, color: "#94a3b8", letterSpacing: "-0.1px" }}>Application Studio</span>
             </div>
             
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-              <span style={{ fontSize: "13px", color: "#64748b" }}>
-                Account: <strong style={{ color: "#e2e8f0" }}>{user?.firstName || "Developer"}</strong>
+              <span style={{ fontSize: "13px", color: "#64748b", fontWeight: 500 }}>
+                Account: <strong style={{ color: "#e2e8f0", fontWeight: 600 }}>{user?.firstName || "Developer"}</strong>
               </span>
               <UserButton afterSignOutUrl="/" />
             </div>
@@ -300,13 +302,13 @@ export default function PromptArcPremiumSuite() {
             }}>
               <div>
                 <h2 style={{ fontSize: "20px", fontWeight: 700, margin: "0 0 6px 0", letterSpacing: "-0.5px" }}>Application Generator</h2>
-                <p style={{ color: "#71717a", fontSize: "13px", margin: 0, lineHeight: "1.5" }}>
+                <p style={{ color: "#71717a", fontSize: "13px", margin: 0, lineHeight: "1.5", fontWeight: 400 }}>
                   Declare deployment specifications. Our automation pipeline compiles the visual interface assets inside the sandboxed viewport.
                 </p>
               </div>
 
               <form onSubmit={handleGenerateApp} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                <label style={{ fontSize: "11px", fontWeight: 600, color: "#a1a1aa", letterSpacing: "1px", textTransform: "uppercase" }}>Prompt Specifications</label>
+                <label style={{ fontSize: "11px", fontWeight: 700, color: "#a1a1aa", letterSpacing: "1px", textTransform: "uppercase" }}>Prompt Specifications</label>
                 <textarea
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
@@ -325,7 +327,7 @@ export default function PromptArcPremiumSuite() {
                     color: isGenerating || !prompt ? "#71717a" : "#000000",
                     border: isGenerating || !prompt ? "1px solid rgba(255,255,255,0.05)" : "none",
                     borderRadius: "10px", padding: "14px", fontSize: "14px", fontWeight: 600,
-                    cursor: isGenerating || !prompt ? "not-allowed" : "pointer"
+                    cursor: isGenerating || !prompt ? "not-allowed" : "pointer", fontFamily: "inherit", letterSpacing: "-0.1px"
                   }}
                 >
                   {isGenerating ? "Compiling App Matrix..." : "Generate Web App"}
@@ -334,7 +336,7 @@ export default function PromptArcPremiumSuite() {
 
               {/* Console Pipeline Compilation Logs Widget */}
               <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "12px" }}>
-                <span style={{ fontSize: "11px", fontWeight: 600, color: "#a1a1aa", letterSpacing: "1px", textTransform: "uppercase" }}>System Compilation Logs</span>
+                <span style={{ fontSize: "11px", fontWeight: 700, color: "#a1a1aa", letterSpacing: "1px", textTransform: "uppercase" }}>System Compilation Logs</span>
                 <div style={{
                   flex: 1, backgroundColor: "#000000", border: "1px solid rgba(255, 255, 255, 0.04)",
                   borderRadius: "12px", padding: "16px", fontFamily: "monospace", fontSize: "12px",
@@ -356,7 +358,7 @@ export default function PromptArcPremiumSuite() {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                   <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: generatedHtmlText ? "#22c55e" : "#eab308" }} />
-                  <span style={{ fontSize: "13px", fontWeight: 500, color: "#a1a1aa" }}>
+                  <span style={{ fontSize: "13px", fontWeight: 500, color: "#a1a1aa", letterSpacing: "-0.1px" }}>
                     {generatedHtmlText ? "Live Application Sandbox Framework" : "Awaiting Output Compilation Sequence"}
                   </span>
                 </div>
@@ -369,7 +371,7 @@ export default function PromptArcPremiumSuite() {
                       style={{
                         backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
                         color: isSubscribed ? "#e2e8f0" : "#52525b", padding: "6px 12px", borderRadius: "6px",
-                        fontSize: "12px", fontWeight: 500, cursor: isSubscribed ? "pointer" : "not-allowed"
+                        fontSize: "12px", fontWeight: 600, cursor: isSubscribed ? "pointer" : "not-allowed", fontFamily: "inherit"
                       }}
                     >
                       {copyStatus}
@@ -379,7 +381,7 @@ export default function PromptArcPremiumSuite() {
                       style={{
                         backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
                         color: isSubscribed ? "#e2e8f0" : "#52525b", padding: "6px 12px", borderRadius: "6px",
-                        fontSize: "12px", fontWeight: 500, cursor: isSubscribed ? "pointer" : "not-allowed"
+                        fontSize: "12px", fontWeight: 600, cursor: isSubscribed ? "pointer" : "not-allowed", fontFamily: "inherit"
                       }}
                     >
                       Export to GitHub
@@ -420,14 +422,14 @@ export default function PromptArcPremiumSuite() {
                           <h3 style={{ fontSize: "18px", fontWeight: 700, margin: "0 0 8px 0", letterSpacing: "-0.3px" }}>
                             Unlock Your Application Assets
                           </h3>
-                          <p style={{ color: "#a1a1aa", fontSize: "13px", lineHeight: "1.5", margin: "0 0 24px 0" }}>
+                          <p style={{ color: "#a1a1aa", fontSize: "13px", lineHeight: "1.5", margin: "0 0 24px 0", fontWeight: 400 }}>
                             Your fully responsive sandbox layout has successfully compiled! Upgrade to PromptArc premium to export directly to GitHub and snap the clean source code files.
                           </p>
                           <button
                             onClick={() => setIsSubscribed(true)} 
                             style={{
                               backgroundColor: "#ffffff", color: "#000000", border: "none", borderRadius: "8px",
-                              width: "100%", padding: "12px 16px", fontSize: "14px", fontWeight: 600, cursor: "pointer"
+                              width: "100%", padding: "12px 16px", fontSize: "14px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit"
                             }}
                           >
                             Upgrade to Premium
@@ -439,10 +441,10 @@ export default function PromptArcPremiumSuite() {
                 ) : (
                   <div style={{ textAlign: "center", maxWidth: "320px" }}>
                     <div style={{ width: "32px", height: "32px", margin: "0 auto 16px auto", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "4px" }} />
-                    <h4 style={{ fontSize: "14px", fontWeight: 600, margin: "0 0 6px 0", letterSpacing: "-0.2px" }}>
+                    <h4 style={{ fontSize: "14px", fontWeight: 600, margin: "0 0 6px 0", letterSpacing: "-0.3px" }}>
                       {isGenerating ? "Assembling Code Structures" : "Sandbox Matrix Completely Empty"}
                     </h4>
-                    <p style={{ color: "#71717a", fontSize: "12px", margin: 0, lineHeight: "1.5" }}>
+                    <p style={{ color: "#71717a", fontSize: "12px", margin: 0, lineHeight: "1.5", fontWeight: 400 }}>
                       {isGenerating ? "Our automated pipeline is building application frames and resolving asset allocations live." : "Your target live application view screen mounts programmatically immediately following generation sequence confirmation."}
                     </p>
                   </div>
