@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { UserButton, useUser, SignInButton } from "@clerk/nextjs";
 
 export default function PromptArcApp() {
-  const { user } = useUser();
+  const { user, isSignedIn } = useUser();
   
-  // NAVIGATION ROUTING STATE: "landing" shows homepage, "studio" shows workspace
+  // VIEW MODE CONTROLLER: "landing" or "studio"
   const [viewMode, setViewMode] = useState<"landing" | "studio">("landing");
   
   const [prompt, setPrompt] = useState("");
@@ -14,6 +14,7 @@ export default function PromptArcApp() {
   const [generationLogs, setGenerationLogs] = useState<string[]>([]);
   const [generatedHtmlText, setGeneratedHtmlText] = useState<string | null>(null);
   
+  // SaaS Gate States
   const [isSubscribed, setIsSubscribed] = useState(false); 
   const [copyStatus, setCopyStatus] = useState("Copy Code");
 
@@ -92,7 +93,7 @@ export default function PromptArcApp() {
     setTimeout(() => setCopyStatus("Copy Code"), 2000);
   };
 
-  // --- RENDERING ROUTE CONDITIONALS ---
+  // --- VIEW MODE 1: LANDING ENTRY PAGE ---
   if (viewMode === "landing") {
     return (
       <div style={{
@@ -102,24 +103,63 @@ export default function PromptArcApp() {
         fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif',
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "24px",
         position: "relative",
         overflow: "hidden"
       }}>
+        {/* Landing Page Header Component */}
+        <header style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "24px 40px",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 10
+        }}>
+          <div style={{ fontWeight: 800, fontSize: "16px", color: "#ffffff", letterSpacing: "-0.5px" }}>
+            PROMPTARC
+          </div>
+          <div>
+            {isSignedIn ? (
+              <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                <span style={{ fontSize: "13px", color: "#a1a1aa" }}>Logged in as <strong style={{ color: "#ffffff" }}>{user?.firstName}</strong></span>
+                <UserButton afterSignOutUrl="/" />
+              </div>
+            ) : (
+              <SignInButton mode="modal">
+                <button style={{
+                  backgroundColor: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  color: "#ffffff",
+                  padding: "8px 16px",
+                  borderRadius: "8px",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  cursor: "pointer"
+                }}>
+                  Sign In
+                </button>
+              </SignInButton>
+            )}
+          </div>
+        </header>
+
+        {/* Cinematic Backdrop Glow */}
         <div style={{
           position: "absolute",
-          top: "35%",
+          top: "40%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: "500px",
-          height: "500px",
-          background: "radial-gradient(circle, rgba(56,189,248,0.07) 0%, rgba(0,0,0,0) 70%)",
+          width: "550px",
+          height: "550px",
+          background: "radial-gradient(circle, rgba(56,189,248,0.06) 0%, rgba(0,0,0,0) 70%)",
           zIndex: 1
         }} />
 
-        <div style={{ textAlign: "center", maxWidth: "640px", zIndex: 2 }}>
+        {/* Hero Center Block */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "24px", zIndex: 2, marginTop: "40px" }}>
           <div style={{
             display: "inline-block",
             padding: "6px 14px",
@@ -154,38 +194,58 @@ export default function PromptArcApp() {
             color: "#a1a1aa",
             lineHeight: "1.6",
             margin: "0 0 44px 0",
+            textAlign: "center",
+            maxWidth: "600px",
             fontWeight: 400
           }}>
             Turn simple text prompts into fully interactive, beautifully styled web applications in seconds. Preview instantly, subscribe, and export straight to GitHub.
           </p>
 
-          <div style={{ display: "flex", gap: "16px", justifyContent: "center" }}>
-            <button 
-              onClick={() => setViewMode("studio")} // Fixed: Instantly toggles the full app dashboard live!
-              style={{
-                backgroundColor: "#ffffff",
-                color: "#000000",
-                padding: "16px 32px",
-                borderRadius: "12px",
-                fontSize: "15px",
-                fontWeight: 600,
-                cursor: "pointer",
-                border: "none",
-                boxShadow: "0 4px 25px rgba(255,255,255,0.15)",
-                transition: "transform 0.2s ease"
-              }}
-            >
-              Launch Application Studio 🚀
-            </button>
+          <div style={{ display: "flex", gap: "16px" }}>
+            {isSignedIn ? (
+              <button 
+                onClick={() => setViewMode("studio")}
+                style={{
+                  backgroundColor: "#ffffff",
+                  color: "#000000",
+                  padding: "16px 32px",
+                  borderRadius: "12px",
+                  fontSize: "15px",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  border: "none",
+                  boxShadow: "0 4px 25px rgba(255,255,255,0.15)"
+                }}
+              >
+                Launch Application Studio 🚀
+              </button>
+            ) : (
+              <SignInButton mode="modal">
+                <button style={{
+                  backgroundColor: "#ffffff",
+                  color: "#000000",
+                  padding: "16px 32px",
+                  borderRadius: "12px",
+                  fontSize: "15px",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  border: "none",
+                  boxShadow: "0 4px 25px rgba(255,255,255,0.15)"
+                }}>
+                  Get Started for Free ⚡
+                </button>
+              </SignInButton>
+            )}
           </div>
         </div>
 
         <footer style={{
-          position: "absolute",
-          bottom: "32px",
+          textAlign: "center",
+          paddingBottom: "32px",
           fontSize: "12px",
           color: "#3f3f46",
-          letterSpacing: "0.5px"
+          letterSpacing: "0.5px",
+          zIndex: 2
         }}>
           © 2026 PROMPTARC. All rights reserved. Built for high-velocity software creation.
         </footer>
@@ -193,7 +253,7 @@ export default function PromptArcApp() {
     );
   }
 
-  // --- STUDIO WORKSPACE VIEW MODE ---
+  // --- VIEW MODE 2: UNMODIFIED FULL-SCALE WORKSPACE STUDIO ---
   return (
     <div style={{
       backgroundColor: "#030303",
