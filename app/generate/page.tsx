@@ -103,9 +103,9 @@ export default function GenerateWorkspace() {
         backgroundColor: "#09090b"
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
-          <Link href="/" style={{ textDecoration: "none", fontWeight: 800, fontSize: "15px", color: "#ffffff", letterSpacing: "-0.5px" }}>
-            VELOSTACK
-          </Link>
+          <Link href="/" style={{ textDecoration: "none", fontWeight: 800, fontSize: "16px", color: "#ffffff", letterSpacing: "-0.5px" }}>
+  PROMPTARC
+</Link>
           <span style={{ color: "rgba(255,255,255,0.2)", fontSize: "14px" }}>/</span>
           <span style={{ fontSize: "13px", fontWeight: 500, color: "#94a3b8" }}>Application Studio</span>
         </div>
