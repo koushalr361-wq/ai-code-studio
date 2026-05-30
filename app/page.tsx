@@ -195,7 +195,7 @@ export default function PromptArcPremiumSuite() {
                 <button onClick={handleLaunchStudio} style={{
                   backgroundColor: "rgba(255,255,255,0.05)", color: "#ffffff", padding: "14px 32px", borderRadius: "8px",
                   fontSize: "14px", fontWeight: 600, cursor: "pointer", border: "1px solid rgba(255,255,255,0.15)",
-                  boxShadow: "0 0 30px rgba(255,255,255,0.02)", backgroundLinear: "linear-gradient(rgba(255,255,255,0.05), transparent)",
+                  boxShadow: "0 0 30px rgba(255,255,255,0.02)", background: "linear-gradient(rgba(255,255,255,0.05), transparent)",
                   transition: "all 0.2s"
                 }}>
                   Launch Application Studio 🚀
