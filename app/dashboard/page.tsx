@@ -20,6 +20,7 @@ interface DeployedApp {
 }
 
 export default function UnifiedWorkspaceStudio() {
+  const { user, isSignedIn } = useUser();
   const [activeTab, setActiveTab] = useState<"web" | "mobile" | "landing">("web");
   const [feedMode, setFeedMode] = useState<"tasks" | "apps">("tasks");
   const [prompt, setPrompt] = useState("");
@@ -86,6 +87,7 @@ export default function UnifiedWorkspaceStudio() {
       
       {/* Global Embedded Design Transitions & Wave Configurations */}
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
         @keyframes contextPulse {
           0%, 100% { opacity: 0.3; transform: scale(1); }
           50% { opacity: 0.5; transform: scale(1.02); }
@@ -126,7 +128,7 @@ export default function UnifiedWorkspaceStudio() {
         }
       `}</style>
 
-      {/* Reusable Core Option Navigation Header */}
+      {/* Navigation Header */}
       <ComplexNavbar />
 
       <div className="cosmic-nebula-glow" />
@@ -136,7 +138,7 @@ export default function UnifiedWorkspaceStudio() {
         
         {/* Top Promotional Discount Layer Bar */}
         <div style={{ width: "100%", maxWidth: "560px", margin: "0 auto 48px auto" }}>
-          <div className="blur-discount-strip" style={{ borderRadius: "9999px", padding: "10px 24px", display: "flex", alignItems: "center", justifyBox: "space-between", justifyContent: "space-between" }}>
+          <div className="blur-discount-strip" style={{ borderRadius: "9999px", padding: "10px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", fontWeight: 500, color: "#bae6fd" }}>
               <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#38bdf8" }} />
               FLAT 85% off on Standard monthly plan.
@@ -149,7 +151,7 @@ export default function UnifiedWorkspaceStudio() {
 
         {/* --- MAIN OPERATIONAL INPUT CONSOLE HUB --- */}
         <div style={{ width: "100%", maxWidth: "768px", margin: "0 auto 64px auto", textAlign: "center" }}>
-          <h2 style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: "36px", fontWeight: 800, color: "#ffffff", marginBottom: "8px" }}>
+          <h2 style={{ fontFamily: '"Syne", sans-serif', fontSize: "36px", fontWeight: 800, color: "#ffffff", marginBottom: "8px" }}>
             Where ideas become reality
           </h2>
           <p style={{ color: "#94a3b8", fontSize: "14px", fontWeight: 400, margin: "0 0 32px 0" }}>
@@ -192,14 +194,14 @@ export default function UnifiedWorkspaceStudio() {
                 disabled={isProcessing}
               />
 
-              {/* Lower Active Action Parameter Strip Layout */}
+              {/* Lower Active Action Parameter Strip Layout (TYPO REMOVED AND CORRECTED HERE) */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: "16px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                   
                   {/* LLM Routing Model Context Selector Component Container */}
                   <ModelSelector />
 
-                  <span style={{ fontSize: "10px", fontWeight: 700, color: "#52525b", backgroundColor: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.04)", padding: "6px 12px", borderRadius: "8px" }}>
+                  <span style={{ fontSize: "10px", fontWeight: 700, color: "#bae6fd", backgroundColor: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.04)", padding: "6px 12px", borderRadius: "8px" }}>
                     CLUSTER CAP: {clusterCapacity}%
                   </span>
                 </div>
@@ -302,7 +304,7 @@ export default function UnifiedWorkspaceStudio() {
               </div>
               
               {/* Pagination Dashboard Ledger Sheet Controller Footer */}
-              <div style={{ padding: "16px 24px", backgroundColor: "rgba(0,0,0,0.15)", display: "flex", alignItems: "center", justifyBox: "space-between", justifyContent: "space-between", fontSize: "12px", color: "#52525b", fontWeight: 500 }}>
+              <div style={{ padding: "16px 24px", backgroundColor: "rgba(0,0,0,0.15)", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "12px", color: "#52525b", fontWeight: 500 }}>
                 <span>Showing 1-1 out of 1 records</span>
                 <div style={{ display: "flex", gap: "8px", fontSize: "11px" }}>
                   <span>Tasks per page: </span>
