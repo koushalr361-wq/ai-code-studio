@@ -409,7 +409,7 @@ export default function PromptArcGodScaleSuite() {
                   fontSize: "14px", fontWeight: 600, cursor: "pointer", border: "none", boxShadow: "0 10px 40px rgba(255,255,255,0.25)"
                 }}
               >
-                Launch Application Studio 🚀
+                Launch Application Studio 
               </button>
             </div>
 
