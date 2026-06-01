@@ -15,220 +15,204 @@ interface DeployedApp {
   id: string;
   name: string;
   url: string;
-  status: "active" | "building";
   tier: "developer" | "scale";
   timestamp: string;
 }
 
-export default function WorkspaceStudioDashboard() {
+export default function UnifiedWorkspaceStudio() {
   const [activeTab, setActiveTab] = useState<"web" | "mobile" | "landing">("web");
   const [feedMode, setFeedMode] = useState<"tasks" | "apps">("tasks");
   const [prompt, setPrompt] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [clusterCapacity, setClusterCapacity] = useState(42);
+  const [clusterCapacity, setClusterCapacity] = useState(44);
   const [consoleLogs, setConsoleLogs] = useState<string[]>([]);
 
-  // Simulated live production data arrays built directly from the UI screenshots
+  // Telemetry simulation matching live server ticks
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setClusterCapacity(() => Math.floor(39 + Math.random() * 12));
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Structural mock data pulled directly from capture ledger rows
   const recentTasks: TaskItem[] = [
     {
       id: "EMT - d42c09",
-      task: "micro-analysis-matrix",
-      description: "Assembled an optimized canvas that takes an input photo configuration, parses it, and dynamically tracks layout properties in parallel threads.",
+      task: "micro-analysis",
+      description: "create an A website that takes input as photo, scans it and detects the microplastic content in par...",
       lastModified: "206 days ago"
-    },
-    {
-      id: "EMT - x89a11",
-      task: "cross-platform-native-framer",
-      description: "Provisioned an isolated execution bundle mapping views directly into a multi-tier sandbox grid framework.",
-      lastModified: "210 days ago"
     }
   ];
 
   const deployedApps: DeployedApp[] = [
     {
-      id: "DEP - 00291",
+      id: "DEP - 88102",
       name: "Auramax headphone website",
       url: "auramax-curated.promptarc.app",
-      status: "active",
       tier: "developer",
       timestamp: "Active live link"
     },
     {
-      id: "DEP - 00184",
+      id: "DEP - 77291",
       name: "Ocean research platform",
       url: "ocean-analytics.promptarc.app",
-      status: "active",
       tier: "scale",
       timestamp: "Active live link"
     }
   ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setClusterCapacity(() => Math.floor(38 + Math.random() * 11));
-    }, 2500);
-    return () => clearInterval(interval);
-  }, []);
 
   const handleExecuteAgent = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim()) return;
 
     setIsProcessing(true);
-    setConsoleLogs(["[INIT] Securing remote environment parameters for synthesis..."]);
+    setConsoleLogs(["[INIT] Mapping orchestration network streams..."]);
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 800));
-      setConsoleLogs((prev) => [...prev, `[ROUTER] Mapping system instructions directly to model layer token context...`]);
-      await new Promise((resolve) => setTimeout(resolve, 700));
-      setConsoleLogs((prev) => [...prev, "SUCCESS: Deployment routine initialized. System layer listening."]);
+      setConsoleLogs((prev) => [...prev, `[ROUTER] Instantiating isolated pipeline sandbox for context [${activeTab.toUpperCase()}]...`]);
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      setConsoleLogs((prev) => [...prev, "SUCCESS: Workspace deployment framework synced cleanly."]);
     } catch (err) {
-      setConsoleLogs((prev) => [...prev, "ERROR: Target matrix compilation timeout."]);
+      setConsoleLogs((prev) => [...prev, "CRITICAL ERROR: Matrix handshake configuration timeout."]);
     } finally {
       setIsProcessing(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col relative" style={{ backgroundColor: "#020205", minHeight: "100vh" }}>
+    <div style={{ backgroundColor: "#030307", minHeight: "100vh", display: "flex", flexDirection: "column", relative: "position" }}>
       
+      {/* Global Embedded Design Transitions & Wave Configurations */}
       <style>{`
-        @keyframes subtlePulse {
+        @keyframes contextPulse {
           0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 0.5; transform: scale(1.01); }
+          50% { opacity: 0.5; transform: scale(1.02); }
         }
-        @keyframes soundWave {
+        @keyframes soundTick {
           0%, 100% { height: 4px; }
           50% { height: 16px; }
         }
-        .anim-ambient-glow {
+        .cosmic-nebula-glow {
           position: absolute;
           top: 15%;
           left: 50%;
           transform: translate(-50%, -50%);
           width: 900px;
-          height: 450px;
-          background: radial-gradient(circle, rgba(56,189,248,0.04) 0%, rgba(168,85,247,0.02) 60%, transparent 100%);
+          height: 400px;
+          background: radial-gradient(circle, rgba(56,189,248,0.05) 0%, rgba(147,51,234,0.02) 60%, transparent 100%);
           filter: blur(60px);
           pointer-events: none;
           z-index: 0;
-          animation: subtlePulse 10s infinite ease-in-out;
+          animation: contextPulse 10s infinite ease-in-out;
         }
-        .wave-bar {
+        .recording-wave-node {
           width: 2px;
           background-color: #ef4444;
-          animation: soundWave 0.5s infinite ease-in-out;
+          animation: soundTick 0.5s infinite ease-in-out;
         }
-        .premium-blur-banner {
-          background: linear-gradient(90deg, rgba(56, 189, 248, 0.15) 0%, rgba(147, 51, 234, 0.15) 100%);
-          border: 1px solid rgba(255, 255, 255, 0.05);
-          backdrop-filter: blur(24px);
-          -webkit-backdrop-filter: blur(24px);
-        }
-        .custom-terminal-input {
-          background: rgba(10, 10, 14, 0.4);
+        .blur-discount-strip {
+          background: linear-gradient(90deg, rgba(56, 189, 248, 0.12) 0%, rgba(147, 51, 234, 0.12) 100%);
           border: 1px solid rgba(255, 255, 255, 0.04);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+        }
+        .dark-console-card {
+          background: rgba(9, 9, 11, 0.4);
+          border: 1px solid rgba(255, 255, 255, 0.03);
           backdrop-filter: blur(32px);
           -webkit-backdrop-filter: blur(32px);
         }
       `}</style>
 
-      {/* Global Specialized Navigation Menu */}
+      {/* Reusable Core Option Navigation Header */}
       <ComplexNavbar />
 
-      <div className="anim-ambient-glow" />
+      <div className="cosmic-nebula-glow" />
 
-      {/* Main Workspace Operational Frame */}
-      <main className="flex-1 max-w-5xl w-full mx-auto px-6 pt-12 pb-24 relative z-10 flex flex-col justify-between">
+      {/* Main Continuous Flow Dashboard Viewport */}
+      <main style={{ flex: 1, width: "100%", maxWidth: "1140px", margin: "0 auto", padding: "48px 24px 96px 24px", zIndex: 10, position: "relative" }}>
         
-        {/* Top Active Discount Gating Banner */}
-        <div className="w-full max-w-xl mx-auto mb-12">
-          <div className="premium-blur-banner rounded-full px-6 py-2.5 flex items-center justify-between shadow-2xl">
-            <div className="flex items-center gap-2 text-xs font-medium text-sky-200">
-              <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+        {/* Top Promotional Discount Layer Bar */}
+        <div style={{ width: "100%", maxWidth: "560px", margin: "0 auto 48px auto" }}>
+          <div className="blur-discount-strip" style={{ borderRadius: "9999px", padding: "10px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", fontWeight: 500, color: "#bae6fd" }}>
+              <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#38bdf8" }} />
               FLAT 85% off on Standard monthly plan.
             </div>
-            <button className="bg-black/50 border border-white/10 text-white text-[11px] font-bold px-4 py-1.5 rounded-full hover:bg-black/80 transition-all">
+            <button type="button" style={{ backgroundColor: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.1)", color: "#ffffff", fontSize: "11px", fontWeight: 700, padding: "6px 14px", borderRadius: "9999px", cursor: "pointer" }}>
               Discount auto applied
             </button>
           </div>
         </div>
 
-        {/* Console Workspace Entry Core */}
-        <div className="w-full max-w-3xl mx-auto flex flex-col items-center mb-16">
-          <h2 className="text-3xl font-bold tracking-tight text-white mb-2 font-display" style={{ fontFamily: "var(--font-syne)" }}>
+        {/* --- MAIN OPERATIONAL INPUT CONSOLE HUB --- */}
+        <div style={{ width: "100%", maxWidth: "768px", margin: "0 auto 64px auto", textAlign: "center" }}>
+          <h2 style={{ fontFamily: "var(--font-syne)", fontSize: "36px", fontWeight: 800, color: "#ffffff", marginBottom: "8px" }}>
             Where ideas become reality
           </h2>
-          <p className="text-zinc-400 text-sm mb-8 text-center max-w-md font-light">
+          <p style={{ color: "#94a3b8", fontSize: "14px", fontWeight: 400, margin: "0 0 32px 0" }}>
             Build fully functional apps and websites through simple conversations
           </p>
 
-          {/* Interactive Console Prompt Input Utility Module */}
-          <div className="w-full custom-terminal-input rounded-3xl p-5 shadow-2xl">
+          <div className="dark-console-card" style={{ borderRadius: "24px", padding: "20px", textAlign: "left" }}>
             
-            {/* Tab Switches (Full Stack, Mobile, Landing Pages) */}
-            <div className="flex gap-2 border-b border-white/[0.04] pb-4 mb-4">
+            {/* Horizontal Sub-Routing Context Toggles */}
+            <div style={{ display: "flex", gap: "8px", borderBottom: "1px solid rgba(255,255,255,0.04)", paddingBottom: "16px", marginBottom: "16px" }}>
               <button
                 type="button"
                 onClick={() => setActiveTab("web")}
-                className={`text-xs font-semibold px-4 py-2 rounded-xl transition-all ${
-                  activeTab === "web" ? "bg-white/[0.05] text-white" : "text-zinc-500 hover:text-white"
-                }`}
+                style={{ backgroundColor: activeTab === "web" ? "rgba(255,255,255,0.05)" : "transparent", color: activeTab === "web" ? "#ffffff" : "#71717a", border: "none", borderRadius: "10px", padding: "8px 16px", fontSize: "12px", fontWeight: 600, cursor: "pointer", transition: "all 0.2s" }}
               >
                 Full Stack App
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab("mobile")}
-                className={`text-xs font-semibold px-4 py-2 rounded-xl transition-all ${
-                  activeTab === "mobile" ? "bg-white/[0.05] text-white" : "text-zinc-500 hover:text-white"
-                }`}
+                style={{ backgroundColor: activeTab === "mobile" ? "rgba(255,255,255,0.05)" : "transparent", color: activeTab === "mobile" ? "#ffffff" : "#71717a", border: "none", borderRadius: "10px", padding: "8px 16px", fontSize: "12px", fontWeight: 600, cursor: "pointer", transition: "all 0.2s" }}
               >
                 Mobile App
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab("landing")}
-                className={`text-xs font-semibold px-4 py-2 rounded-xl transition-all ${
-                  activeTab === "landing" ? "bg-white/[0.05] text-white" : "text-zinc-500 hover:text-white"
-                }`}
+                style={{ backgroundColor: activeTab === "landing" ? "rgba(255,255,255,0.05)" : "transparent", color: activeTab === "landing" ? "#ffffff" : "#71717a", border: "none", borderRadius: "10px", padding: "8px 16px", fontSize: "12px", fontWeight: 600, cursor: "pointer", transition: "all 0.2s" }}
               >
                 Landing Page
               </button>
             </div>
 
-            <form onSubmit={handleExecuteAgent} className="flex flex-col gap-4">
+            <form onSubmit={handleExecuteAgent} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
               <textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="Build me a SaaS app for..."
-                className="w-full bg-transparent text-white placeholder-zinc-600 text-sm outline-none resize-none h-20 font-light leading-relaxed"
+                style={{ width: "100%", backgroundColor: "transparent", color: "#ffffff", border: "none", outline: "none", resize: "none", height: "80px", fontSize: "14px", fontFamily: "inherit", fontWeight: 400, lineHeight: "1.6" }}
                 disabled={isProcessing}
               />
 
-              {/* Toolbar Mechanics */}
-              <div className="flex items-center justify-between border-t border-white/[0.04] pt-4">
-                <div className="flex items-center gap-3">
+              {/* Lower Active Action Parameter Strip Layout */}
+              <div style={{ display: "flex", alignItems: "center", justifyBox: "space-between", justifyContent: "space-between", borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: "16px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                   
-                  {/* Dedicated Core Model Selector Dropdown Tool */}
+                  {/* LLM Routing Model Context Selector Component Container */}
                   <ModelSelector />
 
-                  <span className="text-[10px] font-bold text-zinc-500 bg-white/[0.01] border border-white/[0.04] px-3 py-1.5 rounded-lg tracking-wider">
-                    CLUSTER LOAD: {clusterCapacity}%
+                  <span style={{ fontSize: "10px", fontWeight: 700, color: "#52525b", backgroundColor: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.04)", padding: "6px 12px", borderRadius: "8px", tracking: "0.5px" }}>
+                    CLUSTER CAP: {clusterCapacity}%
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 relative">
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", position: "relative" }}>
                   
-                  {/* Voice Context Action Loop Hooks */}
+                  {/* Voice Streaming Interactivity Tool Option */}
                   <button
                     type="button"
                     onMouseEnter={() => setIsRecording(true)}
                     onMouseLeave={() => setIsRecording(false)}
-                    className={`p-2.5 rounded-xl border transition-all ${
-                      isRecording ? "bg-red-500/10 border-red-500/30 text-red-400" : "bg-white/[0.01] border-white/[0.04] text-zinc-500 hover:text-white"
-                    }`}
+                    style={{ backgroundColor: isRecording ? "rgba(239,68,68,0.1)" : "rgba(255,255,255,0.01)", border: isRecording ? "1px solid rgba(239,68,68,0.3)" : "1px solid rgba(255,255,255,0.05)", color: isRecording ? "#ef4444" : "#71717a", padding: "10px", borderRadius: "10px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
@@ -237,11 +221,11 @@ export default function WorkspaceStudioDashboard() {
                   </button>
 
                   {isRecording && (
-                    <div className="absolute bottom-full right-0 mb-3 bg-zinc-950 border border-white/10 px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-3 text-xs font-semibold text-zinc-300 whitespace-nowrap">
-                      <div className="flex gap-0.5 items-center h-4">
-                        <div className="wave-bar" style={{ animationDelay: "0.1s" }} />
-                        <div className="wave-bar" style={{ animationDelay: "0.3s" }} />
-                        <div className="wave-bar" style={{ animationDelay: "0.2s" }} />
+                    <div style={{ position: "absolute", bottom: "100%", right: 0, marginBottom: "12px", backgroundColor: "#09090b", border: "1px solid rgba(255,255,255,0.08)", padding: "10px 16px", borderRadius: "12px", display: "flex", alignItems: "center", gap: "12px", fontSize: "12px", fontWeight: 600, color: "#e4e4e7", whiteSpace: "nowrap", boxShadow: "0 20px 40px rgba(0,0,0,0.5)" }}>
+                      <div style={{ display: "flex", gap: "2px", alignItems: "center", height: "16px" }}>
+                        <div className="recording-wave-node" style={{ animationDelay: "0.1s" }} />
+                        <div className="recording-wave-node" style={{ animationDelay: "0.3s" }} />
+                        <div className="recording-wave-node" style={{ animationDelay: "0.2s" }} />
                       </div>
                       Start voice recording
                     </div>
@@ -250,11 +234,7 @@ export default function WorkspaceStudioDashboard() {
                   <button
                     type="submit"
                     disabled={isProcessing || !prompt.trim()}
-                    className={`p-2.5 rounded-xl transition-all ${
-                      !prompt.trim() || isProcessing
-                        ? "bg-white/[0.01] border border-white/[0.03] text-zinc-700 cursor-not-allowed"
-                        : "bg-white text-black hover:bg-zinc-200 shadow-xl"
-                    }`}
+                    style={{ backgroundColor: !prompt.trim() || isProcessing ? "rgba(255,255,255,0.01)" : "#ffffff", color: !prompt.trim() || isProcessing ? "#3f3f46" : "#000000", border: !prompt.trim() || isProcessing ? "1px solid rgba(255,255,255,0.03)" : "none", borderRadius: "10px", padding: "10px", cursor: !prompt.trim() || isProcessing ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                       <line x1="22" y1="2" x2="11" y2="13"/>
@@ -267,17 +247,22 @@ export default function WorkspaceStudioDashboard() {
           </div>
         </div>
 
-        {/* --- REPLACED 3 CARDS WITH THE REAL ENTERPRISE RESOURCE LOG UTILITIES --- */}
-        <div className="w-full max-w-3xl mx-auto flex flex-col gap-6">
+        {/* Dynamic Log Feed Box Module */}
+        {consoleLogs.length > 0 && (
+          <div style={{ width: "100%", maxWidth: "768px", margin: "-40px auto 48px auto", backgroundColor: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.02)", borderRadius: "16px", padding: "16px", fontFamily: "monospace", fontSize: "11px", color: "#38bdf8", display: "flex", flexDirection: "column", gap: "6px", height: "80px", overflowY: "auto" }}>
+            {consoleLogs.map((log, index) => <div key={index}>{log}</div>)}
+          </div>
+        )}
+
+        {/* --- THE SCROLL-DOWN FEED SUB-ROUTING METRIC TAB LEDGER (EXACTLY AS SCREENSHOTS) --- */}
+        <div style={{ width: "100%", maxWidth: "768px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "24px" }}>
           
-          {/* Feed Filter Headers mapping image 3 and 4 layout parameters */}
-          <div className="flex items-center gap-6 border-b border-white/[0.04] pb-3">
+          {/* Recent Tasks | Deployed Apps Tab Selector Layout (Screenshot 3 and 4) */}
+          <div style={{ display: "flex", gap: "24px", borderBottom: "1px solid rgba(255,255,255,0.04)", paddingBottom: "12px" }}>
             <button
               type="button"
               onClick={() => setFeedMode("tasks")}
-              className={`text-sm font-semibold flex items-center gap-2 transition-all ${
-                feedMode === "tasks" ? "text-white" : "text-zinc-500 hover:text-zinc-300"
-              }`}
+              style={{ background: "none", border: "none", color: feedMode === "tasks" ? "#ffffff" : "#52525b", fontSize: "14px", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", transition: "all 0.2s" }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
               Recent Tasks
@@ -285,68 +270,69 @@ export default function WorkspaceStudioDashboard() {
             <button
               type="button"
               onClick={() => setFeedMode("apps")}
-              className={`text-sm font-semibold flex items-center gap-2 transition-all ${
-                feedMode === "apps" ? "text-white" : "text-zinc-500 hover:text-zinc-300"
-              }`}
+              style={{ background: "none", border: "none", color: feedMode === "apps" ? "#ffffff" : "#52525b", fontSize: "14px", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", transition: "all 0.2s" }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
               Deployed Apps
             </button>
           </div>
 
-          {/* Conditional View Layer: Tasks Matrix Tracker Panel (Screenshot 4 layout) */}
+          {/* Table Data Render Blocks Context Mode Switch Mapping */}
           {feedMode === "tasks" && (
-            <div className="bg-zinc-950/40 border border-white/[0.03] rounded-2xl overflow-hidden shadow-2xl">
-              <div className="grid grid-cols-4 px-6 py-3 border-b border-white/[0.03] text-[11px] font-bold text-zinc-500 tracking-wider uppercase">
+            <div style={{ backgroundColor: "rgba(9,9,11,0.2)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: "16px", overflow: "hidden" }}>
+              
+              {/* Header Label Column Matrix Row */}
+              <div style={{ display: "grid", gridTemplateColumns: "140px 1fr 120px", padding: "12px 24px", borderBottom: "1px solid rgba(255,255,255,0.03)", fontSize: "11px", fontWeight: 700, color: "#52525b", letterSpacing: "0.5px", textTransform: "uppercase" }}>
                 <span>ID</span>
-                <span className="col-span-2">Task Parameters</span>
-                <span className="text-right">Last Modified</span>
+                <span>Task</span>
+                <span style={{ textAlign: "right" }}>Last Modified</span>
               </div>
               
-              <div className="divide-y divide-white/[0.02]">
+              {/* Execution Line Data Target Loop Rows */}
+              <div>
                 {recentTasks.map((item) => (
-                  <div key={item.id} className="grid grid-cols-4 px-6 py-5 text-sm items-start hover:bg-white/[0.01] transition-all">
-                    <span className="font-mono text-xs text-zinc-400 font-semibold">{item.id}</span>
-                    <div className="col-span-2 flex flex-col gap-1 pr-4">
-                      <span className="text-zinc-200 font-semibold">{item.task}</span>
-                      <span className="text-zinc-500 text-xs font-light leading-relaxed">{item.description}</span>
+                  <div key={item.id} style={{ display: "grid", gridTemplateColumns: "140px 1fr 120px", padding: "20px 24px", fontSize: "13px", alignItems: "start", borderBottom: "1px solid rgba(255,255,255,0.01)" }}>
+                    <span style={{ fontFamily: "monospace", fontSize: "12px", color: "#a1a1aa", fontWeight: 600 }}>{item.id}</span>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "4px", paddingRight: "16px" }}>
+                      <span style={{ color: "#e4e4e7", fontWeight: 600 }}>{item.task}</span>
+                      <span style={{ color: "#71717a", fontSize: "12px", fontWeight: 400, lineHeight: "1.6" }}>{item.description}</span>
                     </div>
-                    <span className="text-right text-xs text-zinc-500 font-medium">{item.lastModified}</span>
+                    <span style={{ textAlign: "right", fontSize: "12px", color: "#71717a", fontWeight: 500 }}>{item.lastModified}</span>
                   </div>
                 ))}
               </div>
               
-              <div className="px-6 py-4 border-t border-white/[0.02] flex items-center justify-between text-xs text-zinc-500 font-medium bg-black/20">
-                <span>Showing 1-2 out of 2 records</span>
-                <div className="flex gap-2">
-                  <button type="button" className="px-3 py-1.5 bg-white/[0.02] border border-white/[0.05] rounded-lg disabled:opacity-40" disabled>Previous</button>
-                  <button type="button" className="px-3 py-1.5 bg-white/[0.02] border border-white/[0.05] rounded-lg disabled:opacity-40" disabled>Next</button>
+              {/* Pagination Dashboard Ledger Sheet Controller Footer (Screenshot 4 Element) */}
+              <div style={{ padding: "16px 24px", backgroundColor: "rgba(0,0,0,0.15)", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "12px", color: "#52525b", fontWeight: 500 }}>
+                <span>Showing 1-1 out of 1 records</span>
+                <div style={{ display: "flex", gap: "8px", fontSize: "11px" }}>
+                  <span>Tasks per page: </span>
+                  <select disabled style={{ backgroundColor: "rgba(255,255,255,0.02)", color: "#52525b", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "4px", padding: "2px 6px" }}>
+                    <option>50</option>
+                  </select>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Conditional View Layer: Deployed Web Apps Registry Panel */}
+          {/* Conditional App Distribution Blocks Hub Cards Display */}
           {feedMode === "apps" && (
-            <div className="grid grid-cols-2 gap-4">
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
               {deployedApps.map((app) => (
-                <div key={app.id} className="bg-zinc-950/40 border border-white/[0.03] p-5 rounded-2xl flex flex-col justify-between gap-4 hover:border-white/[0.08] transition-all shadow-xl">
-                  <div className="flex justify-between items-start">
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-xs font-mono text-zinc-500 font-semibold">{app.id}</span>
-                      <h4 className="text-sm font-semibold text-zinc-200">{app.name}</h4>
+                <div key={app.id} style={{ backgroundColor: "rgba(9,9,11,0.2)", border: "1px solid rgba(255,255,255,0.03)", padding: "20px", borderRadius: "16px", display: "flex", flexDirection: "column", gap: "16px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                      <span style={{ fontSize: "11px", fontFamily: "monospace", color: "#52525b", fontWeight: 600 }}>{app.id}</span>
+                      <h4 style={{ fontSize: "14px", fontWeight: 600, color: "#e4e4e7", margin: 0 }}>{app.name}</h4>
                     </div>
-                    <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${
-                      app.tier === "scale" ? "bg-purple-500/10 text-purple-400 border border-purple-500/20" : "bg-sky-500/10 text-sky-400 border border-sky-500/20"
-                    }`}>
+                    <span style={{ fontSize: "10px", fontWeight: 700, backgroundColor: app.tier === "scale" ? "rgba(168,85,247,0.1)" : "rgba(56,189,248,0.1)", color: app.tier === "scale" ? "#a855f7" : "#38bdf8", border: app.tier === "scale" ? "1px solid rgba(168,85,247,0.2)" : "1px solid rgba(56,189,248,0.2)", padding: "4px 10px", borderRadius: "9999px", textTransform: "uppercase", letterSpacing: "0.5px" }}>
                       {app.tier}
                     </span>
                   </div>
-                  
-                  <div className="flex justify-between items-center text-xs border-t border-white/[0.02] pt-3 mt-1">
-                    <span className="text-zinc-500 font-light truncate max-w-[180px]">{app.url}</span>
-                    <span className="text-emerald-400 font-medium flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px", borderTop: "1px solid rgba(255,255,255,0.02)", paddingTop: "12px" }}>
+                    <span style={{ color: "#71717a", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{app.url}</span>
+                    <span style={{ color: "#22c55e", fontWeight: 500, display: "flex", alignItems: "center", gap: "6px" }}>
+                      <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#22c55e" }} />
                       {app.timestamp}
                     </span>
                   </div>
