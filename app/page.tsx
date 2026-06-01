@@ -26,7 +26,7 @@ export default function PromptArcPersonalDashboard() {
   const [showCreditModal, setShowCreditModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
-  // Dynamic user data generation built from your real Arduino configuration project context
+  // Dynamic user data generation built from real context parameters
   const [personalTasks, setPersonalTasks] = useState<UserTask[]>([
     {
       id: "ARC-UNO-9051",
@@ -387,16 +387,17 @@ export default function PromptArcPersonalDashboard() {
           {/* Conditional Frame Node: Active Personalized History Stream Sheet */}
           {feedMode === "tasks" && (
             <div className="bubbly-surface" style={{ borderRadius: "16px", overflow: "hidden" }}>
-              {/* FIXED: 'tracking' completely updated to standard React TypeScript 'letterSpacing' */}
+              {/* FIXED: 'tracking' updated to standard 'letterSpacing' */}
               <div style={{ display: "grid", gridTemplateColumns: "160px 1fr 140px", padding: "12px 24px", borderBottom: "1px solid rgba(255,255,255,0.04)", fontSize: "11px", fontWeight: 700, color: "#52525b", letterSpacing: "0.5px", textTransform: "uppercase" }}>
                 <span>Session ID</span>
                 <span>Context Pipeline Parameters</span>
                 <span style={{ textAlign: "right" }}>Staging Status</span>
               </div>
 
-              <div style={{ divideY: "1px solid rgba(255,255,255,0.02)" }}>
+              {/* FIXED: Replaced invalid style attribute 'divideY' with standard border bottom configurations */}
+              <div>
                 {personalTasks.map((t) => (
-                  <div key={t.id} style={{ display: "grid", gridTemplateColumns: "160px 1fr 140px", padding: "20px 24px", fontSize: "13px", alignItems: "start", borderBottom: "1px solid rgba(255,255,255,0.02)" }}>
+                  <div key={t.id} style={{ display: "grid", gridTemplateColumns: "160px 1fr 140px", padding: "20px 24px", fontSize: "13px", alignItems: "start", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
                     <span style={{ fontFamily: "monospace", fontSize: "12px", color: "#71717a", fontWeight: 600 }}>{t.id}</span>
                     <div style={{ display: "flex", flexDirection: "column", gap: "4px", paddingRight: "16px" }}>
                       <span style={{ color: "#e4e4e7", fontWeight: 600 }}>{t.projectType}</span>
