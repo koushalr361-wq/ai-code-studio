@@ -1,22 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useUser, UserButton, SignInButton } from "@clerk/nextjs";
 
-// Structural interfaces for real interactive telemetry arrays
 interface UserTask {
   id: string;
   projectType: string;
   queryDetails: string;
   timestamp: string;
   status: "idle" | "building" | "deployed" | "failed";
-}
-
-interface creditTier {
-  name: string;
-  tokens: string;
-  price: string;
-  features: string[];
 }
 
 export default function PromptArcPersonalDashboard() {
@@ -30,12 +22,11 @@ export default function PromptArcPersonalDashboard() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [consoleLogs, setConsoleLogs] = useState<string[]>([]);
   
-  // Custom interactive system notifications overlay state
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [showCreditModal, setShowCreditModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
-  // Dynamic user data generation built from real context parameters
+  // Dynamic user data generation built from your real Arduino configuration project context
   const [personalTasks, setPersonalTasks] = useState<UserTask[]>([
     {
       id: "ARC-UNO-9051",
@@ -164,7 +155,7 @@ export default function PromptArcPersonalDashboard() {
           letter-spacing: -1px;
           background: linear-gradient(90deg, #ffffff, #a1a1aa);
           -webkit-background-clip: text;
-          -webkit-text-fill_color: transparent;
+          -webkit-text-fill-color: transparent;
           transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
           cursor: pointer;
         }
@@ -177,6 +168,8 @@ export default function PromptArcPersonalDashboard() {
 
         .spinning-loader { animation: rotatingSpin 1s linear infinite; }
         .floating-banner { animation: floatEffect 4s ease-in-out infinite; }
+        .recording-pulse-node { width: 2px; background-color: #ef4444; animation: soundWave 0.5s infinite ease-in-out; border-radius: 2px; }
+        @keyframes soundWave { 0%, 100% { height: 4px; } 50% { height: 14px; } }
       `}</style>
 
       <div className="kinetic-backdrop" />
@@ -394,7 +387,8 @@ export default function PromptArcPersonalDashboard() {
           {/* Conditional Frame Node: Active Personalized History Stream Sheet */}
           {feedMode === "tasks" && (
             <div className="bubbly-surface" style={{ borderRadius: "16px", overflow: "hidden" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "160px 1fr 140px", padding: "12px 24px", borderBottom: "1px solid rgba(255,255,255,0.04)", fontSize: "11px", fontWeight: 700, color: "#52525b", tracking: "0.5px", textTransform: "uppercase" }}>
+              {/* FIXED: 'tracking' completely updated to standard React TypeScript 'letterSpacing' */}
+              <div style={{ display: "grid", gridTemplateColumns: "160px 1fr 140px", padding: "12px 24px", borderBottom: "1px solid rgba(255,255,255,0.04)", fontSize: "11px", fontWeight: 700, color: "#52525b", letterSpacing: "0.5px", textTransform: "uppercase" }}>
                 <span>Session ID</span>
                 <span>Context Pipeline Parameters</span>
                 <span style={{ textAlign: "right" }}>Staging Status</span>
@@ -464,7 +458,7 @@ export default function PromptArcPersonalDashboard() {
       {/* --- CREDIT ACCOUNT BALANCES MODAL LAYER PANEL --- */}
       {showCreditModal && (
         <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", backgroundColor: "rgba(0,0,0,0.7)", backdropFilter: "blur(8px)", zIndex: 200 }}>
-          <div className="bubbly-surface" style={{ position: "absolute", top: "50%", left: "50%", width: "90%", maxWidth: "500px", padding: "32px", borderRadius: "24px", animation: "modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)" }}>
+          <div className="bubbly-surface" style={{ position: "absolute", top: "50%", left: "50%", width: "90%", maxWidth: "500px", padding: "32px", borderRadius: "24px", animation: "modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)", transform: "translate(-50%, -50%)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "24px" }}>
               <h3 style={{ fontFamily: "Syne", fontSize: "20px", fontWeight: 700, margin: 0 }}>Framework Resource Allocation</h3>
               <button type="button" onClick={() => setShowCreditModal(false)} style={{ background: "none", border: "none", color: "#71717a", fontSize: "16px", cursor: "pointer" }}>✕</button>
@@ -483,7 +477,7 @@ export default function PromptArcPersonalDashboard() {
       {/* --- CORE INFRASTRUCTURE CONFIGURATION OPTIONS MODAL --- */}
       {showSettingsModal && (
         <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", backgroundColor: "rgba(0,0,0,0.7)", backdropFilter: "blur(8px)", zIndex: 200 }}>
-          <div className="bubbly-surface" style={{ position: "absolute", top: "50%", left: "50%", width: "90%", maxWidth: "450px", padding: "32px", borderRadius: "24px", animation: "modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)" }}>
+          <div className="bubbly-surface" style={{ position: "absolute", top: "50%", left: "50%", width: "90%", maxWidth: "450px", padding: "32px", borderRadius: "24px", animation: "modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)", transform: "translate(-50%, -50%)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
               <h3 style={{ fontFamily: "Syne", fontSize: "18px", fontWeight: 700, margin: 0 }}>Gateway Staging Properties</h3>
               <button type="button" onClick={() => setShowSettingsModal(false)} style={{ background: "none", border: "none", color: "#71717a", fontSize: "16px", cursor: "pointer" }}>✕</button>
@@ -493,7 +487,7 @@ export default function PromptArcPersonalDashboard() {
                 <span>Isolated Sandbox Target Port</span>
                 <input type="text" defaultValue="localhost:3000" style={{ backgroundColor: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.06)", padding: "10px", borderRadius: "8px", color: "#fff", outline: "none" }} />
               </label>
-              <label style={{ display: "flex", items: "center", gap: "10px", cursor: "pointer" }}>
+              <label style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" }}>
                 <input type="checkbox" defaultChecked style={{ accentColor: "#a855f7" }} />
                 <span>Enforce strict production TypeScript type-check assertions</span>
               </label>
