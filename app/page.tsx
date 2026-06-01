@@ -7,14 +7,14 @@ export default function PromptArcGodScaleSuite() {
   const { user, isSignedIn } = useUser();
   const [viewMode, setViewMode] = useState<"landing" | "studio">("landing");
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
+  const [activeMenu, setActiveMenu] = useState<"compute" | "api" | "nodes" | null>(null);
   
-  // Interactive Home Screen Component States
+  // Real-Time Widget Interface States
   const [engineTemperature, setEngineTemperature] = useState(0.7);
   const [selectedBranch, setSelectedBranch] = useState("main");
   const [systemLoad, setSystemLoad] = useState(42);
 
-  // Studio Operation States
+  // Studio State Architecture
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationLogs, setGenerationLogs] = useState<string[]>([]);
@@ -24,15 +24,15 @@ export default function PromptArcGodScaleSuite() {
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Dynamic system metric clock simulation loop
+  // Simulates telemetry variations across distributed H100 clusters
   useEffect(() => {
     const interval = setInterval(() => {
-      setSystemLoad(() => Math.floor(38 + Math.random() * 12));
-    }, 2000);
+      setSystemLoad(() => Math.floor(38 + Math.random() * 14));
+    }, 2500);
     return () => clearInterval(interval);
   }, []);
 
-  // --- THREE.JS LIVE KINETIC WEBGL SHADER ENGINE ---
+  // --- THREE.JS LIVE KINETIC WEBGL PARTICLE SYSTEM ---
   useEffect(() => {
     if (!canvasRef.current) return;
 
@@ -81,14 +81,14 @@ export default function PromptArcGodScaleSuite() {
     gl.linkProgram(shaderProgram);
     gl.useProgram(shaderProgram);
 
-    const particleCount = 2000;
+    const particleCount = 1900;
     const positions = new Float32Array(particleCount * 3);
     const alphas = new Float32Array(particleCount);
 
     for (let i = 0; i < particleCount; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos((Math.random() * 2) - 1);
-      const dist = 8 + Math.random() * 28;
+      const dist = 8 + Math.random() * 26;
 
       positions[i * 3] = dist * Math.sin(phi) * Math.cos(theta);
       positions[i * 3 + 1] = dist * Math.sin(phi) * Math.sin(theta);
@@ -262,7 +262,7 @@ export default function PromptArcGodScaleSuite() {
       backgroundColor: "#020204",
       color: "#ffffff",
       minHeight: "100vh",
-      fontFamily: '"Space Grotesk", -apple-system, BlinkMacSystemFont, sans-serif',
+      fontFamily: '"Space Grotesk", -apple-system, sans-serif',
       WebkitFontSmoothing: "antialiased",
       display: "flex",
       flexDirection: "column",
@@ -270,16 +270,16 @@ export default function PromptArcGodScaleSuite() {
       overflow: "hidden"
     }}>
       
-      {/* 3D Core WebGL Spatial Canvas Layer */}
+      {/* 3D WebGL Canvas Layer */}
       <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0, pointerEvents: "none" }} />
       
-      {/* --- MASTER STARTUP CSS STYLING ENGINE --- */}
+      {/* --- MASTER STARTUP CSS ENGINE --- */}
       <style>{`
         @import url('[https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap](https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap)');
         
         @keyframes godScaleExit {
           0% { opacity: 1; transform: scale(1) translateY(0) rotateX(0deg); filter: blur(0px); }
-          100% { opacity: 0; transform: scale(0.92) translateY(-40px) rotateX(10deg); filter: blur(12px); }
+          100% { opacity: 0; transform: scale(0.91) translateY(-45px) rotateX(12deg); filter: blur(14px); }
         }
         @keyframes godScaleEntry {
           0% { opacity: 0; transform: scale(1.06) translateY(24px) rotateX(-6deg); filter: blur(8px); }
@@ -291,14 +291,14 @@ export default function PromptArcGodScaleSuite() {
         }
         .anim-scale-exit { animation: godScaleExit 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .anim-scale-entry { animation: godScaleEntry 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .mega-menu-entry { animation: menuPop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .mega-menu-entry { animation: menuPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
         .god-tier-card {
-          background: linear-gradient(145deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.002) 100%);
+          background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.002) 100%);
           border: 1px solid rgba(255, 255, 255, 0.04);
           backdrop-filter: blur(32px);
           -webkit-backdrop-filter: blur(32px);
-          border-radius: 32px !important; /* Continuous Rounded Architecture Style */
+          border-radius: 32px !important;
           transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .god-tier-card:hover {
@@ -307,14 +307,20 @@ export default function PromptArcGodScaleSuite() {
           box-shadow: 0 40px 80px rgba(0,0,0,0.5);
         }
         .cyan-glow-barrier {
-          border-color: rgba(56, 189, 248, 0.4) !important;
+          border-color: rgba(56, 189, 248, 0.45) !important;
           box-shadow: 0 0 40px rgba(56, 189, 248, 0.06), inset 0 0 20px rgba(56, 189, 248, 0.02) !important;
         }
-        .premium-slider::-webkit-slider-runnable-track { background: rgba(255,255,255,0.05); height: 4px; border-radius: 2px; }
+        .premium-slider {
+          -webkit-appearance: none;
+          width: 100%;
+          background: transparent;
+          outline: none;
+        }
+        .premium-slider::-webkit-slider-runnable-track { background: rgba(255,255,255,0.06); height: 4px; border-radius: 2px; }
         .premium-slider::-webkit-slider-thumb { -webkit-appearance: none; background: #38bdf8; width: 12px; height: 12px; border-radius: 50%; margin-top: -4px; cursor: pointer; box-shadow: 0 0 10px #38bdf8; }
       `}</style>
 
-      {/* --- VIEW ROUTE 1: LANDING FLOW --- */}
+      {/* --- VIEW ROUTE 1: LANDING ENTRY FLOW --- */}
       {viewMode === "landing" && (
         <div className={isTransitioning ? "anim-scale-exit" : "anim-scale-entry"} style={{
           flex: 1, display: "flex", flexDirection: "column", position: "relative", zIndex: 1, perspective: "1200px"
@@ -322,21 +328,21 @@ export default function PromptArcGodScaleSuite() {
           
           {/* NAVIGATION BAR HEADER INFRASTRUCTURE */}
           <header 
-            onMouseLeave={() => setIsMegaMenuOpen(false)}
+            onMouseLeave={() => setActiveMenu(null)}
             style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "36px 64px", position: "relative", zIndex: 100 }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "48px" }}>
               <div 
-                onMouseEnter={() => setIsMegaMenuOpen(true)}
                 style={{ fontFamily: '"Syne", sans-serif', fontWeight: 800, fontSize: "19px", letterSpacing: "-1px", cursor: "pointer" }}
               >
-                PROMPTARC ▾
+                PROMPTARC
               </div>
 
+              {/* HIGH-LEVEL STARTUP APP INTERACTIVE NAV LINKS */}
               <nav style={{ display: "flex", gap: "32px", fontSize: "13px", fontWeight: 500, color: "#94a3b8" }}>
-                <span style={{ cursor: "pointer" }} onClick={handleLaunchStudio}>Studio Terminal</span>
-                <span style={{ cursor: "pointer" }}>Infrastructure Node Cloud</span>
-                <span style={{ cursor: "pointer" }}>Documentation</span>
+                <span style={{ cursor: "pointer", color: activeMenu === "compute" ? "#ffffff" : "#94a3b8" }} onMouseEnter={() => setActiveMenu("compute")}>GPU Clusters ▾</span>
+                <span style={{ cursor: "pointer", color: activeMenu === "api" ? "#ffffff" : "#94a3b8" }} onMouseEnter={() => setActiveMenu("api")}>API Protocols ▾</span>
+                <span style={{ cursor: "pointer", color: activeMenu === "nodes" ? "#ffffff" : "#94a3b8" }} onMouseEnter={() => setActiveMenu("nodes")}>Network Nodes ▾</span>
               </nav>
             </div>
 
@@ -353,23 +359,34 @@ export default function PromptArcGodScaleSuite() {
               )}
             </div>
 
-            {/* --- SYSTEM OPTIONS HOVER MEGA-MENU MATRIX --- */}
-            {isMegaMenuOpen && (
+            {/* --- HOVER OPTIONS NAVIGATION MENUS MATRIX --- */}
+            {activeMenu && (
               <div className="mega-menu-entry" style={{
-                position: "absolute", top: "84px", left: "64px", width: "620px", backgroundColor: "rgba(5, 5, 8, 0.85)",
-                border: "1px solid rgba(255, 255, 255, 0.05)", backdropFilter: "blur(40px)", WebkitBackdropFilter: "blur(40px)",
-                borderRadius: "24px", padding: "32px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "28px", boxShadow: "0 50px 100px rgba(0,0,0,0.7)"
+                position: "absolute", top: "84px", left: "200px", width: "420px", backgroundColor: "rgba(5, 5, 8, 0.92)",
+                border: "1px solid rgba(255, 255, 255, 0.06)", backdropFilter: "blur(40px)", WebkitBackdropFilter: "blur(40px)",
+                borderRadius: "24px", padding: "28px", boxShadow: "0 50px 100px rgba(0,0,0,0.75)"
               }}>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, color: "#38bdf8", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px" }}>GPU Compute Cluster</div>
-                  <p style={{ color: "#94a3b8", fontSize: "12px", margin: "0 0 14px 0", lineHeight: "1.4" }}>Monitor active distributed server nodes processing model translations live inside production arrays.</p>
-                  <span style={{ fontSize: "12px", color: "#ffffff", fontWeight: 600, cursor: "pointer" }} onClick={handleLaunchStudio}>Enter Staging Core →</span>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, color: "#a855f7", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px" }}>Automated API System</div>
-                  <p style={{ color: "#94a3b8", fontSize: "12px", margin: "0 0 14px 0", lineHeight: "1.4" }}>Stitch prompt parameters directly into deployment frames using clean web hooks and state rules.</p>
-                  <span style={{ fontSize: "12px", color: "#ffffff", fontWeight: 600, cursor: "pointer" }}>Read API Specs →</span>
-                </div>
+                {activeMenu === "compute" && (
+                  <div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, color: "#38bdf8", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px" }}>H100 Core Clusters</div>
+                    <p style={{ color: "#94a3b8", fontSize: "12px", margin: "0 0 16px 0", lineHeight: "1.4" }}>Monitor active high-performance cloud processing partitions running compilation stacks synchronously.</p>
+                    <span style={{ fontSize: "12px", color: "#ffffff", fontWeight: 600, cursor: "pointer" }} onClick={handleLaunchStudio}>Open Studio Canvas →</span>
+                  </div>
+                )}
+                {activeMenu === "api" && (
+                  <div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, color: "#a855f7", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px" }}>Asynchronous Endpoint Router</div>
+                    <p style={{ color: "#94a3b8", fontSize: "12px", margin: "0 0 16px 0", lineHeight: "1.4" }}>Connect workflows using secure prompt payload hooks to automatically compile Tailwind rules into staging code blocks.</p>
+                    <span style={{ fontSize: "12px", color: "#ffffff", fontWeight: 600, cursor: "pointer" }}>View API Logs →</span>
+                  </div>
+                )}
+                {activeMenu === "nodes" && (
+                  <div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, color: "#22c55e", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px" }}>Global Mesh Telemetry</div>
+                    <p style={{ color: "#94a3b8", fontSize: "12px", margin: "0 0 16px 0", lineHeight: "1.4" }}>Verify worldwide server telemetry distributions, runtime file sandboxing configurations, and node connection states.</p>
+                    <span style={{ fontSize: "12px", color: "#ffffff", fontWeight: 600, cursor: "pointer" }}>Node Telemetry →</span>
+                  </div>
+                )}
               </div>
             )}
           </header>
@@ -396,27 +413,27 @@ export default function PromptArcGodScaleSuite() {
               </button>
             </div>
 
-            {/* --- REBUILT MICRO-APP INTERACTIVE WORKSPACE WIDGETS --- */}
+            {/* --- THREE ACTUAL HARD-CODED OPERATIONAL MICRO APPLICATION BOXES --- */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "28px", width: "100%", maxWidth: "1140px", paddingBottom: "60px" }}>
               
-              {/* Micro-App 1: Live Cluster Hardware Utility Core */}
+              {/* Box 1: Real-Time Telemetry Hardware Unit */}
               <div className="god-tier-card cyan-glow-barrier" style={{ padding: "36px", display: "flex", flexDirection: "column", gap: "28px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ fontSize: "11px", fontWeight: 700, color: "#38bdf8", textTransform: "uppercase", letterSpacing: "1px" }}>Node Cluster Monitor</span>
-                  <span style={{ fontSize: "12px", color: "#22c55e", fontFamily: "monospace" }}>● RUNNING</span>
+                  <span style={{ fontSize: "12px", color: "#22c55e", fontWeight: 600 }}>● RUNNING</span>
                 </div>
-                <div style={{ height: "100px", display: "flex", flexDirection: "column", justifyCenter: "center", gap: "12px" }}>
+                <div style={{ height: "100px", display: "flex", flexDirection: "column", justifyContent: "center", gap: "12px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", color: "#94a3b8" }}>
-                    <span>Active H100 GPU Arrays</span>
-                    <span style={{ color: "#ffffff", fontWeight: 600 }}>{systemLoad}% Load</span>
+                    <span>Active Compute Load</span>
+                    <span style={{ color: "#ffffff", fontWeight: 600 }}>{systemLoad}% Matrix</span>
                   </div>
                   <div style={{ width: "100%", height: "6px", backgroundColor: "rgba(255,255,255,0.03)", borderRadius: "3px", overflow: "hidden" }}>
-                    <div style={{ width: `${systemLoad}%`, height: "100%", backgroundColor: "#38bdf8", boxShadow: "0 0 10px #38bdf8", transition: "width 0.5s ease" }} />
+                    <div style={{ width: `${systemLoad}%`, height: "100%", backgroundColor: "#38bdf8", boxShadow: "0 0 10px #38bdf8", transition: "width 0.4s ease" }} />
                   </div>
                   <div style={{ display: "flex", gap: "6px", marginTop: "4px" }}>
-                    <div style={{ flex: 1, height: "20px", background: "rgba(56,189,248,0.1)", borderRadius: "4px" }} />
-                    <div style={{ flex: 1, height: "20px", background: "rgba(56,189,248,0.1)", borderRadius: "4px" }} />
-                    <div style={{ flex: 1, height: "20px", background: systemLoad > 45 ? "rgba(56,189,248,0.1)" : "rgba(255,255,255,0.02)", borderRadius: "4px" }} />
+                    <div style={{ flex: 1, height: "18px", background: "rgba(56,189,248,0.12)", borderRadius: "4px" }} />
+                    <div style={{ flex: 1, height: "18px", background: "rgba(56,189,248,0.12)", borderRadius: "4px" }} />
+                    <div style={{ flex: 1, height: "18px", background: systemLoad > 44 ? "rgba(56,189,248,0.12)" : "rgba(255,255,255,0.02)", borderRadius: "4px" }} />
                   </div>
                 </div>
                 <div>
@@ -425,7 +442,7 @@ export default function PromptArcGodScaleSuite() {
                 </div>
               </div>
 
-              {/* Micro-App 2: Live Prompt Weights Parameter Tool */}
+              {/* Box 2: Real Prompt Weight Matrix Slider Utility (FIXED ESCAPE QUOTE CHARACTERS) */}
               <div className="god-tier-card" style={{ padding: "36px", display: "flex", flexDirection: "column", gap: "28px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "1px" }}>Weights Tool Matrix</span>
@@ -440,11 +457,11 @@ export default function PromptArcGodScaleSuite() {
                     value={engineTemperature} 
                     onChange={(e) => setEngineTemperature(parseFloat(e.target.value))}
                     className="premium-slider"
-                    style={{ -webkit-appearance: "none", width: "100%", background: "transparent", outline: "none" }}
+                    style={{ WebkitAppearance: "none", width: "100%", background: "transparent", outline: "none" }}
                   />
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "#64748b" }}>
-                    <span>Deterministic (Precise)</span>
-                    <span>Creative (Liquid)</span>
+                    <span>Deterministic</span>
+                    <span>Creative Fluid</span>
                   </div>
                 </div>
                 <div>
@@ -453,22 +470,24 @@ export default function PromptArcGodScaleSuite() {
                 </div>
               </div>
 
-              {/* Micro-App 3: Live Staging Branch Architecture Selector */}
+              {/* Box 3: Git Integration Selector App */}
               <div className="god-tier-card" style={{ padding: "36px", display: "flex", flexDirection: "column", gap: "28px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "1px" }}>Git Cluster Sync</span>
                   <span style={{ fontSize: "12px", color: "#a855f7", fontFamily: "monospace" }}>v3.1.2</span>
                 </div>
-                <div style={{ height: "100px", display: "flex", alignItems: "center", gap: "8px" }}>
+                <div style={{ height: "100px", display: "flex", alignItems: "center", gap: "10px" }}>
                   <button 
+                    type="button"
                     onClick={() => setSelectedBranch("main")}
-                    style={{ flex: 1, padding: "10px", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.05)", background: selectedBranch === "main" ? "rgba(255,255,255,0.06)" : "transparent", color: "#ffffff", fontSize: "12px", fontWeight: 600, cursor: "pointer" }}
+                    style={{ flex: 1, padding: "10px 14px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)", background: selectedBranch === "main" ? "rgba(255,255,255,0.07)" : "transparent", color: "#ffffff", fontSize: "12px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}
                   >
                     main
                   </button>
                   <button 
+                    type="button"
                     onClick={() => setSelectedBranch("staging")}
-                    style={{ flex: 1, padding: "10px", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.05)", background: selectedBranch === "staging" ? "rgba(255,255,255,0.06)" : "transparent", color: "#ffffff", fontSize: "12px", fontWeight: 600, cursor: "pointer" }}
+                    style={{ flex: 1, padding: "10px 14px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)", background: selectedBranch === "staging" ? "rgba(255,255,255,0.07)" : "transparent", color: "#ffffff", fontSize: "12px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}
                   >
                     staging
                   </button>
@@ -488,7 +507,7 @@ export default function PromptArcGodScaleSuite() {
         </div>
       )}
 
-      {/* --- VIEW ROUTE 2: COMPACT APP ENGINE TERMINAL --- */}
+      {/* --- VIEW ROUTE 2: COMPACT WORKSPACE DEV TERMINAL STUDIO --- */}
       {viewMode === "studio" && (
         <div className={isTransitioning ? "anim-scale-exit" : "anim-scale-entry"} style={{ flex: 1, display: "flex", flexDirection: "column", position: "relative", zIndex: 1, perspective: "1200px" }}>
           
