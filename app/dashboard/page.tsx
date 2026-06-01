@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useUser, UserButton } from "@clerk/nextjs";
 import ModelSelector from "@/components/model-selector";
+import ComplexNavbar from "@/components/complex-navbar";
 
 interface TaskItem {
   id: string;
@@ -113,7 +114,7 @@ export default function UnifiedWorkspaceStudio() {
           <div style={{ backgroundColor: "rgba(255,255,255,0.04)", padding: "8px", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
           </div>
-          <span style={{ fontSize: "14px", fontWeight: 600, tracking: "-0.2px" }}>Home</span>
+          <span style={{ fontSize: "14px", fontWeight: 600, letterSpacing: "-0.2px" }}>Home</span>
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
@@ -152,7 +153,7 @@ export default function UnifiedWorkspaceStudio() {
 
         {/* Dynamic Typography Identity Block */}
         <div style={{ textAlign: "center" }}>
-          <h1 style={{ fontSize: "40px", fontWeight: 500, color: "#ffffff", margin: "0 0 6px 0", tracking: "-0.5px" }}>
+          <h1 style={{ fontSize: "40px", fontWeight: 500, color: "#ffffff", margin: "0 0 6px 0", letterSpacing: "-0.5px" }}>
             Where ideas become reality
           </h1>
           <p style={{ color: "#71717a", fontSize: "14px", margin: 0, fontWeight: 400 }}>
@@ -275,7 +276,7 @@ export default function UnifiedWorkspaceStudio() {
         {/* --- CONTINUOUS VERTICAL SCROLL: PRODUCTION RECENT TASKS LEDGER FRAME --- */}
         <div style={{ width: "100%", maxWidth: "800px", margin: "24px auto 0 auto", display: "flex", flexDirection: "column", gap: "20px" }}>
           
-          {/* Tab Filter Links (Screenshot 3 & 4 Architecture Mapping) */}
+          {/* Tab Filter Links */}
           <div style={{ display: "flex", gap: "24px", borderBottom: "1px solid rgba(255,255,255,0.04)", paddingBottom: "12px" }}>
             <button
               type="button"
@@ -339,7 +340,7 @@ export default function UnifiedWorkspaceStudio() {
                       <span style={{ fontSize: "11px", fontFamily: "monospace", color: "#52525b", fontWeight: 600 }}>{app.id}</span>
                       <h4 style={{ fontSize: "14px", fontWeight: 600, color: "#e4e4e7", margin: 0 }}>{app.name}</h4>
                     </div>
-                    <span style={{ fontSize: "10px", fontWeight: 700, backgroundColor: app.tier === "scale" ? "rgba(168,85,247,0.1)" : "rgba(56,189,248,0.1)", color: app.tier === "scale" ? "#a855f7" : "#38bdf8", border: app.tier === "scale" ? "1px solid rgba(168,85,247,0.2)" : "1px solid rgba(56,189,248,0.2)", padding: "4px 10px", borderRadius: "9999px", textTransform: "uppercase" }}>
+                    <span style={{ fontSize: "10px", fontWeight: 700, backgroundColor: app.tier === "scale" ? "rgba(168,85,247,0.1)" : "rgba(56,189,248,0.1)", color: app.tier === "scale" ? "#a855f7" : "#38bdf8", border: app.tier === "scale" ? "1px solid rgba(168,85,247,0.2)" : "1px solid rgba(56,189,248,0.2)", padding: "4px 10px", borderRadius: "9999px", textTransform: "uppercase", letterSpacing: "0.5px" }}>
                       {app.tier}
                     </span>
                   </div>
