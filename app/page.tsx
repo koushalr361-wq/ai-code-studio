@@ -1,70 +1,41 @@
 "use client";
-
 import React, { useState } from "react";
 import { useUser, UserButton, SignInButton } from "@clerk/nextjs";
 
-export default function PromptArcProduction() {
+export default function Home() {
   const { isSignedIn } = useUser();
   const [prompt, setPrompt] = useState("");
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleExecute = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!prompt.trim()) return;
-
     setLoading(true);
-    try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Generation failed.");
-
-      setOutput(data.output);
-    } catch (err: any) {
-      setOutput("Error: " + err.message);
-    } finally {
-      setLoading(false);
-    }
+    const res = await fetch("/api/generate", {
+      method: "POST",
+      body: JSON.stringify({ prompt }),
+    });
+    const data = await res.json();
+    setOutput(data.output || "Error");
+    setLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-8 font-sans">
-      <header className="flex justify-between items-center pb-8 border-b border-zinc-800">
-        <h1 className="text-xl font-bold tracking-tighter">PROMPTARC</h1>
-        {isSignedIn ? <UserButton afterSignOutUrl="/" /> : <SignInButton />}
+    <div style={{ padding: "40px", fontFamily: "sans-serif" }}>
+      <header style={{ marginBottom: "20px" }}>
+        {isSignedIn ? <UserButton /> : <SignInButton />}
       </header>
-
-      <main className="max-w-3xl mx-auto mt-16">
-        <form onSubmit={handleExecute} className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800">
-          <textarea
-            className="w-full h-32 bg-transparent text-white border-none focus:ring-0 resize-none"
-            placeholder="Describe your application architecture..."
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-          />
-          <button 
-            type="submit" 
-            disabled={loading}
-            className="mt-4 w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold transition disabled:opacity-50"
-          >
-            {loading ? "Generating..." : "Launch Generation"}
-          </button>
-        </form>
-
-        {output && (
-          <div className="mt-8 p-6 bg-zinc-900 rounded-2xl border border-zinc-800">
-            <h2 className="text-sm font-semibold text-zinc-400 mb-4 uppercase tracking-wider">Generated Output</h2>
-            <pre className="text-sm text-zinc-200 whitespace-pre-wrap font-mono">
-              {output}
-            </pre>
-          </div>
-        )}
-      </main>
+      <form onSubmit={handleSubmit}>
+        <textarea 
+          value={prompt} 
+          onChange={(e) => setPrompt(e.target.value)} 
+          style={{ width: "100%", height: "100px" }}
+        />
+        <button type="submit" disabled={loading}>
+          {loading ? "Loading..." : "Generate"}
+        </button>
+      </form>
+      <div style={{ marginTop: "20px" }}>{output}</div>
     </div>
   );
 }
