@@ -1,72 +1,74 @@
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs";
+
+// Force Edge runtime for high-velocity streaming response mechanics
+export const runtime = "edge";
 
 export async function POST(req: Request) {
   try {
-    const { prompt } = await req.json();
-
-    if (!prompt) {
-      return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
+    // 1. Authenticate the active Clerk session context
+    const { userId } = auth();
+    if (!userId) {
+      return new NextResponse(JSON.stringify({ error: "Unauthorized session allocation." }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
-    // 1. SET UP AN API KEY POOL FOR ROTATION
-    const keyPool = [
-      process.env.GEMINI_API_KEY,
-      process.env.GEMINI_API_KEY_SECONDARY, // Your secondary backup key
-    ].filter(Boolean); // Clears out any keys that aren't configured yet
-
-    if (keyPool.length === 0) {
-      return NextResponse.json({ error: "No Gemini API keys found on the server" }, { status: 500 });
+    // 2. Parse incoming prompt specifications from the dashboard console
+    const { prompt, type } = await req.json();
+    if (!prompt || !prompt.trim()) {
+      return new NextResponse(JSON.stringify({ error: "Null prompt instruction vector." }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
-    // 2. INTELLIGENT ROTATION: Pick a random key out of the pool for this specific user request
-    const randomIndex = Math.floor(Math.random() * keyPool.length);
-    const activeApiKey = keyPool[randomIndex];
+    // 3. System Ororchesration System Prompt Matrix
+    const systemPrompt = `
+      You are the PromptArc Core Engine. You output strictly production-ready, raw standalone HTML code strings wrapped inside Tailwind CSS utility targets.
+      Do NOT write markdown formatting, do NOT write markdown code blocks (\`\`\`html), and do NOT offer conversational text descriptions. 
+      Synthesize a pristine application framework matching this explicit user query: "${prompt}" and deployment context: [${type?.toUpperCase()}].
+    `;
 
-    // 3. TARGET THE ULTRA-FAST, HIGH-VOLUME INFRASTRUCTURE MODEL (gemini-3.1-flash-lite)
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-3.1-flash-lite:generateContent`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": activeApiKey!,
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: `You are an expert full-stack AI developer. Generate a complete, beautifully styled HTML web component layout based on this specification: "${prompt}". Use Tailwind CSS via CDN for rich modern styling. Return ONLY the raw code elements. Do not include markdown code block backticks (\`\`\`) or any conversational text.`,
-                },
-              ],
-            },
-          ],
-          generationConfig: {
-            maxOutputTokens: 8000,
-            temperature: 0.2, // Slightly lowered for faster, more deterministic generation speeds
-          },
-        }),
-      }
-    );
-
-    const data = await response.json();
+    // 4. Dispatch payload execution directly to Anthropic's flagship model pipeline
+    // Replacing this with your active proxy or direct API routing key credentials
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.ANTHROPIC_API_KEY || "",
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-3-5-sonnet-20241022",
+        max_tokens: 4000,
+        system: systemPrompt,
+        messages: [{ role: "user", content: prompt }],
+      }),
+    });
 
     if (!response.ok) {
-      return NextResponse.json(
-        { error: data.error?.message || "The cluster limits are full. Try again." },
-        { status: response.status }
-      );
+      const errorData = await response.json();
+      return new NextResponse(JSON.stringify({ error: "Upstream model pipeline allocation exception.", details: errorData }), {
+        status: response.status,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
-    const generatedCode = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const data = await response.json();
+    const rawGeneratedCode = data.content[0]?.text || "";
 
-    if (!generatedCode) {
-      return NextResponse.json({ error: "No code text returned from AI engine" }, { status: 500 });
-    }
+    // 5. Return clean compiled operational string assets
+    return new NextResponse(JSON.stringify({ code: rawGeneratedCode }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
 
-    return NextResponse.json({ code: generatedCode });
-  } catch (error) {
-    console.error("Multi-User Distribution Routing Error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  } catch (error: any) {
+    return new NextResponse(JSON.stringify({ error: "Internal generation gateway failure.", details: error.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
