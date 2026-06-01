@@ -36,7 +36,6 @@ export default function UnifiedWorkspaceStudio() {
     return () => clearInterval(interval);
   }, []);
 
-  // Structural mock data pulled directly from capture ledger rows
   const recentTasks: TaskItem[] = [
     {
       id: "EMT - d42c09",
@@ -83,7 +82,7 @@ export default function UnifiedWorkspaceStudio() {
   };
 
   return (
-    <div style={{ backgroundColor: "#030307", minHeight: "100vh", display: "flex", flexDirection: "column", relative: "position" }}>
+    <div style={{ backgroundColor: "#030307", minHeight: "100vh", display: "flex", flexDirection: "column", position: "relative" }}>
       
       {/* Global Embedded Design Transitions & Wave Configurations */}
       <style>{`
@@ -137,7 +136,7 @@ export default function UnifiedWorkspaceStudio() {
         
         {/* Top Promotional Discount Layer Bar */}
         <div style={{ width: "100%", maxWidth: "560px", margin: "0 auto 48px auto" }}>
-          <div className="blur-discount-strip" style={{ borderRadius: "9999px", padding: "10px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div className="blur-discount-strip" style={{ borderRadius: "9999px", padding: "10px 24px", display: "flex", alignItems: "center", justifyBox: "space-between", justifyContent: "space-between" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", fontWeight: 500, color: "#bae6fd" }}>
               <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#38bdf8" }} />
               FLAT 85% off on Standard monthly plan.
@@ -150,7 +149,7 @@ export default function UnifiedWorkspaceStudio() {
 
         {/* --- MAIN OPERATIONAL INPUT CONSOLE HUB --- */}
         <div style={{ width: "100%", maxWidth: "768px", margin: "0 auto 64px auto", textAlign: "center" }}>
-          <h2 style={{ fontFamily: "var(--font-syne)", fontSize: "36px", fontWeight: 800, color: "#ffffff", marginBottom: "8px" }}>
+          <h2 style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: "36px", fontWeight: 800, color: "#ffffff", marginBottom: "8px" }}>
             Where ideas become reality
           </h2>
           <p style={{ color: "#94a3b8", fontSize: "14px", fontWeight: 400, margin: "0 0 32px 0" }}>
@@ -194,13 +193,13 @@ export default function UnifiedWorkspaceStudio() {
               />
 
               {/* Lower Active Action Parameter Strip Layout */}
-              <div style={{ display: "flex", alignItems: "center", justifyBox: "space-between", justifyContent: "space-between", borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: "16px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: "16px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                   
                   {/* LLM Routing Model Context Selector Component Container */}
                   <ModelSelector />
 
-                  <span style={{ fontSize: "10px", fontWeight: 700, color: "#52525b", backgroundColor: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.04)", padding: "6px 12px", borderRadius: "8px", tracking: "0.5px" }}>
+                  <span style={{ fontSize: "10px", fontWeight: 700, color: "#52525b", backgroundColor: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.04)", padding: "6px 12px", borderRadius: "8px" }}>
                     CLUSTER CAP: {clusterCapacity}%
                   </span>
                 </div>
@@ -254,10 +253,10 @@ export default function UnifiedWorkspaceStudio() {
           </div>
         )}
 
-        {/* --- THE SCROLL-DOWN FEED SUB-ROUTING METRIC TAB LEDGER (EXACTLY AS SCREENSHOTS) --- */}
+        {/* --- THE SCROLL-DOWN FEED SUB-ROUTING METRIC TAB LEDGER --- */}
         <div style={{ width: "100%", maxWidth: "768px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "24px" }}>
           
-          {/* Recent Tasks | Deployed Apps Tab Selector Layout (Screenshot 3 and 4) */}
+          {/* Recent Tasks | Deployed Apps Tab Selector Layout */}
           <div style={{ display: "flex", gap: "24px", borderBottom: "1px solid rgba(255,255,255,0.04)", paddingBottom: "12px" }}>
             <button
               type="button"
@@ -302,8 +301,8 @@ export default function UnifiedWorkspaceStudio() {
                 ))}
               </div>
               
-              {/* Pagination Dashboard Ledger Sheet Controller Footer (Screenshot 4 Element) */}
-              <div style={{ padding: "16px 24px", backgroundColor: "rgba(0,0,0,0.15)", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "12px", color: "#52525b", fontWeight: 500 }}>
+              {/* Pagination Dashboard Ledger Sheet Controller Footer */}
+              <div style={{ padding: "16px 24px", backgroundColor: "rgba(0,0,0,0.15)", display: "flex", alignItems: "center", justifyBox: "space-between", justifyContent: "space-between", fontSize: "12px", color: "#52525b", fontWeight: 500 }}>
                 <span>Showing 1-1 out of 1 records</span>
                 <div style={{ display: "flex", gap: "8px", fontSize: "11px" }}>
                   <span>Tasks per page: </span>
