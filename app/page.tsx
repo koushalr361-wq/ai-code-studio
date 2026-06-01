@@ -22,11 +22,9 @@ export default function PromptArcProduction() {
       });
 
       const data = await response.json();
-
       if (!response.ok) throw new Error(data.error || "Generation failed.");
 
-      // This displays the output returned from your route.ts
-      setOutput(data.output || data.code || "No response received.");
+      setOutput(data.output);
     } catch (err: any) {
       setOutput("Error: " + err.message);
     } finally {
@@ -54,7 +52,7 @@ export default function PromptArcProduction() {
             disabled={loading}
             className="mt-4 w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold transition disabled:opacity-50"
           >
-            {loading ? "Generating Framework..." : "Launch Generation"}
+            {loading ? "Generating..." : "Launch Generation"}
           </button>
         </form>
 
