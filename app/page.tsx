@@ -46,13 +46,12 @@ export default function PromptArcPersonalDashboard() {
     setPrompt(`Create a customized premium template architecture for a ${text.toLowerCase()} platform...`);
     triggerToast(`Context loaded: ${text}`);
   };
-
-  const handleExecuteAgent = async (e: React.FormEvent) => {
+const handleExecuteAgent = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim()) return;
 
     setIsProcessing(true);
-    setConsoleLogs(["[SYSTEM] Allocating dedicated kernel instance..."]);
+    setConsoleLogs(["[INIT] Connection secure. Handshaking with execution router..."]);
 
     const newTaskID = `ARC-${Math.floor(1000 + Math.random() * 9000)}`;
     const freshNode: UserTask = {
@@ -66,28 +65,46 @@ export default function PromptArcPersonalDashboard() {
     setPersonalTasks(prev => [freshNode, ...prev]);
 
     try {
-      await new Promise(r => setTimeout(r, 800));
-      setConsoleLogs(prev => [...prev, `[ROUTER] Mapping instruction sequence directly to ${activeModel}...`]);
-      await new Promise(r => setTimeout(r, 900));
-      setConsoleLogs(prev => [...prev, `[STAGING] Compiling asset distribution networks onto edge storage layers...`]);
-      await new Promise(r => setTimeout(r, 700));
-      
+      // Dispatch payload directly to our fresh endpoint
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt, type: activeTab }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Upstream network compilation link dropped.");
+      }
+
+      // Storing the code asset returned cleanly from the Claude mesh pipeline
+      setConsoleLogs(prev => [
+        ...prev, 
+        `[COMPILE] Asset blocks constructed dynamically for ${newTaskID}.`,
+        `SUCCESS: Staging build isolated. Outputting structure data layer live.`
+      ]);
+
       setPersonalTasks(prev => 
         prev.map(t => t.id === newTaskID ? { ...t, status: "deployed" } : t)
       );
-      setConsoleLogs(prev => [...prev, `[COMPILER] Build sequence verified cleanly. Generation ${newTaskID} successfully deployed live.`]);
-      triggerToast("Application orchestrated and deployed successfully.");
-    } catch (err) {
+
+      triggerToast(`Framework allocation ${newTaskID} successfully deployed live!`);
+      
+      // OPTIONAL: If you want to see the pure text string code dump directly in terminal logs, uncomment this line:
+      // setConsoleLogs(prev => [...prev, `[CODE ASSET]: ${data.code.substring(0, 300)}...`]);
+
+    } catch (err: any) {
       setPersonalTasks(prev => 
         prev.map(t => t.id === newTaskID ? { ...t, status: "failed" } : t)
       );
-      setConsoleLogs(prev => [...prev, "[CRITICAL] Deployment stack dropped due to communication buffer limit."]);
+      setConsoleLogs(prev => [...prev, `[CRITICAL] Error processing pipeline execution context: ${err.message}`]);
+      triggerToast("Deployment routine encountered a structural compile block.");
     } finally {
       setIsProcessing(false);
       setPrompt("");
     }
   };
-
   return (
     <div style={{ backgroundColor: "#020205", color: "#ffffff", minHeight: "100vh", fontFamily: '"Space Grotesk", system-ui, -apple-system, sans-serif', display: "flex", flexDirection: "column", position: "relative", overflowX: "hidden" }}>
       
