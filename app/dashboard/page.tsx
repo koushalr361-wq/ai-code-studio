@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
 import ComplexNavbar from "@/components/complex-navbar";
 import ModelSelector from "@/components/model-selector";
 
@@ -194,7 +195,7 @@ export default function UnifiedWorkspaceStudio() {
                 disabled={isProcessing}
               />
 
-              {/* Lower Active Action Parameter Strip Layout (TYPO REMOVED AND CORRECTED HERE) */}
+              {/* Lower Active Action Parameter Strip Layout */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: "16px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                   
