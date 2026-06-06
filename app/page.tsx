@@ -204,6 +204,7 @@ export default function PromptArcGodScaleSuite() {
       await new Promise((resolve) => setTimeout(resolve, 800));
       setGenerationLogs((prev) => [...prev, "[ROUTER] Provisioning active sandboxed node arrays..."]);
 
+      // Real network call to your backend engine
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -217,11 +218,13 @@ export default function PromptArcGodScaleSuite() {
       await new Promise((resolve) => setTimeout(resolve, 600));
       setGenerationLogs((prev) => [...prev, "[RUNTIME] Launching local framing isolation preview..."]);
 
+      // Extract the code safely from the payload
       let rawCode = data.code || "";
       if (rawCode.includes("```")) {
         rawCode = rawCode.replace(/```html/gi, "").replace(/```/g, "").trim();
       }
 
+      // Structure the preview environment
       const completeHtmlCode = `
         <!DOCTYPE html>
         <html lang="en">
