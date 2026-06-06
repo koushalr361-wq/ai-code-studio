@@ -8,28 +8,26 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
     }
 
-    // 1. SET UP AN API KEY POOL FOR ROTATION
+    // 1. THE FIX: .trim() completely destroys any hidden spaces or newlines from Vercel
     const keyPool = [
-      process.env.GEMINI_API_KEY,
-      process.env.GEMINI_API_KEY_SECONDARY, // Your secondary backup key
-    ].filter(Boolean); // Clears out any keys that aren't configured yet
+      process.env.GEMINI_API_KEY?.trim(),
+      process.env.GEMINI_API_KEY_SECONDARY?.trim(), 
+    ].filter(Boolean); 
 
     if (keyPool.length === 0) {
       return NextResponse.json({ error: "No Gemini API keys found on the server" }, { status: 500 });
     }
 
-    // 2. INTELLIGENT ROTATION: Pick a random key out of the pool for this specific user request
     const randomIndex = Math.floor(Math.random() * keyPool.length);
     const activeApiKey = keyPool[randomIndex];
 
-    // 3. TARGET THE ULTRA-FAST, HIGH-VOLUME INFRASTRUCTURE MODEL (gemini-3.1-flash-lite)
+    // 2. THE FIX: Attach the key directly to the URL instead of the Headers
     const response = await fetch(
-     `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${activeApiKey}`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-goog-api-key": activeApiKey!,
         },
         body: JSON.stringify({
           contents: [
@@ -43,7 +41,7 @@ export async function POST(req: Request) {
           ],
           generationConfig: {
             maxOutputTokens: 8000,
-            temperature: 0.2, // Slightly lowered for faster, more deterministic generation speeds
+            temperature: 0.2, 
           },
         }),
       }
@@ -65,8 +63,8 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ code: generatedCode });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Multi-User Distribution Routing Error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
   }
 }
