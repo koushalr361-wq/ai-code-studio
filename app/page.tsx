@@ -1,5 +1,4 @@
-
-"use client";
+ "use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { UserButton, useUser, SignInButton } from "@clerk/nextjs";
@@ -223,7 +222,7 @@ export default function PromptArcGodScaleSuite() {
         rawCode = rawCode.replace(/```html/gi, "").replace(/```/g, "").trim();
       }
 
-      // FIXED STRING WITHOUT CORRUPTED MARKDOWN WRAPPERS
+      // 100% FIXED TAILWIND SCRIPT TAG URL 
       const completeHtmlCode = `
         <!DOCTYPE html>
         <html lang="en">
