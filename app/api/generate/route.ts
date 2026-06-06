@@ -8,7 +8,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
     }
 
-    // Force-clean the API key to remove any hidden Vercel formatting
+    // Completely nuke any invisible spaces, newlines, or corruptions from the Vercel env keys
     const rawKey = process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY_SECONDARY || "";
     const cleanKey = rawKey.replace(/[^a-zA-Z0-9_-]/g, "");
 
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No valid Gemini API key found on server." }, { status: 500 });
     }
 
-    // Connect directly to the stable 1.5-flash model
+    // Connect securely via URL to bypass any strict Header parsing crashes
     const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${cleanKey}`;
 
     const response = await fetch(targetUrl, {
