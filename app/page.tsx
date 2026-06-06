@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { UserButton, useUser, SignInButton } from "@clerk/nextjs";
@@ -24,7 +24,6 @@ export default function PromptArcGodScaleSuite() {
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Background metric loop simulation tracking live server ticks
   useEffect(() => {
     const interval = setInterval(() => {
       setSystemLoad(() => Math.floor(41 + Math.random() * 11));
@@ -32,7 +31,6 @@ export default function PromptArcGodScaleSuite() {
     return () => clearInterval(interval);
   }, []);
 
-  // --- THREE.JS LIVE KINETIC SHADER MATRIX BACKGROUND ---
   useEffect(() => {
     if (!canvasRef.current) return;
 
@@ -222,7 +220,6 @@ export default function PromptArcGodScaleSuite() {
         rawCode = rawCode.replace(/```html/gi, "").replace(/```/g, "").trim();
       }
 
-      // 100% FIXED TAILWIND SCRIPT TAG URL 
       const completeHtmlCode = `
         <!DOCTYPE html>
         <html lang="en">
@@ -271,10 +268,8 @@ export default function PromptArcGodScaleSuite() {
       overflow: "hidden"
     }}>
       
-      {/* 3D WebGL Background Canvas Frame */}
       <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0, pointerEvents: "none" }} />
       
-      {/* --- PREMIUM COMPONENT STYLING SYSTEM --- */}
       <style>{`
         @import url('[https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap](https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap)');
         
@@ -316,13 +311,11 @@ export default function PromptArcGodScaleSuite() {
         .premium-slider::-webkit-slider-thumb { -webkit-appearance: none; background: #38bdf8; width: 12px; height: 12px; border-radius: 50%; margin-top: -4px; cursor: pointer; box-shadow: 0 0 10px #38bdf8; }
       `}</style>
 
-      {/* --- VIEW ROUTE 1: HIGH-CONVERTING INTERACTIVE LANDING TIERS --- */}
       {viewMode === "landing" && (
         <div className={isTransitioning ? "anim-scale-exit" : "anim-scale-entry"} style={{
           flex: 1, display: "flex", flexDirection: "column", position: "relative", zIndex: 1, perspective: "1200px"
         }}>
           
-          {/* HEADER INFRASTRUCTURE WITH DROPDOWN TRIGGER MATRIX */}
           <header 
             onMouseLeave={() => setActiveMenu(null)}
             style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "36px 64px", position: "relative", zIndex: 100 }}
@@ -334,7 +327,6 @@ export default function PromptArcGodScaleSuite() {
                 PROMPTARC
               </div>
 
-              {/* ACTIVE OPTION SWITCHERS */}
               <nav style={{ display: "flex", gap: "32px", fontSize: "13px", fontWeight: 500, color: "#94a3b8" }}>
                 <span style={{ cursor: "pointer", color: activeMenu === "compute" ? "#ffffff" : "#94a3b8" }} onMouseEnter={() => setActiveMenu("compute")}>Staging Core ▾</span>
                 <span style={{ cursor: "pointer", color: activeMenu === "api" ? "#ffffff" : "#94a3b8" }} onMouseEnter={() => setActiveMenu("api")}>API Gateway ▾</span>
@@ -355,7 +347,6 @@ export default function PromptArcGodScaleSuite() {
               )}
             </div>
 
-            {/* --- MEGA-MENU OPERATIONAL MATRICES --- */}
             {activeMenu && (
               <div className="mega-menu-entry" style={{
                 position: "absolute", top: "84px", left: "190px", width: "420px", backgroundColor: "rgba(4, 4, 6, 0.94)",
@@ -387,7 +378,6 @@ export default function PromptArcGodScaleSuite() {
             )}
           </header>
 
-          {/* Hero Header Presentation Area */}
           <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "0 24px" }}>
             <h1 style={{ fontFamily: '"Syne", sans-serif', fontSize: "78px", fontWeight: 800, letterSpacing: "-4px", margin: "0 0 20px 0", textAlign: "center", background: "linear-gradient(to bottom, #ffffff 40%, #4b5563 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", lineHeight: 0.95 }}>
               PROMPTARC
@@ -409,10 +399,8 @@ export default function PromptArcGodScaleSuite() {
               </button>
             </div>
 
-            {/* --- RE-ENGINEERED SAAS MICRO INSTRUMENTATION CARD WIDGETS --- */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "28px", width: "100%", maxWidth: "1140px", paddingBottom: "60px" }}>
               
-              {/* Box 1: Real-Time Cluster Core Diagnostic Tool */}
               <div className="god-tier-card cyan-glow-barrier" style={{ padding: "36px", display: "flex", flexDirection: "column", gap: "24px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ fontSize: "11px", fontWeight: 700, color: "#38bdf8", textTransform: "uppercase", letterSpacing: "1px" }}>Compute Cluster Status</span>
@@ -438,7 +426,6 @@ export default function PromptArcGodScaleSuite() {
                 </div>
               </div>
 
-              {/* Box 2: Hyperparameter Weights Token Utility */}
               <div className="god-tier-card" style={{ padding: "36px", display: "flex", flexDirection: "column", gap: "24px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "1px" }}>Model Generation Weights</span>
@@ -466,7 +453,6 @@ export default function PromptArcGodScaleSuite() {
                 </div>
               </div>
 
-              {/* Box 3: COMMERCIAL TRANSPARENT PRICING MATRIX PLATFORM */}
               <div className="god-tier-card" style={{ padding: "36px", display: "flex", flexDirection: "column", gap: "24px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ fontSize: "11px", fontWeight: 700, color: "#a855f7", textTransform: "uppercase", letterSpacing: "1px" }}>Commercial Licensing</span>
@@ -505,7 +491,6 @@ export default function PromptArcGodScaleSuite() {
         </div>
       )}
 
-      {/* --- VIEW ROUTE 2: FULL COMPACT RE-NAMED CORE DEV WORKSPACE --- */}
       {viewMode === "studio" && (
         <div className={isTransitioning ? "anim-scale-exit" : "anim-scale-entry"} style={{ flex: 1, display: "flex", flexDirection: "column", position: "relative", zIndex: 1, perspective: "1200px" }}>
           
