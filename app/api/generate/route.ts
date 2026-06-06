@@ -8,55 +8,38 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
     }
 
-    // 1. THIS IS THE MAGIC: It strips the invisible newlines from Vercel
-    const rawKeys = [
-      process.env.GEMINI_API_KEY,
-      process.env.GEMINI_API_KEY_SECONDARY, 
-    ];
+    // Force-clean the API key to remove any hidden Vercel formatting
+    const rawKey = process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY_SECONDARY || "";
+    const cleanKey = rawKey.replace(/[^a-zA-Z0-9_-]/g, "");
 
-    const cleanKeys = rawKeys
-      .filter((key) => typeof key === "string" && key.trim().length > 0)
-      .map((key) => key!.replace(/[\r\n\s]+/g, '')); // Destroys spaces and newlines
-
-    if (cleanKeys.length === 0) {
-      return NextResponse.json({ error: "No valid Gemini API keys found on the server" }, { status: 500 });
+    if (!cleanKey) {
+      return NextResponse.json({ error: "No valid Gemini API key found on server." }, { status: 500 });
     }
 
-    const activeApiKey = cleanKeys[Math.floor(Math.random() * cleanKeys.length)];
+    // Connect directly to the stable 1.5-flash model
+    const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${cleanKey}`;
 
-    // 2. We put the key in the URL, bypassing the Next.js header crash entirely
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${activeApiKey}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: `You are an expert full-stack AI developer. Generate a complete, beautifully styled HTML web component layout based on this specification: "${prompt}". Use Tailwind CSS via CDN for rich modern styling. Return ONLY the raw code elements. Do not include markdown code block backticks (\`\`\`) or any conversational text.`,
-                },
-              ],
-            },
-          ],
-          generationConfig: {
-            maxOutputTokens: 8000,
-            temperature: 0.2, 
+    const response = await fetch(targetUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text: `You are an expert full-stack AI developer. Generate a complete, beautifully styled HTML web component layout based on this specification: "${prompt}". Use Tailwind CSS via CDN for rich modern styling. Return ONLY the raw code elements. Do not include markdown code block backticks (\`\`\`) or any conversational text.`,
+              },
+            ],
           },
-        }),
-      }
-    );
+        ],
+        generationConfig: { maxOutputTokens: 8000, temperature: 0.2 },
+      }),
+    });
 
     const data = await response.json();
 
     if (!response.ok) {
-      return NextResponse.json(
-        { error: data.error?.message || "Google API rejected the request." },
-        { status: response.status }
-      );
+      return NextResponse.json({ error: data.error?.message || "Google API rejected the request." }, { status: response.status });
     }
 
     const generatedCode = data.candidates?.[0]?.content?.parts?.[0]?.text;
