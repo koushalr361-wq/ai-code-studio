@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -201,10 +202,9 @@ export default function PromptArcGodScaleSuite() {
     setGenerationLogs(["[SYSTEM] Parsing deployment context tokens..."]);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      await new Promise((resolve) => setTimeout(resolve, 400));
       setGenerationLogs((prev) => [...prev, "[ROUTER] Provisioning active sandboxed node arrays..."]);
 
-      // Real network call to your backend engine
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -215,16 +215,15 @@ export default function PromptArcGodScaleSuite() {
       if (!response.ok) throw new Error(data.error || "Generation error.");
 
       setGenerationLogs((prev) => [...prev, "[COMPILER] Syncing responsive Tailwind layer hooks..."]);
-      await new Promise((resolve) => setTimeout(resolve, 600));
+      await new Promise((resolve) => setTimeout(resolve, 400));
       setGenerationLogs((prev) => [...prev, "[RUNTIME] Launching local framing isolation preview..."]);
 
-      // Extract the code safely from the payload
       let rawCode = data.code || "";
       if (rawCode.includes("```")) {
         rawCode = rawCode.replace(/```html/gi, "").replace(/```/g, "").trim();
       }
 
-      // Structure the preview environment
+      // FIXED STRING WITHOUT CORRUPTED MARKDOWN WRAPPERS
       const completeHtmlCode = `
         <!DOCTYPE html>
         <html lang="en">
@@ -586,7 +585,7 @@ export default function PromptArcGodScaleSuite() {
                   <div style={{ textAlign: "center", maxWidth: "320px" }}>
                     <div style={{ width: "36px", height: "36px", margin: "0 auto 16px auto", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px" }} />
                     <h4 style={{ fontSize: "14px", fontWeight: 600, margin: "0 0 6px 0", letterSpacing: "-0.2px" }}>Viewport Architecture Empty</h4>
-                    <p style={{ color: "#71717a", fontSize: "12px", margin: 0, lineHeight: "1.5" }}>Our automated pipeline is building application frames and resolving asset allocations live.</p>
+                    <p style={{ color: "#71717a", fontSize: "12px", margin 0, lineHeight: "1.5" }}>Our automated pipeline is building application frames and resolving asset allocations live.</p>
                   </div>
                 )}
               </div>
