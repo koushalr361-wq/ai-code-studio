@@ -9,12 +9,10 @@ export default function PromptArcGodScaleSuite() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [activeMenu, setActiveMenu] = useState<"compute" | "api" | "nodes" | null>(null);
   
-  // High-Fidelity Active Telemetry States
   const [engineTemperature, setEngineTemperature] = useState(0.7);
   const [selectedTier, setSelectedTier] = useState<"developer" | "scale">("developer");
   const [systemLoad, setSystemLoad] = useState(42);
 
-  // Studio Core Frame States
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationLogs, setGenerationLogs] = useState<string[]>([]);
@@ -196,7 +194,7 @@ export default function PromptArcGodScaleSuite() {
 
     setIsGenerating(true);
     setGeneratedHtmlText(null);
-    setGenerationLogs(["[SYSTEM] Parsing deployment context tokens..."]);
+    setGenerationLogs(["[SYSTEM] Environment successfully connected. Parsing tokens..."]);
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 400));
@@ -321,9 +319,7 @@ export default function PromptArcGodScaleSuite() {
             style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "36px 64px", position: "relative", zIndex: 100 }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "48px" }}>
-              <div 
-                style={{ fontFamily: '"Syne", sans-serif', fontWeight: 800, fontSize: "19px", letterSpacing: "-1px", cursor: "pointer" }}
-              >
+              <div style={{ fontFamily: '"Syne", sans-serif', fontWeight: 800, fontSize: "19px", letterSpacing: "-1px", cursor: "pointer" }}>
                 PROMPTARC
               </div>
 
@@ -390,17 +386,13 @@ export default function PromptArcGodScaleSuite() {
             <div style={{ marginBottom: "96px" }}>
               <button 
                 onClick={handleLaunchStudio} 
-                style={{ 
-                  backgroundColor: "#ffffff", color: "#000000", padding: "18px 44px", borderRadius: "16px", 
-                  fontSize: "14px", fontWeight: 600, cursor: "pointer", border: "none", boxShadow: "0 10px 40px rgba(255,255,255,0.25)"
-                }}
+                style={{ backgroundColor: "#ffffff", color: "#000000", padding: "18px 44px", borderRadius: "16px", fontSize: "14px", fontWeight: 600, cursor: "pointer", border: "none", boxShadow: "0 10px 40px rgba(255,255,255,0.25)" }}
               >
                 Launch Application Studio 
               </button>
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "28px", width: "100%", maxWidth: "1140px", paddingBottom: "60px" }}>
-              
               <div className="god-tier-card cyan-glow-barrier" style={{ padding: "36px", display: "flex", flexDirection: "column", gap: "24px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ fontSize: "11px", fontWeight: 700, color: "#38bdf8", textTransform: "uppercase", letterSpacing: "1px" }}>Compute Cluster Status</span>
