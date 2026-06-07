@@ -16,8 +16,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No valid Gemini API key found on server." }, { status: 500 });
     }
 
-    const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${cleanKey}`;
-
+    const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${cleanKey}`;
     const response = await fetch(targetUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
