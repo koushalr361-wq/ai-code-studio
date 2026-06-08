@@ -213,7 +213,9 @@ export default function PromptArcGodScaleSuite() {
       await new Promise((resolve) => setTimeout(resolve, 400));
       setGenerationLogs((prev) => [...prev, "[RUNTIME] Launching local framing isolation preview..."]);
 
-      let rawCode = data.code || "";
+      // THE FIX: Changed data.code to data.text to match the Next.js API response key
+      let rawCode = data.text || ""; 
+      
       if (rawCode.includes("```")) {
         rawCode = rawCode.replace(/```html/gi, "").replace(/```/g, "").trim();
       }
@@ -226,7 +228,8 @@ export default function PromptArcGodScaleSuite() {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
           <style>
-            body { background-color: #030303; color: #ffffff; margin: 0; padding: 24px; font-family: system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+            /* Default background set to #ffffff (white) to ensure text is visible if the AI doesn't specify a dark theme */
+            body { background-color: #ffffff; color: #000000; margin: 0; padding: 24px; font-family: system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
             ::-webkit-scrollbar { display: none; }
           </style>
         </head>
@@ -543,7 +546,13 @@ export default function PromptArcGodScaleSuite() {
               <div style={{ flex: 1, backgroundColor: "#020204", borderRadius: "24px", border: "1px solid rgba(255, 255, 255, 0.05)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", boxShadow: "0 30px 60px rgba(0,0,0,0.6)" }}>
                 {generatedHtmlText ? (
                   <>
-                    <iframe srcDoc={generatedHtmlText} title="Generated Preview Frame" style={{ width: "100%", height: "100%", border: "none" }} />
+                    {/* THE FIX: Added sandbox permissions and background-color to the iframe */}
+                    <iframe 
+                      srcDoc={generatedHtmlText} 
+                      title="Generated Preview Frame" 
+                      sandbox="allow-scripts allow-same-origin allow-popups"
+                      style={{ width: "100%", height: "100%", border: "none", backgroundColor: "#ffffff" }} 
+                    />
                     {!isSubscribed && (
                       <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(2, 2, 5, 0.35)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 20 }}>
                         <div style={{ backgroundColor: "#07070a", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "24px", padding: "40px", maxWidth: "400px", textAlign: "center", boxShadow: "0 40px 80px rgba(0,0,0,0.8)" }}>
