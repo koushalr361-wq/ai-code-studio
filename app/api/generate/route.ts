@@ -22,12 +22,11 @@ export async function POST(req: Request) {
       contents: [{ role: "user", parts: [{ text: prompt }] }],
     };
 
-    // THE FIX: The Fallback Matrix
-    // If one model is busy, we cascade to the next.
+    // The Fallback Matrix: Cascading through models to handle high demand
     const modelsToTry = [
       "gemini-3.5-flash",
-      "gemini-3.1-flash-lite", // Lighter model, less likely to be congested
-      "gemini-3.1-pro"         // Premium model, used as a final fallback
+      "gemini-3.1-flash-lite", 
+      "gemini-3.1-pro"         
     ];
 
     for (let i = 0; i < modelsToTry.length; i++) {
@@ -42,10 +41,23 @@ export async function POST(req: Request) {
 
       const data = await response.json();
 
-      // 1. If successful, return the data immediately!
+      // 1. If successful, intercept and clean the data to fix the blank screen!
       if (response.ok) {
-        const generatedText = data.candidates[0].content.parts[0].text;
-        return NextResponse.json({ text: generatedText });
+        let rawText = data.candidates[0].content.parts[0].text;
+
+        // Scrub away any markdown backticks that break the iframe HTML parser
+        let cleanHtml = rawText
+          .replace(/```html/gi, "") 
+          .replace(/```/gi, "")     
+          .trim();
+
+        // Force inject Tailwind CSS if the AI forgot it
+        if (!cleanHtml.includes("cdn.tailwindcss.com")) {
+          cleanHtml = `<script src="https://cdn.tailwindcss.com"></script>\n${cleanHtml}`;
+        }
+
+        // Send the perfectly formatted, guaranteed-to-render HTML to the frontend
+        return NextResponse.json({ text: cleanHtml });
       }
 
       // 2. If we get a 503 (High Demand) and we still have models left to try
