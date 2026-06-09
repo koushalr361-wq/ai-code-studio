@@ -6,8 +6,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "VeloStack",
-  description: "The Engine of Modern Production.",
+  title: "PromptArc",
+  description: "Auto-generates clean HTML/Tailwind components from text prompts.",
 };
 
 export default function RootLayout({
