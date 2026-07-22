@@ -213,7 +213,6 @@ export default function PromptArcGodScaleSuite() {
       await new Promise((resolve) => setTimeout(resolve, 400));
       setGenerationLogs((prev) => [...prev, "[RUNTIME] Launching local framing isolation preview..."]);
 
-      // THE FIX: Changed data.code to data.text to match the Next.js API response key
       let rawCode = data.text || ""; 
       
       if (rawCode.includes("```")) {
@@ -228,7 +227,6 @@ export default function PromptArcGodScaleSuite() {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
           <style>
-            /* Default background set to #ffffff (white) to ensure text is visible if the AI doesn't specify a dark theme */
             body { background-color: #ffffff; color: #000000; margin: 0; padding: 24px; font-family: system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
             ::-webkit-scrollbar { display: none; }
           </style>
@@ -538,7 +536,8 @@ export default function PromptArcGodScaleSuite() {
                 {generatedHtmlText && (
                   <div style={{ display: "flex", gap: "10px" }}>
                     <button onClick={handleCopyCode} disabled={!isSubscribed} style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: isSubscribed ? "#e2e8f0" : "#52525b", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600 }}>{copyStatus}</button>
-                    <button disabled={!isSubscribed} style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: isSubscribed ? "#e2e8f0" : "#52525b", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600 }}>Export to GitHub</button>
+                    {/* THE FIX: Added onClick alert handler for GitHub export */}
+                    <button onClick={() => alert("GitHub export triggered! You now need to build the API route to send this code to GitHub.")} disabled={!isSubscribed} style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: isSubscribed ? "#e2e8f0" : "#52525b", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600 }}>Export to GitHub</button>
                   </div>
                 )}
               </div>
@@ -546,7 +545,6 @@ export default function PromptArcGodScaleSuite() {
               <div style={{ flex: 1, backgroundColor: "#020204", borderRadius: "24px", border: "1px solid rgba(255, 255, 255, 0.05)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", boxShadow: "0 30px 60px rgba(0,0,0,0.6)" }}>
                 {generatedHtmlText ? (
                   <>
-                    {/* THE FIX: Added sandbox permissions and background-color to the iframe */}
                     <iframe 
                       srcDoc={generatedHtmlText} 
                       title="Generated Preview Frame" 
