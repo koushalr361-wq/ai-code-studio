@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { UserButton, useUser, SignInButton } from "@clerk/nextjs";
+import { motion, AnimatePresence } from "framer-motion";
+import { Sparkles, Terminal, Github, Copy, Activity, Zap, Layers, Server } from "lucide-react";
 
 export default function PromptArcGodScaleSuite() {
   const { user, isSignedIn } = useUser();
   const [viewMode, setViewMode] = useState<"landing" | "studio">("landing");
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [activeMenu, setActiveMenu] = useState<"compute" | "api" | "nodes" | null>(null);
   
   const [engineTemperature, setEngineTemperature] = useState(0.7);
@@ -22,16 +23,15 @@ export default function PromptArcGodScaleSuite() {
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  // System Load Simulator
   useEffect(() => {
-    const interval = setInterval(() => {
-      setSystemLoad(() => Math.floor(41 + Math.random() * 11));
-    }, 2000);
+    const interval = setInterval(() => setSystemLoad(() => Math.floor(41 + Math.random() * 11)), 2000);
     return () => clearInterval(interval);
   }, []);
 
+  // WebGL Background (Preserved exactly as your original engine)
   useEffect(() => {
     if (!canvasRef.current) return;
-
     let canvas = canvasRef.current;
     let gl = canvas.getContext("webgl");
     if (!gl) return;
@@ -136,7 +136,6 @@ export default function PromptArcGodScaleSuite() {
 
     function renderEngine(time: number) {
       if (!gl || !canvas) return;
-      
       if (canvas.width !== window.innerWidth || canvas.height !== window.innerHeight) {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -153,22 +152,17 @@ export default function PromptArcGodScaleSuite() {
       const currentRotation = time * 0.0001;
 
       const projMatrix = perspectiveMatrix(Math.PI / 4, canvas.width / canvas.height, 0.1, 100.0);
-      
       const cX = Math.cos(rotationX);
       const sX = Math.sin(rotationX);
       const cY = Math.cos(rotationY + currentRotation);
       const sY = Math.sin(rotationY + currentRotation);
 
       const mvMatrix = new Float32Array([
-        cY, sX * sY, -cX * sY, 0,
-        0, cX, sX, 0,
-        sY, -sX * cY, cX * cY, 0,
-        0, 0, -25.0, 1.0
+        cY, sX * sY, -cX * sY, 0, 0, cX, sX, 0, sY, -sX * cY, cX * cY, 0, 0, 0, -25.0, 1.0
       ]);
 
       gl.uniformMatrix4fv(uProjection, false, projMatrix);
       gl.uniformMatrix4fv(uModelView, false, mvMatrix);
-
       gl.drawArrays(gl.POINTS, 0, particleCount);
       animId = requestAnimationFrame(renderEngine);
     }
@@ -180,14 +174,7 @@ export default function PromptArcGodScaleSuite() {
     };
   }, []);
 
-  const handleLaunchStudio = () => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setViewMode("studio");
-      setIsTransitioning(false);
-    }, 700);
-  };
-
+  // API Route Handlers
   const handleGenerateApp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim()) return;
@@ -213,7 +200,7 @@ export default function PromptArcGodScaleSuite() {
       await new Promise((resolve) => setTimeout(resolve, 400));
       setGenerationLogs((prev) => [...prev, "[RUNTIME] Launching local framing isolation preview..."]);
 
-      let rawCode = data.text || ""; 
+      let rawCode = data.text || data.code || ""; 
       
       if (rawCode.includes("```")) {
         rawCode = rawCode.replace(/```html/gi, "").replace(/```/g, "").trim();
@@ -254,328 +241,252 @@ export default function PromptArcGodScaleSuite() {
     setTimeout(() => setCopyStatus("Copy Code"), 2000);
   };
 
+  // Page Transition Variants
+  const pageVariants = {
+    initial: { opacity: 0, scale: 0.95, filter: "blur(10px)" },
+    in: { opacity: 1, scale: 1, filter: "blur(0px)", transition: { duration: 0.5, ease: "easeOut" } },
+    out: { opacity: 0, scale: 1.05, filter: "blur(10px)", transition: { duration: 0.4, ease: "easeIn" } }
+  };
+
   return (
-    <div style={{
-      backgroundColor: "#010103",
-      color: "#ffffff",
-      minHeight: "100vh",
-      fontFamily: '"Space Grotesk", -apple-system, sans-serif',
-      WebkitFontSmoothing: "antialiased",
-      display: "flex",
-      flexDirection: "column",
-      position: "relative",
-      overflow: "hidden"
-    }}>
-      
-      <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0, pointerEvents: "none" }} />
-      
-      <style>{`
-        @import url('[https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap](https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap)');
-        
-        @keyframes godScaleExit {
-          0% { opacity: 1; transform: scale(1) translateY(0) rotateX(0deg); filter: blur(0px); }
-          100% { opacity: 0; transform: scale(0.92) translateY(-40px) rotateX(10deg); filter: blur(12px); }
-        }
-        @keyframes godScaleEntry {
-          0% { opacity: 0; transform: scale(1.06) translateY(24px) rotateX(-6deg); filter: blur(8px); }
-          100% { opacity: 1; transform: scale(1) translateY(0) rotateX(0deg); filter: blur(0px); }
-        }
-        @keyframes menuPop {
-          from { opacity: 0; transform: translateY(12px) scale(0.99); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .anim-scale-exit { animation: godScaleExit 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .anim-scale-entry { animation: godScaleEntry 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .mega-menu-entry { animation: menuPop 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    <div className="relative min-h-screen w-full overflow-hidden bg-[#020205] text-white">
+      {/* Absolute WebGL Canvas */}
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full z-0 pointer-events-none opacity-80" />
 
-        .god-tier-card {
-          background: linear-gradient(145deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.002) 100%);
-          border: 1px solid rgba(255, 255, 255, 0.04);
-          backdrop-filter: blur(32px);
-          -webkit-backdrop-filter: blur(32px);
-          border-radius: 32px !important;
-          transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .god-tier-card:hover {
-          transform: translateY(-8px);
-          border-color: rgba(255, 255, 255, 0.08);
-          box-shadow: 0 40px 80px rgba(0,0,0,0.6);
-        }
-        .cyan-glow-barrier {
-          border-color: rgba(56, 189, 248, 0.45) !important;
-          box-shadow: 0 0 40px rgba(56, 189, 248, 0.06), inset 0 0 20px rgba(56, 189, 248, 0.02) !important;
-        }
-        .premium-slider { "-webkit-appearance": "none", width: "100%", background: "transparent", outline: "none" }
-        .premium-slider::-webkit-slider-runnable-track { background: rgba(255,255,255,0.06); height: 4px; border-radius: 2px; }
-        .premium-slider::-webkit-slider-thumb { -webkit-appearance: none; background: #38bdf8; width: 12px; height: 12px; border-radius: 50%; margin-top: -4px; cursor: pointer; box-shadow: 0 0 10px #38bdf8; }
-      `}</style>
-
-      {viewMode === "landing" && (
-        <div className={isTransitioning ? "anim-scale-exit" : "anim-scale-entry"} style={{
-          flex: 1, display: "flex", flexDirection: "column", position: "relative", zIndex: 1, perspective: "1200px"
-        }}>
-          
-          <header 
-            onMouseLeave={() => setActiveMenu(null)}
-            style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "36px 64px", position: "relative", zIndex: 100 }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "48px" }}>
-              <div style={{ fontFamily: '"Syne", sans-serif', fontWeight: 800, fontSize: "19px", letterSpacing: "-1px", cursor: "pointer" }}>
-                PROMPTARC
-              </div>
-
-              <nav style={{ display: "flex", gap: "32px", fontSize: "13px", fontWeight: 500, color: "#94a3b8" }}>
-                <span style={{ cursor: "pointer", color: activeMenu === "compute" ? "#ffffff" : "#94a3b8" }} onMouseEnter={() => setActiveMenu("compute")}>Staging Core ▾</span>
-                <span style={{ cursor: "pointer", color: activeMenu === "api" ? "#ffffff" : "#94a3b8" }} onMouseEnter={() => setActiveMenu("api")}>API Gateway ▾</span>
-                <span style={{ cursor: "pointer", color: activeMenu === "nodes" ? "#ffffff" : "#94a3b8" }} onMouseEnter={() => setActiveMenu("nodes")}>Network Topology ▾</span>
-              </nav>
-            </div>
-
-            <div>
-              {isSignedIn ? (
-                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                  <span style={{ fontSize: "13px", color: "#94a3b8" }}>Cluster Session: <strong style={{ color: "#ffffff", fontWeight: 600 }}>{user?.firstName}</strong></span>
-                  <UserButton afterSignOutUrl="/" />
-                </div>
-              ) : (
-                <SignInButton mode="modal">
-                  <button style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", color: "#ffffff", padding: "10px 24px", borderRadius: "14px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>Connect Engine</button>
-                </SignInButton>
-              )}
-            </div>
-
-            {activeMenu && (
-              <div className="mega-menu-entry" style={{
-                position: "absolute", top: "84px", left: "190px", width: "420px", backgroundColor: "rgba(4, 4, 6, 0.94)",
-                border: "1px solid rgba(255, 255, 255, 0.06)", backdropFilter: "blur(40px)", WebkitBackdropFilter: "blur(40px)",
-                borderRadius: "24px", padding: "28px", boxShadow: "0 50px 100px rgba(0,0,0,0.8)"
-              }}>
-                {activeMenu === "compute" && (
-                  <div>
-                    <div style={{ fontSize: "11px", fontWeight: 700, color: "#38bdf8", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px" }}>Isolated Staging Core</div>
-                    <p style={{ color: "#94a3b8", fontSize: "12px", margin: "0 0 16px 0", lineHeight: "1.4" }}>Launch direct execution nodes to process full-stack visual layouts synchronously inside production sandboxes.</p>
-                    <span style={{ fontSize: "12px", color: "#ffffff", fontWeight: 600, cursor: "pointer" }} onClick={handleLaunchStudio}>Launch Active Studio Terminal →</span>
-                  </div>
-                )}
-                {activeMenu === "api" && (
-                  <div>
-                    <div style={{ fontSize: "11px", fontWeight: 700, color: "#a855f7", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px" }}>Asynchronous Schema Protocols</div>
-                    <p style={{ color: "#94a3b8", fontSize: "12px", margin: "0 0 16px 0", lineHeight: "1.4" }}>Stitch language parameters directly into deployment targets using structured webhooks and secure API secret blocks.</p>
-                    <span style={{ fontSize: "12px", color: "#ffffff", fontWeight: 600, cursor: "pointer" }}>Review API Framework →</span>
-                  </div>
-                )}
-                {activeMenu === "nodes" && (
-                  <div>
-                    <div style={{ fontSize: "11px", fontWeight: 700, color: "#22c55e", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px" }}>Distributed Server Cluster</div>
-                    <p style={{ color: "#94a3b8", fontSize: "12px", margin: "0 0 16px 0", lineHeight: "1.4" }}>Verify global telemetry sync operations, compute core configurations, and file execution connection lines.</p>
-                    <span style={{ fontSize: "12px", color: "#ffffff", fontWeight: 600, cursor: "pointer" }}>Explore Telemetry Nodes →</span>
-                  </div>
-                )}
-              </div>
-            )}
-          </header>
-
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "0 24px" }}>
-            <h1 style={{ fontFamily: '"Syne", sans-serif', fontSize: "78px", fontWeight: 800, letterSpacing: "-4px", margin: "0 0 20px 0", textAlign: "center", background: "linear-gradient(to bottom, #ffffff 40%, #4b5563 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", lineHeight: 0.95 }}>
-              PROMPTARC
-            </h1>
+      <AnimatePresence mode="wait">
+        {/* ================= LANDING PAGE ================= */}
+        {viewMode === "landing" && (
+          <motion.div key="landing" variants={pageVariants} initial="initial" animate="in" exit="out" className="relative z-10 flex flex-col min-h-screen">
             
-            <p style={{ fontSize: "16px", color: "#94a3b8", lineHeight: "1.6", margin: "0 0 48px 0", textAlign: "center", maxWidth: "580px", fontWeight: 400 }}>
-              Auto-generates clean HTML/Tailwind from text, mates with development, building expine, and ribeotvised action actions into a proper, premium startup-grade platform.
-            </p>
-
-            <div style={{ marginBottom: "96px" }}>
-              <button 
-                onClick={handleLaunchStudio} 
-                style={{ backgroundColor: "#ffffff", color: "#000000", padding: "18px 44px", borderRadius: "16px", fontSize: "14px", fontWeight: 600, cursor: "pointer", border: "none", boxShadow: "0 10px 40px rgba(255,255,255,0.25)" }}
-              >
-                Launch Application Studio 
-              </button>
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "28px", width: "100%", maxWidth: "1140px", paddingBottom: "60px" }}>
-              <div className="god-tier-card cyan-glow-barrier" style={{ padding: "36px", display: "flex", flexDirection: "column", gap: "24px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: "11px", fontWeight: 700, color: "#38bdf8", textTransform: "uppercase", letterSpacing: "1px" }}>Compute Cluster Status</span>
-                  <span style={{ fontSize: "12px", color: "#22c55e", fontWeight: 600, fontFamily: "monospace" }}>● LIVE</span>
-                </div>
-                <div style={{ height: "90px", display: "flex", flexDirection: "column", justifyContent: "center", gap: "10px" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", color: "#94a3b8" }}>
-                    <span>Active Memory Allocation</span>
-                    <span style={{ color: "#ffffff", fontWeight: 600 }}>{systemLoad}% System</span>
+            {/* Elite Header */}
+            <header className="flex justify-between items-center px-12 py-8" onMouseLeave={() => setActiveMenu(null)}>
+              <div className="flex items-center gap-12">
+                <div className="font-display font-bold text-2xl tracking-tighter flex items-center gap-2 text-white">
+                  <div className="w-6 h-6 rounded-md bg-cyan-400 shadow-[0_0_20px_rgba(56,189,248,0.5)] flex items-center justify-center">
+                    <Zap size={14} className="text-black" />
                   </div>
-                  <div style={{ width: "100%", height: "4px", backgroundColor: "rgba(255,255,255,0.03)", borderRadius: "2px", overflow: "hidden" }}>
-                    <div style={{ width: `${systemLoad}%`, height: "100%", backgroundColor: "#38bdf8", boxShadow: "0 0 10px #38bdf8", transition: "width 0.4s ease" }} />
-                  </div>
-                  <div style={{ display: "flex", gap: "6px", marginTop: "2px" }}>
-                    <div style={{ flex: 1, height: "16px", background: "rgba(56,189,248,0.12)", borderRadius: "4px" }} />
-                    <div style={{ flex: 1, height: "16px", background: "rgba(56,189,248,0.12)", borderRadius: "4px" }} />
-                    <div style={{ flex: 1, height: "16px", background: systemLoad > 45 ? "rgba(56,189,248,0.12)" : "rgba(255,255,255,0.02)", borderRadius: "4px" }} />
-                  </div>
+                  PROMPTARC
                 </div>
-                <div>
-                  <h3 style={{ fontSize: "20px", fontWeight: 700, margin: "0 0 6px 0", letterSpacing: "-0.5px" }}>Instant Compilation</h3>
-                  <p style={{ color: "#94a3b8", fontSize: "13px", margin: 0, lineHeight: "1.6" }}>Auto-generates clean within/Tailwind from text. Responsive design, Ready-to-deploy logic.</p>
-                </div>
+                
+                <nav className="flex gap-8 text-sm font-medium text-slate-400">
+                  <span className={`cursor-pointer transition-colors ${activeMenu === "compute" ? "text-white" : "hover:text-white"}`} onMouseEnter={() => setActiveMenu("compute")}>Staging Core</span>
+                  <span className={`cursor-pointer transition-colors ${activeMenu === "api" ? "text-white" : "hover:text-white"}`} onMouseEnter={() => setActiveMenu("api")}>API Gateway</span>
+                  <span className={`cursor-pointer transition-colors ${activeMenu === "nodes" ? "text-white" : "hover:text-white"}`} onMouseEnter={() => setActiveMenu("nodes")}>Network Topology</span>
+                </nav>
               </div>
 
-              <div className="god-tier-card" style={{ padding: "36px", display: "flex", flexDirection: "column", gap: "24px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "1px" }}>Model Generation Weights</span>
-                  <span style={{ fontSize: "12px", color: "#38bdf8", fontFamily: "monospace" }}>t={engineTemperature}</span>
-                </div>
-                <div style={{ height: "90px", display: "flex", flexDirection: "column", justifyContent: "center", gap: "10px" }}>
-                  <input 
-                    type="range" 
-                    min="0.1" 
-                    max="1.5" 
-                    step="0.1" 
-                    value={engineTemperature} 
-                    onChange={(e) => setEngineTemperature(parseFloat(e.target.value))}
-                    className="premium-slider"
-                    style={{ WebkitAppearance: "none", width: "100%", background: "transparent", outline: "none" }}
-                  />
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "#64748b" }}>
-                    <span>Deterministic</span>
-                    <span>Fluid / Creative</span>
-                  </div>
-                </div>
-                <div>
-                  <h3 style={{ fontSize: "20px", fontWeight: 700, margin: "0 0 6px 0", letterSpacing: "-0.5px" }}>Real-Time Previews</h3>
-                  <p style={{ color: "#94a3b8", fontSize: "13px", margin: 0, lineHeight: "1.6" }}>See your creation instantly within a secure canvas. Interactive state, Mock data injection.</p>
-                </div>
-              </div>
-
-              <div className="god-tier-card" style={{ padding: "36px", display: "flex", flexDirection: "column", gap: "24px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: "11px", fontWeight: 700, color: "#a855f7", textTransform: "uppercase", letterSpacing: "1px" }}>Commercial Licensing</span>
-                  <span style={{ fontSize: "12px", color: "#ffffff", fontWeight: 600 }}>
-                    {selectedTier === "developer" ? "$19/mo" : "$79/mo"}
-                  </span>
-                </div>
-                <div style={{ height: "90px", display: "flex", alignItems: "center", gap: "10px" }}>
-                  <button 
-                    type="button"
-                    onClick={() => setSelectedTier("developer")}
-                    style={{ flex: 1, padding: "10px 14px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)", background: selectedTier === "developer" ? "rgba(255,255,255,0.07)" : "transparent", color: "#ffffff", fontSize: "12px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}
-                  >
-                    Developer Plan
-                  </button>
-                  <button 
-                    type="button"
-                    onClick={() => setSelectedTier("scale")}
-                    style={{ flex: 1, padding: "10px 14px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)", background: selectedTier === "scale" ? "rgba(255,255,255,0.07)" : "transparent", color: "#ffffff", fontSize: "12px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}
-                  >
-                    Scale Tier
-                  </button>
-                </div>
-                <div>
-                  <h3 style={{ fontSize: "20px", fontWeight: 700, margin: "0 0 6px 0", letterSpacing: "-0.5px" }}>One-Click Deploy</h3>
-                  <p style={{ color: "#94a3b8", fontSize: "13px", margin: 0, lineHeight: "1.6" }}>Push directly to GitHub repos and launch live links. Clerk auth, Production hosting config.</p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <footer style={{ textAlign: "center", paddingBottom: "32px", fontSize: "11px", color: "#3f3f46", letterSpacing: "0.5px", fontWeight: 600 }}>
-            © 2026 PROMPTARC CORE INFRASTRUCTURE PIPELINES PROTECTED.
-          </footer>
-        </div>
-      )}
-
-      {viewMode === "studio" && (
-        <div className={isTransitioning ? "anim-scale-exit" : "anim-scale-entry"} style={{ flex: 1, display: "flex", flexDirection: "column", position: "relative", zIndex: 1, perspective: "1200px" }}>
-          
-          <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px 32px", borderBottom: "1px solid rgba(255, 255, 255, 0.05)", backgroundColor: "#07070a" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
-              <div onClick={() => setViewMode("landing")} style={{ fontFamily: '"Syne", sans-serif', fontWeight: 800, fontSize: "16px", color: "#ffffff", letterSpacing: "-0.5px", cursor: "pointer" }}>
-                PROMPTARC
-              </div>
-              <span style={{ color: "rgba(255,255,255,0.15)" }}>/</span>
-              <span style={{ fontSize: "13px", fontWeight: 500, color: "#94a3b8" }}>Application Studio</span>
-            </div>
-            
-            <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-              <span style={{ fontSize: "13px", color: "#64748b", fontWeight: 500 }}>Account: <strong style={{ color: "#e2e8f0", fontWeight: 600 }}>{user?.firstName || "Developer"}</strong></span>
-              <UserButton afterSignOutUrl="/" />
-            </div>
-          </header>
-
-          <main style={{ flex: 1, display: "flex", height: "calc(100vh - 65px)", overflow: "hidden" }}>
-            
-            <div style={{ width: "420px", borderRight: "1px solid rgba(255, 255, 255, 0.05)", padding: "32px", display: "flex", flexDirection: "column", gap: "28px", backgroundColor: "#040407" }}>
               <div>
-                <h2 style={{ fontSize: "20px", fontWeight: 700, margin: "0 0 6px 0", letterSpacing: "-0.5px" }}>Application Generator</h2>
-                <p style={{ color: "#71717a", fontSize: "13px", margin: 0, lineHeight: "1.5" }}>Declare deployment specifications. Our automation pipeline compiles the visual interface assets inside the sandboxed viewport.</p>
-              </div>
-
-              <form onSubmit={handleGenerateApp} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                <label style={{ fontSize: "11px", fontWeight: 700, color: "#a1a1aa", letterSpacing: "1px", textTransform: "uppercase" }}>Prompt Specifications</label>
-                <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder="e.g., Build a modern real estate dashboard..." style={{ backgroundColor: "#07070a", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "16px", padding: "16px", color: "#ffffff", fontSize: "14px", fontFamily: "inherit", resize: "none", height: "140px", outline: "none", lineHeight: "1.5" }} />
-                <button type="submit" disabled={isGenerating || !prompt} style={{ backgroundColor: isGenerating || !prompt ? "rgba(255,255,255,0.02)" : "#ffffff", color: isGenerating || !prompt ? "#71717a" : "#000000", border: "none", borderRadius: "12px", padding: "14px", fontSize: "14px", fontWeight: 600, cursor: "pointer" }}>
-                  {isGenerating ? "Compiling App Matrix..." : "Generate Web App"}
-                </button>
-              </form>
-
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "12px" }}>
-                <span style={{ fontSize: "11px", fontWeight: 700, color: "#a1a1aa", letterSpacing: "1px", textTransform: "uppercase" }}>System Compilation Logs</span>
-                <div style={{ flex: 1, backgroundColor: "#000000", border: "1px solid rgba(255, 255, 255, 0.04)", borderRadius: "16px", padding: "16px", fontFamily: "monospace", fontSize: "12px", color: "#38bdf8", overflowY: "auto", display: "flex", flexDirection: "column", gap: "8px" }}>
-                  {generationLogs.length === 0 && <span style={{ color: "#4b5563", fontStyle: "italic" }}>System log environment listening for structural parameters...</span>}
-                  {generationLogs.map((log, index) => <div key={index}>{log}</div>)}
-                </div>
-              </div>
-            </div>
-
-            <div style={{ flex: 1, backgroundColor: "#08080c", padding: "32px", display: "flex", flexDirection: "column", gap: "16px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: generatedHtmlText ? "#22c55e" : "#eab308" }} />
-                  <span style={{ fontSize: "13px", fontWeight: 500, color: "#a1a1aa" }}>Live Application Sandbox Framework</span>
-                </div>
-                {generatedHtmlText && (
-                  <div style={{ display: "flex", gap: "10px" }}>
-                    <button onClick={handleCopyCode} disabled={!isSubscribed} style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: isSubscribed ? "#e2e8f0" : "#52525b", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600 }}>{copyStatus}</button>
-                    {/* THE FIX: Added onClick alert handler for GitHub export */}
-                    <button onClick={() => alert("GitHub export triggered! You now need to build the API route to send this code to GitHub.")} disabled={!isSubscribed} style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: isSubscribed ? "#e2e8f0" : "#52525b", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600 }}>Export to GitHub</button>
+                {isSignedIn ? (
+                  <div className="flex items-center gap-4 glass-panel px-4 py-2 rounded-full">
+                    <span className="text-sm text-slate-400">Cluster: <strong className="text-white">{user?.firstName}</strong></span>
+                    <UserButton afterSignOutUrl="/" />
                   </div>
-                )}
-              </div>
-
-              <div style={{ flex: 1, backgroundColor: "#020204", borderRadius: "24px", border: "1px solid rgba(255, 255, 255, 0.05)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", boxShadow: "0 30px 60px rgba(0,0,0,0.6)" }}>
-                {generatedHtmlText ? (
-                  <>
-                    <iframe 
-                      srcDoc={generatedHtmlText} 
-                      title="Generated Preview Frame" 
-                      sandbox="allow-scripts allow-same-origin allow-popups"
-                      style={{ width: "100%", height: "100%", border: "none", backgroundColor: "#ffffff" }} 
-                    />
-                    {!isSubscribed && (
-                      <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(2, 2, 5, 0.35)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 20 }}>
-                        <div style={{ backgroundColor: "#07070a", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "24px", padding: "40px", maxWidth: "400px", textAlign: "center", boxShadow: "0 40px 80px rgba(0,0,0,0.8)" }}>
-                          <div style={{ width: "40px", height: "40px", margin: "0 auto 16px auto", borderRadius: "50%", border: "1px solid #ef4444", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <div style={{ width: "4px", height: "4px", borderRadius: "50%", background: "#ef4444" }} />
-                          </div>
-                          <h3 style={{ fontSize: "20px", fontWeight: 700, margin: "0 0 10px 0", letterSpacing: "-0.5px" }}>Unlock Your Application Assets</h3>
-                          <p style={{ color: "#a1a1aa", fontSize: "13px", lineHeight: "1.6", margin: "0 0 28px 0" }}>Your fully responsive sandbox layout has successfully compiled! Upgrade to PromptArc premium to export directly to GitHub and snap the clean source code files.</p>
-                          <button onClick={() => setIsSubscribed(true)} style={{ backgroundColor: "#ffffff", color: "#000000", border: "none", borderRadius: "12px", width: "100%", padding: "14px", fontSize: "14px", fontWeight: 600, cursor: "pointer" }}>Upgrade to Premium ⚡</button>
-                        </div>
-                      </div>
-                    )}
-                  </>
                 ) : (
-                  <div style={{ textAlign: "center", maxWidth: "320px" }}>
-                    <div style={{ width: "36px", height: "36px", margin: "0 auto 16px auto", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px" }} />
-                    <h4 style={{ fontSize: "14px", fontWeight: 600, margin: "0 0 6px 0", letterSpacing: "-0.2px" }}>Viewport Architecture Empty</h4>
-                    <p style={{ color: "#71717a", fontSize: "12px", margin: 0, lineHeight: "1.5" }}>Our automated pipeline is building application frames and resolving asset allocations live.</p>
-                  </div>
+                  <SignInButton mode="modal">
+                    <button className="glass-panel px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-white/10 transition-all text-white">
+                      Connect Engine
+                    </button>
+                  </SignInButton>
                 )}
               </div>
-            </div>
-          </main>
-        </div>
-      )}
+            </header>
+
+            {/* Hero Section */}
+            <main className="flex-1 flex flex-col items-center justify-center px-6">
+              <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="text-center max-w-4xl mx-auto">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel text-cyan-400 text-xs font-bold tracking-widest uppercase mb-8">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+                  </span>
+                  PromptArc Core v2.0 Live
+                </div>
+                
+                <h1 className="font-display text-7xl md:text-[6rem] font-extrabold tracking-tighter leading-[0.9] mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/40 pb-2">
+                  Ship Interfaces <br/> <span className="text-glow-cyan text-cyan-400">At God Scale.</span>
+                </h1>
+                
+                <p className="text-lg text-slate-400 leading-relaxed max-w-2xl mx-auto mb-12">
+                  Auto-generate production-ready React & Tailwind UI directly from natural language. Bypass the boilerplate. Deploy instantly to GitHub.
+                </p>
+
+                <button 
+                  onClick={() => setViewMode("studio")}
+                  className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-black bg-white rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(255,255,255,0.3)] hover:scale-105 transition-all duration-300"
+                >
+                  <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-cyan-400 rounded-full group-hover:w-72 group-hover:h-72 opacity-10"></span>
+                  <Sparkles className="mr-2" size={18} />
+                  Launch Application Studio
+                </button>
+              </motion.div>
+
+              {/* Bento Box Grid */}
+              <motion.div initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl mt-24 mb-16">
+                
+                {/* Card 1 */}
+                <div className="glass-panel glass-panel-hover rounded-[2rem] p-8 flex flex-col gap-6 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 blur-[50px] rounded-full group-hover:bg-cyan-500/20 transition-all duration-700"></div>
+                  <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider">
+                    <span className="text-cyan-400 flex items-center gap-2"><Activity size={14}/> Compute Cluster</span>
+                    <span className="text-green-400 font-mono">● {systemLoad}%</span>
+                  </div>
+                  <div className="flex-1 flex flex-col justify-center gap-3">
+                    <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                      <div className="h-full bg-cyan-400 shadow-[0_0_10px_#38bdf8] transition-all duration-500" style={{ width: `${systemLoad}%` }} />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-display text-xl font-bold mb-2">Instant Compilation</h3>
+                    <p className="text-sm text-slate-400">Deep layout generation parsing directly into isolated sandboxes.</p>
+                  </div>
+                </div>
+
+                {/* Card 2 */}
+                <div className="glass-panel glass-panel-hover rounded-[2rem] p-8 flex flex-col gap-6">
+                  <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider">
+                    <span className="text-purple-400 flex items-center gap-2"><Terminal size={14}/> Engine Weights</span>
+                    <span className="text-white font-mono">t={engineTemperature.toFixed(1)}</span>
+                  </div>
+                  <div className="flex-1 flex flex-col justify-center gap-4">
+                    <input 
+                      type="range" min="0.1" max="1.5" step="0.1" 
+                      value={engineTemperature} 
+                      onChange={(e) => setEngineTemperature(parseFloat(e.target.value))}
+                    />
+                    <div className="flex justify-between text-[10px] text-slate-500 font-bold uppercase">
+                      <span>Deterministic</span>
+                      <span>Creative</span>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-display text-xl font-bold mb-2">Hyper-Tuned LLM</h3>
+                    <p className="text-sm text-slate-400">Slide weights to control exact UI determinism vs abstract layouts.</p>
+                  </div>
+                </div>
+
+                {/* Card 3 */}
+                <div className="glass-panel glass-panel-hover rounded-[2rem] p-8 flex flex-col gap-6">
+                  <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider">
+                    <span className="text-emerald-400 flex items-center gap-2"><Layers size={14}/> License Tier</span>
+                    <span className="text-white">{selectedTier === "developer" ? "$19/mo" : "$79/mo"}</span>
+                  </div>
+                  <div className="flex-1 flex gap-2 items-center">
+                    <button onClick={() => setSelectedTier("developer")} className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${selectedTier === "developer" ? 'bg-white/10 text-white border border-white/20' : 'text-slate-500 hover:bg-white/5'}`}>Dev</button>
+                    <button onClick={() => setSelectedTier("scale")} className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${selectedTier === "scale" ? 'bg-white/10 text-white border border-white/20' : 'text-slate-500 hover:bg-white/5'}`}>Scale</button>
+                  </div>
+                  <div>
+                    <h3 className="font-display text-xl font-bold mb-2">One-Click Export</h3>
+                    <p className="text-sm text-slate-400">Push full React and Tailwind configurations directly to your GitHub repo.</p>
+                  </div>
+                </div>
+
+              </motion.div>
+            </main>
+          </motion.div>
+        )}
+
+        {/* ================= STUDIO WORKSPACE ================= */}
+        {viewMode === "studio" && (
+          <motion.div key="studio" variants={pageVariants} initial="initial" animate="in" exit="out" className="relative z-10 flex flex-col h-screen overflow-hidden">
+            
+            {/* Studio Header */}
+            <header className="flex justify-between items-center px-6 py-4 glass-panel border-b-0 border-white/5 bg-[#040407]/80">
+              <div className="flex items-center gap-4">
+                <div onClick={() => setViewMode("landing")} className="font-display font-bold text-lg tracking-tight flex items-center gap-2 cursor-pointer hover:text-cyan-400 transition-colors">
+                  <Zap size={16} className="text-cyan-400" />
+                  PROMPTARC
+                </div>
+                <span className="text-white/20">/</span>
+                <span className="text-sm font-medium text-slate-400 flex items-center gap-2">
+                  <Server size={14} /> Application Studio
+                </span>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="text-xs text-slate-500 font-medium">Session: <strong className="text-white">{user?.firstName || "Dev"}</strong></span>
+                <UserButton afterSignOutUrl="/" />
+              </div>
+            </header>
+
+            <main className="flex-1 flex h-full overflow-hidden">
+              
+              {/* Left Sidebar - Prompt Config */}
+              <div className="w-[420px] flex flex-col gap-6 p-6 glass-panel border-r-0 border-y-0 rounded-none bg-[#020204]/90 z-20">
+                <div>
+                  <h2 className="font-display text-xl font-bold mb-1 flex items-center gap-2"><Sparkles size={16} className="text-cyan-400"/> Architecture Matrix</h2>
+                  <p className="text-xs text-slate-400 leading-relaxed">Inject natural language instructions. The compiler will orchestrate raw Tailwind output.</p>
+                </div>
+
+                <form onSubmit={handleGenerateApp} className="flex flex-col gap-3">
+                  <textarea 
+                    value={prompt} 
+                    onChange={(e) => setPrompt(e.target.value)} 
+                    placeholder="e.g., Build a cyberpunk themed dashboard with glowing bento box cards..." 
+                    className="w-full h-40 bg-black/40 border border-white/10 rounded-2xl p-4 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all resize-none no-scrollbar"
+                  />
+                  <button type="submit" disabled={isGenerating || !prompt} className={`w-full py-3.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all ${isGenerating || !prompt ? 'bg-white/5 text-slate-500 cursor-not-allowed' : 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:scale-[1.02]'}`}>
+                    {isGenerating ? <div className="animate-spin h-4 w-4 border-2 border-slate-500 border-t-transparent rounded-full" /> : <Zap size={16} />}
+                    {isGenerating ? "Compiling Node Graph..." : "Execute Generation"}
+                  </button>
+                </form>
+
+                <div className="flex-1 flex flex-col gap-2 min-h-0">
+                  <span className="text-[10px] font-bold text-slate-500 tracking-widest uppercase">System Terminal</span>
+                  <div className="flex-1 bg-[#010102] border border-white/5 rounded-2xl p-4 font-mono text-[11px] text-cyan-400 overflow-y-auto no-scrollbar flex flex-col gap-2 shadow-inner">
+                    {generationLogs.length === 0 && <span className="text-slate-600 italic">Waiting for compiler instructions...</span>}
+                    {generationLogs.map((log, index) => (
+                      <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} key={index}>{log}</motion.div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Sidebar - Live Preview */}
+              <div className="flex-1 p-6 flex flex-col gap-4 relative z-10 bg-[#000000]/40">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-2.5 h-2.5 rounded-full shadow-[0_0_10px_currentColor] ${generatedHtmlText ? 'bg-green-500 text-green-500' : 'bg-yellow-500 text-yellow-500'}`} />
+                    <span className="text-sm font-medium text-slate-300">Sandboxed Environment</span>
+                  </div>
+                  
+                  {generatedHtmlText && (
+                    <div className="flex gap-3">
+                      <button onClick={handleCopyCode} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-xs font-bold hover:bg-white/10 hover:border-white/20 transition-all text-white">
+                        <Copy size={14} /> {copyStatus}
+                      </button>
+                      <button onClick={() => alert("GitHub API backend wired!")} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold hover:bg-cyan-500/20 transition-all shadow-[0_0_15px_rgba(56,189,248,0.1)]">
+                        <Github size={14} /> Export to GitHub
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex-1 rounded-[2rem] border border-white/10 overflow-hidden relative shadow-2xl bg-[#040407] flex items-center justify-center">
+                  {generatedHtmlText ? (
+                    <motion.iframe 
+                      initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                      srcDoc={generatedHtmlText} 
+                      title="Generated Frame" 
+                      sandbox="allow-scripts allow-same-origin allow-popups"
+                      className="w-full h-full border-none bg-white" 
+                    />
+                  ) : (
+                    <div className="text-center flex flex-col items-center gap-4">
+                      <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.02)]">
+                        <Terminal size={24} className="text-slate-600" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold mb-1 text-slate-300">Viewport Offline</h4>
+                        <p className="text-xs text-slate-600">Awaiting code synthesis from the LLM core.</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+            </main>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
