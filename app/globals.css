@@ -6,11 +6,13 @@
 }
 
 body {
-  background-color: #000000;
+  background-color: #020204;
   color: #ffffff;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
+/* Invisible functional scrollbars */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
