@@ -3,9 +3,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { UserButton, useUser, SignInButton } from "@clerk/nextjs";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Terminal, GitBranch, Copy, Activity, Zap, Layers, Server, ArrowRight } from "lucide-react";
+import { Sparkles, Terminal, Code2, Copy, GitBranch, ArrowRight, Layers, Activity, Zap, Server, ChevronRight } from "lucide-react";
 
-export default function PromptArcWorkspace() {
+export default function PromptArcGodScaleWorkspace() {
   const { user, isSignedIn } = useUser();
   const [viewMode, setViewMode] = useState<"landing" | "studio">("landing");
   const [activeMenu, setActiveMenu] = useState<"compute" | "api" | "nodes" | null>(null);
@@ -29,7 +29,7 @@ export default function PromptArcWorkspace() {
     return () => clearInterval(interval);
   }, []);
 
-  // Premium Subtle WebGL Background (Soft Indigo/Violet Dust)
+  // Restored & Upgraded WebGL Particle Engine (Premium 21st.dev Aesthetic)
   useEffect(() => {
     if (!canvasRef.current) return;
     let canvas = canvasRef.current;
@@ -45,7 +45,7 @@ export default function PromptArcWorkspace() {
       void main() {
         vAlpha = alpha;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        gl_PointSize = 2.0;
+        gl_PointSize = 3.0;
       }
     `;
 
@@ -55,8 +55,7 @@ export default function PromptArcWorkspace() {
       void main() {
         float dist = distance(gl_PointCoord, vec2(0.5, 0.5));
         if (dist > 0.5) discard;
-        // Soft Indigo Color
-        gl_FragColor = vec4(0.39, 0.40, 0.95, vAlpha * (1.0 - dist * 2.0));
+        gl_FragColor = vec4(0.4, 0.6, 1.0, vAlpha * (1.0 - dist * 2.0)); // Cyan-Indigo mix
       }
     `;
 
@@ -78,19 +77,19 @@ export default function PromptArcWorkspace() {
     gl.linkProgram(shaderProgram);
     gl.useProgram(shaderProgram);
 
-    const particleCount = 1500;
+    const particleCount = 2500;
     const positions = new Float32Array(particleCount * 3);
     const alphas = new Float32Array(particleCount);
 
     for (let i = 0; i < particleCount; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos((Math.random() * 2) - 1);
-      const dist = 8 + Math.random() * 30;
+      const dist = 10 + Math.random() * 40;
 
       positions[i * 3] = dist * Math.sin(phi) * Math.cos(theta);
       positions[i * 3 + 1] = dist * Math.sin(phi) * Math.sin(theta);
       positions[i * 3 + 2] = dist * Math.cos(phi);
-      alphas[i] = 0.1 + Math.random() * 0.3; // Very subtle opacity
+      alphas[i] = 0.15 + Math.random() * 0.4;
     }
 
     const positionBuffer = gl.createBuffer();
@@ -125,10 +124,7 @@ export default function PromptArcWorkspace() {
       const f = 1.0 / Math.tan(fovy / 2);
       const nf = 1 / (near - far);
       return new Float32Array([
-        f / aspect, 0, 0, 0,
-        0, f, 0, 0,
-        0, 0, (far + near) * nf, -1,
-        0, 0, (2 * far * near) * nf, 0
+        f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (far + near) * nf, -1, 0, 0, (2 * far * near) * nf, 0
       ]);
     }
 
@@ -143,15 +139,14 @@ export default function PromptArcWorkspace() {
         gl.viewport(0, 0, canvas.width, canvas.height);
       }
 
-      // Deep Zinc Background
-      gl.clearColor(0.04, 0.04, 0.045, 1.0); 
+      gl.clearColor(0.02, 0.02, 0.04, 1.0); 
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       gl.enable(gl.BLEND);
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
 
-      rotationX += (mouseY * 0.1 - rotationX) * 0.02;
-      rotationY += (mouseX * 0.1 - rotationY) * 0.02;
-      const currentRotation = time * 0.00005;
+      rotationX += (mouseY * 0.15 - rotationX) * 0.05;
+      rotationY += (mouseX * 0.15 - rotationY) * 0.05;
+      const currentRotation = time * 0.0001;
 
       const projMatrix = perspectiveMatrix(Math.PI / 4, canvas.width / canvas.height, 0.1, 100.0);
       const cX = Math.cos(rotationX);
@@ -160,7 +155,7 @@ export default function PromptArcWorkspace() {
       const sY = Math.sin(rotationY + currentRotation);
 
       const mvMatrix = new Float32Array([
-        cY, sX * sY, -cX * sY, 0, 0, cX, sX, 0, sY, -sX * cY, cX * cY, 0, 0, 0, -30.0, 1.0
+        cY, sX * sY, -cX * sY, 0, 0, cX, sX, 0, sY, -sX * cY, cX * cY, 0, 0, 0, -35.0, 1.0
       ]);
 
       gl.uniformMatrix4fv(uProjection, false, projMatrix);
@@ -176,18 +171,21 @@ export default function PromptArcWorkspace() {
     };
   }, []);
 
-  // API Route Handlers
+  const handleLaunchStudio = () => {
+    setViewMode("studio");
+  };
+
   const handleGenerateApp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim()) return;
 
     setIsGenerating(true);
     setGeneratedHtmlText(null);
-    setGenerationLogs(["Initializing compiler environment..."]);
+    setGenerationLogs(["[SYSTEM] Environment connected. Parsing tokens..."]);
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 400));
-      setGenerationLogs((prev) => [...prev, "Provisioning sandboxed nodes..."]);
+      setGenerationLogs((prev) => [...prev, "[ROUTER] Provisioning sandboxed node arrays..."]);
 
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -198,9 +196,9 @@ export default function PromptArcWorkspace() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Generation error.");
 
-      setGenerationLogs((prev) => [...prev, "Syncing Tailwind DOM hooks..."]);
+      setGenerationLogs((prev) => [...prev, "[COMPILER] Syncing responsive Tailwind hooks..."]);
       await new Promise((resolve) => setTimeout(resolve, 400));
-      setGenerationLogs((prev) => [...prev, "Mounting application preview..."]);
+      setGenerationLogs((prev) => [...prev, "[RUNTIME] Launching isolated viewport..."]);
 
       let rawCode = data.text || data.code || ""; 
       
@@ -216,7 +214,7 @@ export default function PromptArcWorkspace() {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
           <style>
-            body { background-color: #ffffff; color: #09090b; margin: 0; padding: 24px; font-family: system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+            body { background-color: #050505; color: #ffffff; margin: 0; padding: 24px; font-family: system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
             ::-webkit-scrollbar { display: none; }
           </style>
         </head>
@@ -226,11 +224,11 @@ export default function PromptArcWorkspace() {
         </html>
       `;
 
-      setGenerationLogs((prev) => [...prev, "Success: Application compiled."]);
+      setGenerationLogs((prev) => [...prev, "SUCCESS: Sandbox compiled."]);
       setGeneratedHtmlText(completeHtmlCode);
 
     } catch (error: any) {
-      setGenerationLogs((prev) => [...prev, `Exception: ${error.message || "Timeout."}`]);
+      setGenerationLogs((prev) => [...prev, `CRITICAL ERROR: ${error.message}`]);
     } finally {
       setIsGenerating(false);
     }
@@ -243,239 +241,266 @@ export default function PromptArcWorkspace() {
     setTimeout(() => setCopyStatus("Copy Code"), 2000);
   };
 
+  // High-End Framer Motion Variants
   const pageVariants = {
-    initial: { opacity: 0, filter: "blur(8px)" },
-    in: { opacity: 1, filter: "blur(0px)", transition: { duration: 0.6, ease: "easeOut" } },
-    out: { opacity: 0, filter: "blur(8px)", transition: { duration: 0.4, ease: "easeIn" } }
+    initial: { opacity: 0, filter: "blur(20px)", scale: 0.95 },
+    in: { opacity: 1, filter: "blur(0px)", scale: 1, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
+    out: { opacity: 0, filter: "blur(20px)", scale: 1.05, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
+  };
+
+  const staggerContainer = {
+    initial: { opacity: 0 },
+    in: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } }
+  };
+
+  const staggerItem = {
+    initial: { opacity: 0, y: 20 },
+    in: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[#09090B] text-zinc-100 font-sans selection:bg-indigo-500/30">
+    <div className="relative min-h-screen w-full bg-[#020204] text-white font-sans selection:bg-indigo-500/30 overflow-hidden">
       
-      {/* Background Ambience */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_center,rgba(99,102,241,0.15),transparent_50%)] pointer-events-none z-0" />
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full z-0 pointer-events-none opacity-40 mix-blend-screen" />
+      {/* Dynamic 3D WebGL Background */}
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full z-0 pointer-events-none opacity-80" />
+      
+      {/* 21st.dev Style Deep Glows */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[400px] bg-indigo-500/20 blur-[120px] pointer-events-none z-0"></div>
 
       <AnimatePresence mode="wait">
-        {/* ================= LANDING PAGE ================= */}
+        
+        {/* ======================= LANDING PAGE ======================= */}
         {viewMode === "landing" && (
-          <motion.div key="landing" variants={pageVariants} initial="initial" animate="in" exit="out" className="relative z-10 flex flex-col min-h-screen pb-20">
+          <motion.div key="landing" variants={pageVariants} initial="initial" animate="in" exit="out" className="relative z-10 flex flex-col min-h-screen">
             
-            {/* Elegant Header */}
-            <header className="flex justify-between items-center px-8 py-6 max-w-7xl mx-auto w-full">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-indigo-500 flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.4)]">
-                  <Sparkles size={16} className="text-white" />
+            {/* Crazy Glass Floating Navbar */}
+            <header className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-6xl z-50 rounded-full bg-white/5 border border-white/10 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] px-6 py-3 flex justify-between items-center" onMouseLeave={() => setActiveMenu(null)}>
+              <div className="flex items-center gap-10">
+                <div className="flex items-center gap-2 group cursor-pointer">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.5)] group-hover:scale-110 transition-transform">
+                    <Zap size={14} className="text-white fill-white" />
+                  </div>
+                  <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-400">PromptArc</span>
                 </div>
-                <span className="font-semibold text-lg tracking-tight text-white">PromptArc</span>
+                
+                <nav className="hidden md:flex gap-1">
+                  {["Compute", "API Gateway", "Topology"].map((item) => (
+                    <span key={item} className="px-4 py-2 rounded-full text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/10 cursor-pointer transition-all">
+                      {item}
+                    </span>
+                  ))}
+                </nav>
               </div>
-              
-              <nav className="hidden md:flex items-center gap-1 bg-white/5 border border-white/10 p-1 rounded-full backdrop-blur-md">
-                {["Products", "Solutions", "Resources", "Enterprise"].map((item) => (
-                  <span key={item} className="px-5 py-2 rounded-full text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 cursor-pointer transition-all">
-                    {item}
-                  </span>
-                ))}
-              </nav>
 
-              <div>
+              <div className="flex items-center gap-4">
                 {isSignedIn ? (
-                  <div className="flex items-center gap-4 bg-white/5 border border-white/10 px-5 py-2 rounded-full backdrop-blur-md">
-                    <span className="text-sm text-zinc-400">Workspace: <strong className="text-white font-medium">{user?.firstName}</strong></span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-zinc-400 hidden sm:block">Session: <strong className="text-white">{user?.firstName}</strong></span>
                     <UserButton afterSignOutUrl="/" />
                   </div>
                 ) : (
                   <SignInButton mode="modal">
-                    <button className="bg-white text-zinc-950 px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-zinc-200 transition-colors shadow-lg">
-                      Sign In
-                    </button>
+                    <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-5 py-2 rounded-full bg-white text-black text-sm font-bold shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-shadow">
+                      Connect Engine
+                    </motion.button>
                   </SignInButton>
                 )}
               </div>
             </header>
 
-            {/* Hero Section */}
-            <main className="flex-1 flex flex-col items-center justify-center px-6 mt-16 md:mt-24">
-              <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }} className="text-center max-w-4xl mx-auto flex flex-col items-center">
+            {/* Heavy Animated Hero */}
+            <main className="flex-1 flex flex-col items-center justify-center pt-32 px-6">
+              <motion.div variants={staggerContainer} initial="initial" animate="in" className="text-center max-w-5xl mx-auto flex flex-col items-center">
                 
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold tracking-wide uppercase mb-8">
-                  <Sparkles size={12} /> Introducing PromptArc 2.0
-                </div>
+                <motion.div variants={staggerItem} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-bold tracking-widest uppercase mb-8 shadow-[0_0_20px_rgba(99,102,241,0.2)]">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                  </span>
+                  PromptArc Core v2.0 Live
+                </motion.div>
                 
-                <h1 className="text-5xl md:text-7xl font-bold tracking-tighter leading-[1.1] mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-zinc-500">
-                  Design at the speed <br className="hidden md:block" /> of thought.
-                </h1>
+                <motion.h1 variants={staggerItem} className="text-6xl md:text-[5rem] lg:text-[6.5rem] font-extrabold tracking-tighter leading-[0.9] mb-8">
+                  Ship Interfaces <br/> 
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-cyan-400 to-indigo-400 animate-pulse">
+                    At God Scale.
+                  </span>
+                </motion.h1>
                 
-                <p className="text-lg text-zinc-400 leading-relaxed max-w-2xl mb-10">
-                  Generate production-ready React and Tailwind interfaces instantly through natural language. Push directly to GitHub. 
-                </p>
+                <motion.p variants={staggerItem} className="text-lg md:text-xl text-zinc-400 leading-relaxed max-w-2xl mb-12">
+                  Auto-generate production-ready React & Tailwind UI directly from natural language. Bypass the boilerplate. Deploy instantly to GitHub.
+                </motion.p>
 
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                  <button 
-                    onClick={() => setViewMode("studio")}
-                    className="flex items-center gap-2 px-8 py-4 font-medium text-zinc-950 bg-white rounded-full hover:scale-105 hover:bg-zinc-100 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.15)]"
+                <motion.div variants={staggerItem}>
+                  <motion.button 
+                    whileHover={{ scale: 1.05, boxShadow: "0 0 40px rgba(99,102,241,0.6)" }} 
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleLaunchStudio}
+                    className="group relative inline-flex items-center justify-center gap-3 px-10 py-5 font-bold text-white bg-indigo-500 rounded-full overflow-hidden transition-all duration-300"
                   >
-                    Open Workspace <ArrowRight size={16} />
-                  </button>
-                  <button className="flex items-center gap-2 px-8 py-4 font-medium text-white bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-colors">
-                    View Documentation
-                  </button>
-                </div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 via-cyan-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <Sparkles className="relative z-10" size={20} />
+                    <span className="relative z-10 text-lg">Launch Workspace</span>
+                    <ArrowRight className="relative z-10 group-hover:translate-x-1 transition-transform" size={20} />
+                  </motion.button>
+                </motion.div>
               </motion.div>
 
-              {/* Sophisticated Bento Grid */}
-              <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }} className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mx-auto mt-24">
+              {/* Ultra-Premium Glass Bento Grid */}
+              <motion.div variants={staggerContainer} initial="initial" animate="in" className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl mt-32 mb-24">
                 
-                {/* Card 1 */}
-                <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-3xl p-8 flex flex-col gap-8 transition-all hover:bg-white/[0.07]">
-                  <div className="flex justify-between items-center text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-                    <span className="flex items-center gap-2"><Activity size={14}/> Engine Status</span>
-                    <span className="text-indigo-400 flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" /> Live
-                    </span>
-                  </div>
-                  <div className="flex-1 flex flex-col justify-center">
-                    <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
-                      <div className="h-full bg-indigo-500 shadow-[0_0_10px_#6366f1] transition-all duration-500" style={{ width: `${systemLoad}%` }} />
+                {[
+                  { icon: Activity, title: "Compute Cluster", value: `● ${systemLoad}%`, color: "text-emerald-400", desc: "Isolated sandboxes for zero-latency component compilation." },
+                  { icon: Terminal, title: "Engine Weights", value: `t=${engineTemperature.toFixed(1)}`, color: "text-indigo-400", desc: "Slide weights to control exact UI determinism vs abstract layouts.", isSlider: true },
+                  { icon: Layers, title: "License Tier", value: selectedTier === "developer" ? "$19" : "$79", color: "text-amber-400", desc: "Push full React and Tailwind configurations directly to your GitHub repo.", isToggles: true }
+                ].map((card, i) => (
+                  <motion.div key={i} variants={staggerItem} className="group relative rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-xl p-8 flex flex-col gap-6 overflow-hidden hover:bg-white/10 hover:border-white/20 transition-all duration-500">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 blur-[50px] rounded-full group-hover:bg-indigo-500/20 transition-all duration-700"></div>
+                    
+                    <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider z-10">
+                      <span className="text-zinc-400 flex items-center gap-2"><card.icon size={14}/> {card.title}</span>
+                      <span className={`${card.color} font-mono bg-white/5 px-2 py-1 rounded-md border border-white/5`}>{card.value}</span>
                     </div>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-1">Compute Cluster</h3>
-                    <p className="text-sm text-zinc-400">Isolated sandbox instances for zero-latency component compilation.</p>
-                  </div>
-                </div>
 
-                {/* Card 2 */}
-                <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-3xl p-8 flex flex-col gap-8 transition-all hover:bg-white/[0.07]">
-                  <div className="flex justify-between items-center text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-                    <span className="flex items-center gap-2"><Terminal size={14}/> Model Weight</span>
-                    <span className="text-white bg-white/10 px-2 py-1 rounded-md">t={engineTemperature.toFixed(1)}</span>
-                  </div>
-                  <div className="flex-1 flex flex-col justify-center">
-                     <input 
-                      type="range" min="0.1" max="1.5" step="0.1" 
-                      value={engineTemperature} 
-                      onChange={(e) => setEngineTemperature(parseFloat(e.target.value))}
-                      className="w-full accent-indigo-500 cursor-pointer h-1 bg-white/10 rounded-lg appearance-none"
-                    />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-1">Generation Fluidity</h3>
-                    <p className="text-sm text-zinc-400">Control the exactness of the LLM response vs creative liberty.</p>
-                  </div>
-                </div>
-
-                {/* Card 3 */}
-                <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-3xl p-8 flex flex-col gap-8 transition-all hover:bg-white/[0.07]">
-                  <div className="flex justify-between items-center text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-                    <span className="flex items-center gap-2"><Layers size={14}/> License Tier</span>
-                  </div>
-                  <div className="flex-1 flex gap-2 items-center">
-                    <button onClick={() => setSelectedTier("developer")} className={`flex-1 py-2.5 rounded-xl text-xs font-semibold transition-all ${selectedTier === "developer" ? 'bg-indigo-500 text-white shadow-lg' : 'bg-white/5 text-zinc-400 hover:bg-white/10'}`}>Dev</button>
-                    <button onClick={() => setSelectedTier("scale")} className={`flex-1 py-2.5 rounded-xl text-xs font-semibold transition-all ${selectedTier === "scale" ? 'bg-indigo-500 text-white shadow-lg' : 'bg-white/5 text-zinc-400 hover:bg-white/10'}`}>Scale</button>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-1">Commercial Access</h3>
-                    <p className="text-sm text-zinc-400">Unlock private GitHub repositories and unrestricted API hooks.</p>
-                  </div>
-                </div>
-
+                    <div className="flex-1 flex flex-col justify-center z-10">
+                      {card.isSlider ? (
+                         <input 
+                          type="range" min="0.1" max="1.5" step="0.1" 
+                          value={engineTemperature} onChange={(e) => setEngineTemperature(parseFloat(e.target.value))}
+                          className="w-full h-1.5 bg-white/10 rounded-full appearance-none outline-none cursor-pointer accent-indigo-500"
+                        />
+                      ) : card.isToggles ? (
+                        <div className="flex gap-2 p-1 bg-white/5 rounded-xl border border-white/5">
+                          <button onClick={() => setSelectedTier("developer")} className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${selectedTier === "developer" ? 'bg-indigo-500 text-white shadow-lg' : 'text-zinc-500 hover:text-white'}`}>Dev</button>
+                          <button onClick={() => setSelectedTier("scale")} className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${selectedTier === "scale" ? 'bg-indigo-500 text-white shadow-lg' : 'text-zinc-500 hover:text-white'}`}>Scale</button>
+                        </div>
+                      ) : (
+                        <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                          <div className="h-full bg-emerald-400 shadow-[0_0_10px_#34d399] transition-all duration-500" style={{ width: `${systemLoad}%` }} />
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="z-10">
+                      <h3 className="text-lg font-bold text-white mb-2">{card.title}</h3>
+                      <p className="text-sm text-zinc-400 leading-relaxed">{card.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
               </motion.div>
             </main>
           </motion.div>
         )}
 
-        {/* ================= STUDIO WORKSPACE ================= */}
+        {/* ======================= STUDIO WORKSPACE ======================= */}
         {viewMode === "studio" && (
-          <motion.div key="studio" variants={pageVariants} initial="initial" animate="in" exit="out" className="relative z-10 flex flex-col h-screen overflow-hidden bg-[#09090B]">
+          <motion.div key="studio" variants={pageVariants} initial="initial" animate="in" exit="out" className="relative z-10 flex flex-col h-screen">
             
-            {/* Minimalist Studio Header */}
-            <header className="flex justify-between items-center px-6 py-4 border-b border-white/10 bg-[#09090B]/80 backdrop-blur-xl z-20">
-              <div className="flex items-center gap-3">
-                <div onClick={() => setViewMode("landing")} className="flex items-center gap-2 cursor-pointer group">
-                  <div className="w-6 h-6 rounded-lg bg-indigo-500 flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <Sparkles size={12} className="text-white" />
-                  </div>
-                  <span className="font-semibold text-white tracking-tight">PromptArc</span>
-                </div>
-                <span className="text-zinc-600">/</span>
-                <span className="text-sm font-medium text-zinc-400">Workspace</span>
-              </div>
+            {/* Minimal Glass Studio Header */}
+            <header className="flex justify-between items-center px-6 py-4 bg-black/40 border-b border-white/10 backdrop-blur-2xl z-20">
               <div className="flex items-center gap-4">
-                <span className="text-sm text-zinc-400">Session: <strong className="text-white font-medium">{user?.firstName || "Dev"}</strong></span>
+                <motion.div whileHover={{ scale: 1.05 }} onClick={() => setViewMode("landing")} className="flex items-center gap-2 cursor-pointer group">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center shadow-[0_0_15px_rgba(99,102,241,0.5)]">
+                    <Sparkles size={14} className="text-white" />
+                  </div>
+                  <span className="font-bold text-lg text-white tracking-tight">PromptArc</span>
+                </motion.div>
+                <span className="text-zinc-700">/</span>
+                <span className="text-sm font-medium text-zinc-300 flex items-center gap-2">
+                  <Server size={14} /> Application Studio
+                </span>
+              </div>
+              <div className="flex items-center gap-4 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full">
+                <span className="text-sm text-zinc-400 hidden sm:block">Session: <strong className="text-white">{user?.firstName || "Dev"}</strong></span>
                 <UserButton afterSignOutUrl="/" />
               </div>
             </header>
 
-            <main className="flex-1 flex h-full overflow-hidden">
+            <main className="flex-1 flex overflow-hidden">
               
-              {/* Left Sidebar - Prompt Config */}
-              <div className="w-[400px] flex flex-col gap-6 p-6 border-r border-white/10 bg-[#09090B] z-20">
+              {/* Left Panel - The Matrix Input */}
+              <div className="w-[450px] flex flex-col gap-6 p-6 bg-black/60 border-r border-white/10 backdrop-blur-xl z-20">
                 <div>
-                  <h2 className="text-lg font-semibold text-white mb-1">Architecture Config</h2>
-                  <p className="text-sm text-zinc-500 leading-relaxed">Describe the interface you want to generate. The compiler will handle the utility classes.</p>
+                  <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                    <Code2 className="text-indigo-400" size={20}/> Architecture Config
+                  </h2>
+                  <p className="text-sm text-zinc-400 leading-relaxed">Inject natural language instructions. The compiler will orchestrate raw Tailwind output.</p>
                 </div>
 
                 <form onSubmit={handleGenerateApp} className="flex flex-col gap-4">
-                  <textarea 
-                    value={prompt} 
-                    onChange={(e) => setPrompt(e.target.value)} 
-                    placeholder="e.g., Build a modern SaaS pricing section with 3 tiers and a toggle switch..." 
-                    className="w-full h-48 bg-zinc-900/50 border border-white/10 rounded-2xl p-4 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all resize-none"
-                  />
-                  <button type="submit" disabled={isGenerating || !prompt} className={`w-full py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all ${isGenerating || !prompt ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed' : 'bg-white text-zinc-950 hover:bg-zinc-200'}`}>
-                    {isGenerating ? <div className="animate-spin h-4 w-4 border-2 border-zinc-500 border-t-transparent rounded-full" /> : <Zap size={16} />}
-                    {isGenerating ? "Compiling Generation..." : "Generate Interface"}
-                  </button>
+                  <div className="relative group">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
+                    <textarea 
+                      value={prompt} 
+                      onChange={(e) => setPrompt(e.target.value)} 
+                      placeholder="e.g., Build a massive Web3 dashboard with crazy glowing glass panels and neon charts..." 
+                      className="relative w-full h-48 bg-black/80 border border-white/10 rounded-2xl p-5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500/80 transition-all resize-none no-scrollbar shadow-inner"
+                    />
+                  </div>
+                  
+                  <motion.button 
+                    whileHover={!isGenerating && prompt ? { scale: 1.02, boxShadow: "0 0 20px rgba(255,255,255,0.2)" } : {}}
+                    whileTap={!isGenerating && prompt ? { scale: 0.98 } : {}}
+                    type="submit" disabled={isGenerating || !prompt} 
+                    className={`w-full py-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all ${isGenerating || !prompt ? 'bg-white/5 text-zinc-600 border border-white/5 cursor-not-allowed' : 'bg-white text-black hover:bg-zinc-200'}`}
+                  >
+                    {isGenerating ? <div className="animate-spin h-5 w-5 border-2 border-zinc-500 border-t-transparent rounded-full" /> : <Zap size={18} />}
+                    {isGenerating ? "Compiling Node Graph..." : "Execute Generation"}
+                  </motion.button>
                 </form>
 
-                <div className="flex-1 flex flex-col gap-2 min-h-0 pt-4 border-t border-white/10">
-                  <span className="text-xs font-semibold text-zinc-500">System Logs</span>
-                  <div className="flex-1 bg-zinc-950 border border-white/5 rounded-xl p-4 font-mono text-[11px] text-zinc-400 overflow-y-auto flex flex-col gap-2">
-                    {generationLogs.length === 0 && <span className="text-zinc-600">Waiting for compiler instructions...</span>}
+                <div className="flex-1 flex flex-col gap-3 min-h-0 pt-2">
+                  <span className="text-[11px] font-bold text-zinc-500 tracking-widest uppercase flex items-center gap-2">
+                    <Terminal size={12}/> System Terminal
+                  </span>
+                  <div className="flex-1 bg-black/80 border border-white/10 rounded-2xl p-5 font-mono text-[12px] text-zinc-300 overflow-y-auto no-scrollbar flex flex-col gap-2 shadow-inner">
+                    {generationLogs.length === 0 && <span className="text-zinc-600 italic">Waiting for compiler instructions...</span>}
                     {generationLogs.map((log, index) => (
-                      <motion.div initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }} key={index}>{log}</motion.div>
+                      <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} key={index} className="flex items-start gap-2">
+                        <ChevronRight size={14} className="text-indigo-500 shrink-0 mt-0.5" />
+                        <span className={log.includes("SUCCESS") ? "text-emerald-400" : log.includes("ERROR") ? "text-rose-400" : ""}>{log}</span>
+                      </motion.div>
                     ))}
                   </div>
                 </div>
               </div>
 
-              {/* Right Sidebar - Live Preview */}
-              <div className="flex-1 p-6 flex flex-col gap-4 relative z-10 bg-[#050505]">
-                <div className="flex justify-between items-center h-8">
-                  <div className="flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full ${generatedHtmlText ? 'bg-emerald-500 shadow-[0_0_10px_#10b981]' : 'bg-amber-500 shadow-[0_0_10px_#f59e0b]'}`} />
-                    <span className="text-sm font-medium text-zinc-400">Sandbox Preview</span>
+              {/* Right Panel - Live Preview Sandbox */}
+              <div className="flex-1 p-6 flex flex-col gap-4 relative z-10 bg-black/20 backdrop-blur-sm">
+                <div className="flex justify-between items-center h-10 bg-black/40 border border-white/10 backdrop-blur-md rounded-2xl px-5">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-2.5 h-2.5 rounded-full shadow-[0_0_15px_currentColor] ${generatedHtmlText ? 'bg-emerald-400 text-emerald-400' : 'bg-amber-400 text-amber-400 animate-pulse'}`} />
+                    <span className="text-sm font-bold text-white tracking-wide">Live Sandbox</span>
                   </div>
                   
                   {generatedHtmlText && (
-                    <div className="flex gap-2">
-                      <button onClick={handleCopyCode} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-xs font-medium text-white hover:bg-white/10 transition-colors">
+                    <div className="flex gap-3">
+                      <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleCopyCode} className="flex items-center gap-2 px-4 py-1.5 rounded-lg bg-white/10 border border-white/20 text-xs font-bold text-white hover:bg-white/20 transition-colors">
                         <Copy size={14} /> {copyStatus}
-                      </button>
-                      <button onClick={() => alert("GitHub API backend wired!")} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-500 text-white text-xs font-medium hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-500/20">
-                        <GitBranch size={14} /> Export to GitHub
-                      </button>
+                      </motion.button>
+                      <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => alert("GitHub export backend required.")} className="flex items-center gap-2 px-4 py-1.5 rounded-lg bg-indigo-500 text-white text-xs font-bold shadow-[0_0_20px_rgba(99,102,241,0.4)]">
+                        <GitBranch size={14} /> Export to Repo
+                      </motion.button>
                     </div>
                   )}
                 </div>
 
-                <div className="flex-1 rounded-2xl border border-white/10 overflow-hidden relative shadow-2xl bg-[#0A0A0A] flex items-center justify-center">
+                <div className="flex-1 rounded-[2rem] border border-white/10 overflow-hidden shadow-2xl bg-[#050505] flex items-center justify-center relative">
                   {generatedHtmlText ? (
                     <motion.iframe 
-                      initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                      initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}
                       srcDoc={generatedHtmlText} 
                       title="Generated Frame" 
                       sandbox="allow-scripts allow-same-origin allow-popups"
                       className="w-full h-full border-none bg-white" 
                     />
                   ) : (
-                    <div className="text-center flex flex-col items-center gap-4 text-zinc-500">
-                      <Server size={32} strokeWidth={1} />
-                      <div>
-                        <p className="text-sm">Viewport Offline</p>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center gap-6 text-zinc-600">
+                      <div className="w-24 h-24 rounded-3xl border border-white/5 flex items-center justify-center bg-white/[0.02] shadow-[0_0_50px_rgba(255,255,255,0.02)]">
+                        <Layers size={40} strokeWidth={1} />
                       </div>
-                    </div>
+                      <p className="text-base font-medium tracking-wide">Viewport Offline</p>
+                    </motion.div>
                   )}
                 </div>
               </div>
