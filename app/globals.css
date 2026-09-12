@@ -1,82 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --bg-space: #020205;
+@theme {
+  --font-sans: "Space Grotesk", system-ui, sans-serif;
+  --font-display: "Syne", system-ui, sans-serif;
 }
 
 body {
-  background-color: var(--bg-space);
+  background-color: #000000;
   color: #ffffff;
-  font-family: 'Space Grotesk', sans-serif;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
 }
 
-h1, h2, h3, .font-display {
-  font-family: 'Syne', sans-serif;
-  letter-spacing: -0.04em;
-}
-
-/* BULLETPROOF GLASSMORPHISM - 100% Raw CSS, Zero Tailwind @apply */
-.glass-panel {
-  background-color: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
-
-.glass-panel-hover {
-  transition: all 0.5s ease;
-}
-
-.glass-panel-hover:hover {
-  background-color: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-4px);
-  box-shadow: 0 20px 80px -20px rgba(56, 189, 248, 0.15);
-}
-
-.text-glow-cyan {
-  text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
-}
-
-/* Invisible functional scrollbars */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-/* Premium Range Slider override */
-input[type=range] {
-  -webkit-appearance: none;
-  background: transparent;
-  width: 100%;
-  outline: none;
-}
-input[type=range]::-webkit-slider-runnable-track {
-  background-color: rgba(255, 255, 255, 0.1);
-  height: 4px;
-  border-radius: 9999px;
-}
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 12px;
-  height: 12px;
-  background-color: #38bdf8;
-  border-radius: 9999px;
-  margin-top: -4px;
-  cursor: pointer;
-  box-shadow: 0 0 15px rgba(56, 189, 248, 0.8);
-  transition: transform 0.2s;
-}
-input[type=range]::-webkit-slider-thumb:hover {
-  transform: scale(1.5);
 }
