@@ -24,13 +24,20 @@
 }
 
 @layer utilities {
-  /* Elite Glassmorphism - 21st.dev style */
+  /* BULLETPROOF GLASSMORPHISM - Bypassing Tailwind's strict parser */
   .glass-panel {
-    @apply bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl shadow-2xl;
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    @apply backdrop-blur-2xl shadow-2xl;
   }
   
   .glass-panel-hover {
-    @apply transition-all duration-500 hover:bg-white/[0.04] hover:border-white/[0.1] hover:-translate-y-1 hover:shadow-[0_20px_80px_-20px_rgba(56,189,248,0.15)];
+    @apply transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_80px_-20px_rgba(56,189,248,0.15)];
+  }
+
+  .glass-panel-hover:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.1);
   }
 
   .text-glow-cyan {
@@ -53,7 +60,8 @@ input[type=range] {
   @apply bg-transparent w-full outline-none;
 }
 input[type=range]::-webkit-slider-runnable-track {
-  @apply h-1 bg-white/10 rounded-full;
+  background-color: rgba(255, 255, 255, 0.1);
+  @apply h-1 rounded-full;
 }
 input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
