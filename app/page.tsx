@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { UserButton, useUser, SignInButton } from "@clerk/nextjs";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Terminal, Github, Copy, Activity, Zap, Layers, Server } from "lucide-react";
+import { Sparkles, Terminal, GitBranch, Copy, Activity, Zap, Layers, Server } from "lucide-react";
 
 export default function PromptArcGodScaleSuite() {
   const { user, isSignedIn } = useUser();
@@ -29,7 +29,7 @@ export default function PromptArcGodScaleSuite() {
     return () => clearInterval(interval);
   }, []);
 
-  // WebGL Background (Preserved exactly as your original engine)
+  // WebGL Background
   useEffect(() => {
     if (!canvasRef.current) return;
     let canvas = canvasRef.current;
@@ -454,7 +454,8 @@ export default function PromptArcGodScaleSuite() {
                         <Copy size={14} /> {copyStatus}
                       </button>
                       <button onClick={() => alert("GitHub API backend wired!")} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold hover:bg-cyan-500/20 transition-all shadow-[0_0_15px_rgba(56,189,248,0.1)]">
-                        <Github size={14} /> Export to GitHub
+                        {/* FIX: Using GitBranch instead of Github */}
+                        <GitBranch size={14} /> Export to GitHub
                       </button>
                     </div>
                   )}
