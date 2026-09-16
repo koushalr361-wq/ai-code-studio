@@ -29,7 +29,7 @@ export default function PromptArcGodScaleWorkspace() {
     return () => clearInterval(interval);
   }, []);
 
-  // Restored & Upgraded WebGL Particle Engine (Premium 21st.dev Aesthetic)
+  // WebGL Particle Engine
   useEffect(() => {
     if (!canvasRef.current) return;
     let canvas = canvasRef.current;
@@ -55,7 +55,7 @@ export default function PromptArcGodScaleWorkspace() {
       void main() {
         float dist = distance(gl_PointCoord, vec2(0.5, 0.5));
         if (dist > 0.5) discard;
-        gl_FragColor = vec4(0.4, 0.6, 1.0, vAlpha * (1.0 - dist * 2.0)); // Cyan-Indigo mix
+        gl_FragColor = vec4(0.4, 0.6, 1.0, vAlpha * (1.0 - dist * 2.0));
       }
     `;
 
@@ -206,6 +206,7 @@ export default function PromptArcGodScaleWorkspace() {
         rawCode = rawCode.replace(/```html/gi, "").replace(/```/g, "").trim();
       }
 
+      // THE FIX: Sandbox click interceptor script injected into the iframe
       const completeHtmlCode = `
         <!DOCTYPE html>
         <html lang="en">
@@ -217,6 +218,19 @@ export default function PromptArcGodScaleWorkspace() {
             body { background-color: #050505; color: #ffffff; margin: 0; padding: 24px; font-family: system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
             ::-webkit-scrollbar { display: none; }
           </style>
+          <script>
+            document.addEventListener('DOMContentLoaded', () => {
+              document.addEventListener('click', (e) => {
+                const link = e.target.closest('a');
+                if (link) {
+                  e.preventDefault();
+                }
+              });
+              document.addEventListener('submit', (e) => {
+                e.preventDefault();
+              });
+            });
+          </script>
         </head>
         <body>
           ${rawCode}
@@ -312,12 +326,10 @@ export default function PromptArcGodScaleWorkspace() {
             <main className="flex-1 flex flex-col items-center justify-center pt-32 px-6">
               <motion.div variants={staggerContainer} initial="initial" animate="in" className="text-center max-w-5xl mx-auto flex flex-col items-center">
                 
-                <motion.div variants={staggerItem} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-bold tracking-widest uppercase mb-8 shadow-[0_0_20px_rgba(99,102,241,0.2)]">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-                  </span>
-                  PromptArc Core v2.0 Live
+                {/* THE FIX: Replaced AI-style ping badge with a clean, human-designed premium indicator */}
+                <motion.div variants={staggerItem} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-zinc-300 text-xs font-medium tracking-wide mb-8">
+                  <div className="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>
+                  PromptArc Core v2.0
                 </motion.div>
                 
                 <motion.h1 variants={staggerItem} className="text-6xl md:text-[5rem] lg:text-[6.5rem] font-extrabold tracking-tighter leading-[0.9] mb-8">
